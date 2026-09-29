@@ -32,7 +32,7 @@ public class SuppressiveFire : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
-            .TargetingAllOpponents(CombatState)
+            .TargetingAllOpponents(CombatState!)
             .WithHitFx("vfx/vfx_attack_fire", null, "fire_attack.mp3")
             .Execute(choiceContext);
         await PowerCmd.Apply<BlurPower>(choiceContext, Owner.Creature,

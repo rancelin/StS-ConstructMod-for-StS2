@@ -30,7 +30,7 @@ public class SweepLaser : AbstractConstructCard
                 .Execute(choiceContext);
         }
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
-            .TargetingAllOpponents(CombatState)
+            .TargetingAllOpponents(CombatState!)
             .WithHitFx("vfx/vfx_attack_magic_beam", null, "magic_beam.mp3")
             .Execute(choiceContext);
     }

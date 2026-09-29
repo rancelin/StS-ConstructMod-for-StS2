@@ -42,7 +42,7 @@ public class VentSteam : AbstractConstructCard
         {
             await CardCmd.Exhaust(choiceContext, card);
         }
-        var targets = cardPlay.Target != null ? [cardPlay.Target] : CombatState.HittableEnemies;
+        var targets = cardPlay.Target != null ? [cardPlay.Target] : CombatState!.HittableEnemies;
         foreach (var target in targets)
         {
             await PowerCmd.Apply<WeakPower>(choiceContext, target, DynamicVars["Weak"].BaseValue, Owner.Creature, this);

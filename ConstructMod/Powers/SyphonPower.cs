@@ -27,6 +27,6 @@ public class SyphonPower : CustomPowerModel
         if (!props.HasFlag(ValueProp.Move)) return;
         var player = dealer?.Player;
         if (player == null) return;
-        await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, player, cardSource);
+        await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, player, cardSource!);
     }
 }
