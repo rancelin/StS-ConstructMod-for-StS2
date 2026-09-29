@@ -15,7 +15,15 @@ public class DefenseMode : AbstractCycleCard
 {
     public DefenseMode() : base(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
-        AddKeyword(CardKeyword.Retain);
+    }
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords
+    {
+        get
+        {
+            foreach (var k in base.CanonicalKeywords) yield return k;
+            yield return CardKeyword.Retain;
+        }
     }
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
