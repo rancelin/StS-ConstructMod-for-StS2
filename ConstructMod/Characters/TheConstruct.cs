@@ -33,12 +33,14 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Strike_Construct>(),
         ModelDb.Card<Strike_Construct>(),
         ModelDb.Card<Strike_Construct>(),
+        ModelDb.Card<Strike_Construct>(),
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<Defend_Construct>(),
-        ModelDb.Card<ModeShift>(),
-        ModelDb.Card<ModeShift>()
+        ModelDb.Card<Defend_Construct>(),
+        ModelDb.Card<AttackMode>(),
+        ModelDb.Card<DefenseMode>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
