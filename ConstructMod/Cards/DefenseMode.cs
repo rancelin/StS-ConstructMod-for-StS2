@@ -40,7 +40,9 @@ public class DefenseMode : AbstractCycleCard
     };
 
     public override List<(string, string)>? Localization => new CardLoc("Defense Mode",
-        "Retain. Gain {Dexterity} Dexterity. Lose {Strength} Strength.");
+        "Gain {Dexterity} *Dexterity*. Lose {Strength} *Strength*.");
+
+    public override bool CanCycle() => false;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
