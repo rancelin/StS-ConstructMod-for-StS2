@@ -26,7 +26,7 @@ public class FocusedBeam : AbstractConstructCard
         if (cardPlay.Target != null)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
-                .WithHitFx("vfx/vfx_attack_magic_beam", null, "magic_beam.mp3")
+                .WithHitFx("vfx/vfx_attack_slash")
                 .Execute(choiceContext);
         }
         await CardPileCmd.Add(this, PileType.Draw, CardPilePosition.Top);

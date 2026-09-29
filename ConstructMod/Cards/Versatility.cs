@@ -33,7 +33,7 @@ public class Versatility : AbstractConstructCard
         else if (cardPlay.Target != null)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
-                .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3")
+                .WithHitFx("vfx/vfx_attack_blunt")
                 .Execute(choiceContext);
         }
     }

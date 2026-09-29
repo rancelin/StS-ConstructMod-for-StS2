@@ -33,7 +33,7 @@ public class SuppressiveFire : AbstractConstructCard
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!)
-            .WithHitFx("vfx/vfx_attack_fire", null, "fire_attack.mp3")
+            .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(choiceContext);
         await PowerCmd.Apply<BlurPower>(choiceContext, Owner.Creature,
             DynamicVars["Blur"].BaseValue, Owner.Creature, this);

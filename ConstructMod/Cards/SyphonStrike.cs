@@ -30,7 +30,7 @@ public class SyphonStrike : AbstractConstructCard
     {
         if (cardPlay.Target == null) return;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
-            .WithHitFx("vfx/vfx_attack_poison", null, "poison_attack.mp3")
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
         await PowerCmd.Apply<SyphonPower>(choiceContext, cardPlay.Target,
             DynamicVars["Turns"].BaseValue, Owner.Creature, this);
