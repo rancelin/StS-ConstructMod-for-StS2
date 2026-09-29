@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -11,7 +10,7 @@ using BaseLib.Abstracts;
 
 namespace ConstructMod.Cards;
 
-public class Defend_Construct : AbstractConstructCard
+public class Defend_Construct : AbstractCycleCard
 {
     public override bool GainsBlock => true;
 
@@ -25,7 +24,14 @@ public class Defend_Construct : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Defend",
-        "#Gain {Block} *Block*.");
+        "#*Cycle* if your *Dexterity* is negative. Gain {Block} *Block*.");
+
+    public override bool CanCycle()
+    {
+        if (!base.CanCycle()) return false;
+        var dexterity = Owner.Creature.GetPower<DexterityPower>();
+        return dexterity is { Amount: < 0 };
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
