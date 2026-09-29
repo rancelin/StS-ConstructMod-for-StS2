@@ -39,6 +39,6 @@ public class Cogwheel : CustomRelicModel
 
     public override List<(string, string)>? Localization => new RelicLoc(
         Title: "Cogwheel",
-        Description: "Gain *1 Artifact* at the start of each combat.",
+        Description: "#Gain *1 Artifact* at the start of each combat.",
         Flavor: "A piece of old machinery, carefully preserved.");
 }

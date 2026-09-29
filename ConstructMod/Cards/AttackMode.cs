@@ -40,7 +40,7 @@ public class AttackMode : AbstractCycleCard
     };
 
     public override List<(string, string)>? Localization => new CardLoc("Attack Mode",
-        "Gain {Strength} *Strength*. Lose {Dexterity} *Dexterity*.");
+        "#Gain {Strength} *Strength*. Lose {Dexterity} *Dexterity*.");
 
     public override bool CanCycle() => false;
 

@@ -25,7 +25,7 @@ public class Defend_Construct : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Defend",
-        "Gain {Block} *Block*.");
+        "#Gain {Block} *Block*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
