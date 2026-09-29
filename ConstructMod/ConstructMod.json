@@ -1,0 +1,12 @@
+{
+  "id": "ConstructMod",
+  "name": "The Construct",
+  "author": "Moocowsgomoo (original), rancelin (port)",
+  "description": "Adds The Construct character to Slay the Spire 2. Port of the Slay the Spire 1 mod.",
+  "version": "v0.1.0",
+  "has_pck": false,
+  "has_dll": true,
+  "min_game_version": "0.107.1",
+  "dependencies": ["BaseLib"],
+  "affects_gameplay": true
+}

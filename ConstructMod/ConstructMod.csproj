@@ -1,0 +1,51 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1">
+    <Import Project=".\local.props" Condition="Exists('.\local.props')"/>
+    <Import Project=".\Sts2PathDiscovery.props"/>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>ConstructMod</RootNamespace>
+        <LangVersion>preview</LangVersion>
+        <Version>0.1.0</Version>
+    </PropertyGroup>
+    <PropertyGroup>
+        <OutputPath>publish/</OutputPath>
+        <NoWarn>$(NoWarn);NU5128;MSB3270</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="0Harmony">
+            <HintPath>$(Sts2DataDir)/0Harmony.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="sts2">
+            <HintPath>$(Sts2DataDir)/sts2.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="SmartFormat">
+            <HintPath>$(Sts2DataDir)/SmartFormat.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Steamworks">
+            <HintPath>$(Sts2DataDir)/Steamworks.NET.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="BaseLib">
+            <HintPath>$(BaseLibPath)</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="All"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Publicize Include="sts2" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="ConstructMod.json"/>
+    </ItemGroup>
+    <Target Name="CopyToModsFolderOnBuild" AfterTargets="AfterBuild">
+        <Message Text="Copying .dll and manifest to mods folder ($(ModsPath))." Importance="high"/>
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)ConstructMod/"/>
+        <Copy SourceFiles="ConstructMod.json" DestinationFolder="$(ModsPath)ConstructMod/"/>
+    </Target>
+</Project>
