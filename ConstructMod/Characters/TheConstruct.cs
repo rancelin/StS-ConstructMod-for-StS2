@@ -1,5 +1,6 @@
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.PotionPools;
@@ -44,6 +45,23 @@ public class TheConstruct : CustomCharacterModel
 
     public override float AttackAnimDelay => 0.15f;
     public override float CastAnimDelay => 0.25f;
+
+    // Placeholder visuals: reuse Ironclad assets until a ConstructMod .pck ships.
+    public override string? CustomVisualPath => SceneHelper.GetScenePath("creature_visuals/ironclad");
+    public override string? CustomTrailPath => SceneHelper.GetScenePath("vfx/card_trail_ironclad");
+    public override string? CustomIconPath => SceneHelper.GetScenePath("ui/character_icons/ironclad_icon");
+    public override string? CustomIconTexturePath => ImageHelper.GetImagePath("ui/top_panel/character_icon_ironclad.png");
+    public override string? CustomEnergyCounterPath => SceneHelper.GetScenePath("combat/energy_counters/ironclad_energy_counter");
+    public override string? CustomRestSiteAnimPath => SceneHelper.GetScenePath("rest_site/characters/ironclad_rest_site");
+    public override string? CustomMerchantAnimPath => SceneHelper.GetScenePath("merchant/characters/ironclad_merchant");
+    public override string? CustomCharacterSelectBg => SceneHelper.GetScenePath("screens/char_select/char_select_bg_ironclad");
+    public override string? CustomCharacterSelectIconPath => ImageHelper.GetImagePath("packed/character_select/char_select_ironclad.png");
+    public override string? CustomCharacterSelectLockedIconPath => ImageHelper.GetImagePath("packed/character_select/char_select_ironclad_locked.png");
+    public override string? CustomCharacterSelectTransitionPath => "res://materials/transitions/ironclad_transition_mat.tres";
+    public override string? CustomMapMarkerPath => ImageHelper.GetImagePath("packed/map/icons/map_marker_ironclad.png");
+    public override string? CustomAttackSfx => "event:/sfx/characters/ironclad/ironclad_attack";
+    public override string? CustomCastSfx => "event:/sfx/characters/ironclad/ironclad_cast";
+    public override string? CustomDeathSfx => "event:/sfx/characters/ironclad/ironclad_die";
 
     public override List<(string, string)>? Localization => new CharacterLoc(
         Title: "The Construct",
