@@ -40,7 +40,19 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<AttackMode>(),
-        ModelDb.Card<DefenseMode>()
+        ModelDb.Card<DefenseMode>(),
+        ModelDb.Card<Accumulate>(),
+        ModelDb.Card<Cards.Anticipate>(),
+        ModelDb.Card<Backfire>(),
+        ModelDb.Card<FocusedBeam>(),
+        ModelDb.Card<Reinforce>(),
+        ModelDb.Card<ScrapCannon>(),
+        ModelDb.Card<ShiftStrike>(),
+        ModelDb.Card<SuppressiveFire>(),
+        ModelDb.Card<SweepLaser>(),
+        ModelDb.Card<SyphonStrike>(),
+        ModelDb.Card<VentSteam>(),
+        ModelDb.Card<Versatility>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
