@@ -24,7 +24,7 @@ public class Defend_Construct : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Defend",
-        "#*Cycle* if your *Dexterity* is negative. Gain {Block} *Block*.");
+        "#*Cycle* if your *Dexterity* is negative.[br]Gain {Block} *Block*.");
 
     public override bool CanCycle()
     {
