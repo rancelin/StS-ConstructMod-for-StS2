@@ -24,7 +24,7 @@ public class Strike_Construct : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Strike",
-        "#Deal {Damage} damage. *Cycle:* If your *Strength* is negative, *Cycle* when drawn.");
+        "#*Cycle* if your *Strength* is negative. Deal {Damage} damage.");
 
     public override bool CanCycle()
     {
