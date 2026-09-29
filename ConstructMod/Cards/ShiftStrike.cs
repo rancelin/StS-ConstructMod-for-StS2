@@ -32,7 +32,7 @@ public class ShiftStrike : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Shift Strike",
-        "#*Cycle* if your *Dexterity* is negative.[br]Deal {Damage} damage.[br]Gain {Str} *Strength*. Lose {Dex} *Dexterity*.");
+        "#*Cycle* if your *Dexterity* is negative.\nDeal {Damage} damage.\nGain {Str} *Strength*. Lose {Dex} *Dexterity*.");
 
     public override bool CanCycle()
     {

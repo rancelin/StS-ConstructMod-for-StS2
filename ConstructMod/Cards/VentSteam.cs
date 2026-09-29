@@ -32,7 +32,7 @@ public class VentSteam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Vent Steam",
-        "#Exhaust 1 card.[br]Apply {Weak} *Weak* and {Vuln} *Vulnerable*.");
+        "#Exhaust 1 card.\nApply {Weak} *Weak* and {Vuln} *Vulnerable*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
