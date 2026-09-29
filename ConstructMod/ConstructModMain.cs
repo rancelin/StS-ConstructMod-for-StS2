@@ -1,4 +1,5 @@
 using BaseLib.Patches.Localization;
+using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 
@@ -13,6 +14,7 @@ public static class ConstructModMain
     public static void Initialize()
     {
         SimpleLoc.EnableSimpleLoc(ModId);
+        new Harmony(ModId).PatchAll(typeof(ConstructModMain).Assembly);
         Logger.Info("Construct Mod initialized.");
     }
 }
