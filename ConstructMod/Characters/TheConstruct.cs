@@ -45,6 +45,22 @@ public class TheConstruct : CustomCharacterModel
     public override float AttackAnimDelay => 0.15f;
     public override float CastAnimDelay => 0.25f;
 
+    public override List<(string, string)>? Localization => new CharacterLoc(
+        Title: "The Construct",
+        TitleObject: "the Construct",
+        Description: "A mechanical being assembled from the Spire's discarded machines. It shifts between modes, cycling cards to maintain perfect operation.",
+        PronounObject: "it",
+        PronounSubject: "it",
+        PronounPossessive: "its",
+        PossessiveAdjective: "its",
+        AromaPrinciple: "Rust and ozone",
+        EndTurnPingAlive: "Systems nominal.",
+        EndTurnPingDead: "Critical failure...",
+        EventDeathPrevention: "NL #rThe Construct's core refuses to halt.",
+        GoldMonologue: "Currency accepted. Adding to stores.",
+        CardsModifierTitle: "Mode Shift",
+        CardsModifierDescription: "The Construct adapts its combat routines on the fly.");
+
     public override List<string> GetArchitectAttackVfx() =>
     [
         "vfx/vfx_attack_blunt",
