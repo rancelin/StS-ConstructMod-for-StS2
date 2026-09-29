@@ -8,6 +8,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RootNamespace>ConstructMod</RootNamespace>
         <LangVersion>preview</LangVersion>
+        <GodotDisabledSourceGenerators>GodotPluginsInitializer</GodotDisabledSourceGenerators>
         <Version>0.1.0</Version>
     </PropertyGroup>
     <PropertyGroup>

@@ -1,5 +1,5 @@
 is_global = true
-build_property.GodotDisabledSourceGenerators = 
+build_property.GodotDisabledSourceGenerators = GodotPluginsInitializer
 build_property.GodotProjectDir = /workspace/github__rancelin__StS-ConstructMod-for-StS2/ConstructMod/
 build_property.GodotProjectDirBase64 = 
 build_property.GodotSourceGenerators = 

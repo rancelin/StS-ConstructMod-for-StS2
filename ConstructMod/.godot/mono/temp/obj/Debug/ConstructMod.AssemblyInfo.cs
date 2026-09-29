@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConstructMod")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+128f8c0379f936a876da9c5923bfdbc6f9ddb30d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+72027a29cdcee07d13878bb98dc9a31520279676")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConstructMod")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConstructMod")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]
