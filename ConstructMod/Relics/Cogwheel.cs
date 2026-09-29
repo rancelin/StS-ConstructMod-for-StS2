@@ -18,7 +18,7 @@ public class Cogwheel : CustomRelicModel
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        new DynamicVar[] { new PowerVar<ArtifactPower>(1m) };
+        new DynamicVar[] { new PowerVar<ArtifactPower>("Artifact", 1m) };
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new IHoverTip[] { HoverTipFactory.FromPower<ArtifactPower>(null) };
