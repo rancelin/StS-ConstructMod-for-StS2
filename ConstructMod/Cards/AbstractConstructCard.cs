@@ -11,8 +11,9 @@ namespace ConstructMod.Cards;
 [Pool(typeof(ConstructCardPool))]
 public abstract class AbstractConstructCard : CustomCardModel
 {
-    protected AbstractConstructCard(int baseCost, CardType type, CardRarity rarity, TargetType target)
-        : base(baseCost, type, rarity, target)
+    protected AbstractConstructCard(int baseCost, CardType type, CardRarity rarity, TargetType target,
+        bool showInCardLibrary = true)
+        : base(baseCost, type, rarity, target, showInCardLibrary)
     {
     }
 }
