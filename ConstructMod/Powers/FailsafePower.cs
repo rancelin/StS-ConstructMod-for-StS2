@@ -20,8 +20,8 @@ public class FailsafePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Failsafe",
-        Description: "The next {Limit} Status cards you draw each turn Cycle. Resets each turn.",
-        SmartDescription: "The next {Limit} Status cards you draw each turn Cycle. Resets each turn.");
+        Description: "The next {Amount} Status cards you draw each turn Cycle. Resets each turn.",
+        SmartDescription: "The next {Amount} Status cards you draw each turn Cycle. Resets each turn.");
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
         Creature? applier, CardModel? cardSource)
