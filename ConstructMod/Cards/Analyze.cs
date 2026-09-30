@@ -14,10 +14,7 @@ namespace ConstructMod.Cards;
 public class Analyze : AbstractConstructCard
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromPower<EnergyNextTurnPower>(null),
-        HoverTipFactory.FromPower<DrawCardsNextTurnPower>(null)
-    ];
+        [EnergyHoverTip];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
