@@ -21,7 +21,7 @@ public class ReactiveShield : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.Static(StaticHoverTip.Block)];
 
-    public ReactiveShield() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public ReactiveShield() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
