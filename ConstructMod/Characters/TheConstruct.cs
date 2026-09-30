@@ -1,7 +1,6 @@
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Helpers;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.PotionPools;
@@ -43,15 +42,8 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<Versatility>(),
-        CreateUpgradedFlameCore()
+        ModelDb.Card<FlameCore>()
     ];
-
-    private static FlameCore CreateUpgradedFlameCore()
-    {
-        var core = (FlameCore)ModelDb.Card<FlameCore>().CreateClone();
-        CardCmd.Upgrade(core);
-        return core;
-    }
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
 
