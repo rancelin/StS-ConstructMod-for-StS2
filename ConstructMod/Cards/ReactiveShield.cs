@@ -26,7 +26,7 @@ public class ReactiveShield : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Reactive Shield",
-        "{IfUpgraded:show:*Innate*.\n|}#Whenever you gain *Block*, deal {ReactiveShieldPower} damage to the lowest-HP enemy.");
+        "#Whenever you gain *Block*, deal {ReactiveShieldPower} damage to the lowest-HP enemy.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -19,7 +19,7 @@ public class ShieldBurst : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Shield Burst",
-        "#Lose all *Block*. Deal damage equal to {Mult} times the Block lost to ALL enemies.");
+        "#Lose all *Block*. Deal {IfUpgraded:show:{Mult} times that much damage|one and a half times that much damage} to ALL enemies.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
