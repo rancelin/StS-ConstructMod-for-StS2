@@ -22,6 +22,7 @@ public class PointDefense : AbstractConstructCard
         {
             foreach (var tip in base.ExtraHoverTips) yield return tip;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }
     }
 
