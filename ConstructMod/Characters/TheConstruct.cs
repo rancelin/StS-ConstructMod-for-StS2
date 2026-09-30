@@ -52,7 +52,19 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Zapper>(),
         ModelDb.Card<GoldenBullet>(),
         ModelDb.Card<ReactiveShield>(),
-        ModelDb.Card<ShieldBurst>()
+        ModelDb.Card<ShieldBurst>(),
+        ModelDb.Card<ClusterMines>(),
+        ModelDb.Card<Missile>(),
+        ModelDb.Card<SaveState>(),
+        ModelDb.Card<Failsafe>(),
+        ModelDb.Card<Overcharge>(),
+        ModelDb.Card<Meltdown>(),
+        ModelDb.Card<PanicFire>(),
+        ModelDb.Card<Antimatter>(),
+        ModelDb.Card<BatteryAcid>(),
+        ModelDb.Card<DarkFlames>(),
+        ModelDb.Card<Implosion>(),
+        ModelDb.Card<Supernova>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
