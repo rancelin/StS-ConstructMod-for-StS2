@@ -30,7 +30,7 @@ public class Analyze : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Analyze",
-        "#Next turn, gain {Energy:energyIcons} and draw {Draw} more cards.");
+        "#Next turn, gain {Energy:energyIcons()} and draw {Draw} more cards.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
