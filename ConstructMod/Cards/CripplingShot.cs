@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -14,6 +15,9 @@ namespace ConstructMod.Cards;
 public class CripplingShot : AbstractConstructCard
 {
     private const string WeakAmount = "99";
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<WeakPower>(null)];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(0m, ValueProp.Move)];

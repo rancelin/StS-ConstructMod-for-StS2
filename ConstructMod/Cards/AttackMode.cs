@@ -11,7 +11,7 @@ using BaseLib.Abstracts;
 
 namespace ConstructMod.Cards;
 
-public class AttackMode : AbstractCycleCard
+public class AttackMode : AbstractConstructCard
 {
     public AttackMode() : base(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
@@ -42,7 +42,6 @@ public class AttackMode : AbstractCycleCard
     public override List<(string, string)>? Localization => new CardLoc("Attack Mode",
         "#Gain {Strength} *Strength*. Lose {Dexterity} *Dexterity*.");
 
-    public override bool CanCycle() => false;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

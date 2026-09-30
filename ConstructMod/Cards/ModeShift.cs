@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using BaseLib.Abstracts;
@@ -16,6 +17,9 @@ namespace ConstructMod.Cards;
 public class ModeShift : AbstractConstructCard
 {
     private const int DrawAmount = 1;
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<StrengthPower>(null),
+            HoverTipFactory.FromPower<DexterityPower>(null)];
 
     public ModeShift() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {

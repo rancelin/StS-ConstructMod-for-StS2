@@ -14,7 +14,7 @@ namespace ConstructMod.Cards;
 public class Anticipate : AbstractConstructCard
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<BlockNextTurnPower>(null)];
+        [HoverTipFactory.FromPower<BlockNextTurnPower>((int)DynamicVars.Block.BaseValue)];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(11m, ValueProp.Move)];
