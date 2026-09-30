@@ -20,7 +20,8 @@ public abstract class AbstractCoreCard : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization =>
-        new CardLoc(CoreName, $"#*Cycle*. When cycled: {CoreCycleText}");
+        new CardLoc(CoreName,
+            $"#*Cycle*. When cycled: {CoreCycleText}\n{{IfUpgraded:show:Put a {CoreName} into your discard pile.|}}");
 
     protected abstract string CoreName { get; }
     protected abstract string CoreCycleText { get; }
