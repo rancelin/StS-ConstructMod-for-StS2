@@ -17,7 +17,6 @@ public class HyperBeam : AbstractConstructCard
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
-        HoverTipFactory.FromKeyword(CardKeyword.Ethereal),
         HoverTipFactory.FromCard<Dazed>()
     ];
 
@@ -38,10 +37,8 @@ public class HyperBeam : AbstractConstructCard
     {
         get
         {
-            foreach (var k in base.CanonicalKeywords)
-            {
-                if (k != CardKeyword.Ethereal || !IsUpgraded) yield return k;
-            }
+            foreach (var k in base.CanonicalKeywords) yield return k;
+            if (!IsUpgraded) yield return CardKeyword.Ethereal;
         }
     }
 
