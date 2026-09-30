@@ -42,15 +42,17 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<Versatility>(),
-        ModelDb.Card<HeatedStrike>(),
-        ModelDb.Card<HeatedDefend>(),
-        ModelDb.Card<CriticalHit>(),
-        ModelDb.Card<QuickAttack>(),
-        ModelDb.Card<FierceBash>(),
-        ModelDb.Card<Reserves>(),
-        ModelDb.Card<HeavyBolt>(),
-        ModelDb.Card<MetalShell>(),
-        ModelDb.Card<HastyRepair>()
+        ModelDb.Card<OneWayMirror>(),
+        ModelDb.Card<UnbalancingBlast>(),
+        ModelDb.Card<Tumble>(),
+        ModelDb.Card<Isolate>(),
+        ModelDb.Card<Bunker>(),
+        ModelDb.Card<SpinDrive>(),
+        ModelDb.Card<PowerUp>(),
+        ModelDb.Card<Zapper>(),
+        ModelDb.Card<GoldenBullet>(),
+        ModelDb.Card<ReactiveShield>(),
+        ModelDb.Card<ShieldBurst>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
