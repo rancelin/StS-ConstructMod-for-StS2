@@ -21,7 +21,7 @@ public class CreateCores : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Create Cores",
-        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.");
+        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.\n{IfUpgraded:show:The Cores are Upgraded.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
