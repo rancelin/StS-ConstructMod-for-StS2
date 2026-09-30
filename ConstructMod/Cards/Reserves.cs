@@ -23,6 +23,7 @@ public class Reserves : AbstractCycleCard
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
+        new EnergyVar(3),
         new DynamicVar("Cards", 3m),
         new DynamicVar("HpThreshold", 10m)
     ];
@@ -32,7 +33,7 @@ public class Reserves : AbstractCycleCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Reserves",
-        "#*Cycle* if your HP is above {HpThreshold}.\nGain [E] [E] [E]. Draw {Cards} cards. *Exhaust*.");
+        "#*Cycle* if your HP is above {HpThreshold}.\nGain {Energy:energyIcons}. Draw {Cards} cards.");
 
     public override bool CanCycle()
     {
@@ -42,7 +43,7 @@ public class Reserves : AbstractCycleCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PlayerCmd.GainEnergy(3m, Owner);
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
         await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext,
             (int)DynamicVars["Cards"].BaseValue, Owner, this);
     }
