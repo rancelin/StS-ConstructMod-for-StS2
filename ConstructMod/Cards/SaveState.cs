@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -14,12 +15,15 @@ public class SaveState : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("RetainTurns", 1m)];
 
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromKeyword(CardKeyword.Retain)];
+
     public SaveState() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Save State",
-        "#*Retain* your hand this turn.{IfUpgraded:show:\\nDraw 1 card.|}\nExhaust.");
+        "#*Retain* your hand this turn.{IfUpgraded:show:\\nDraw 1 card.|}");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {

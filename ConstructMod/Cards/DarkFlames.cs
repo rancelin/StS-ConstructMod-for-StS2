@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -15,7 +16,12 @@ public class DarkFlames : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(3m, ValueProp.Move),
-        new DynamicVar("Burns", 0m)
+        new EnergyVar(1)
+    ];
+
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        EnergyHoverTip
     ];
 
     public DarkFlames() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
@@ -23,7 +29,7 @@ public class DarkFlames : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Dark Flames",
-        "#Deal !Damage! damage and gain 1 energy for each *Burn* in your exhaust pile.\nExhaust.");
+        "#Deal !Damage! damage and gain {Energy:energyIcons()} for each *Burn* in your exhaust pile.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -53,5 +59,6 @@ public class DarkFlames : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

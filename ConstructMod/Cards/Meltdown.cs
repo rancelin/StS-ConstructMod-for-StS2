@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Commands;
 using BaseLib.Abstracts;
 using ConstructMod.Powers;
@@ -12,6 +14,9 @@ public class Meltdown : AbstractConstructCard
 {
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<MeltdownPower>(12m)];
+
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromCard<Burn>()];
 
     public Meltdown() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {

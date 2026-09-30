@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -20,6 +21,9 @@ public class ClusterMines : AbstractConstructCard
         new DamageVar(4m, ValueProp.Move),
         new DynamicVar("Hits", 3m)
     ];
+
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.Static(StaticHoverTip.Block)];
 
     public ClusterMines() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {

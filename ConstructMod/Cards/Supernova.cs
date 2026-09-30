@@ -15,7 +15,7 @@ public class Supernova : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Supernova",
-        "#Exhaust ALL *Status* cards and replace them with random cards.\nThose cards cost 0 this combat.\nExhaust.");
+        "#Exhaust ALL *Status* cards and replace them with random{IfUpgraded:show: *upgraded*|} cards.\nThose cards cost 0 this combat.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -49,6 +49,5 @@ public class Supernova : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
     }
 }
