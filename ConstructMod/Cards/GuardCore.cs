@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -13,6 +14,7 @@ namespace ConstructMod.Cards;
 public class GuardCore : AbstractCoreCard
 {
     protected override string CoreName => "Guard Core";
+    protected override CardModel CanonicalCore => ModelDb.Card<GuardCore>();
     protected override string CoreCycleText => "Gain !Block! Block.";
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

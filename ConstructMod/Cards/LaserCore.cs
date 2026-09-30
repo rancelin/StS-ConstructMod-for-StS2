@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -11,6 +12,7 @@ namespace ConstructMod.Cards;
 public class LaserCore : AbstractCoreCard
 {
     protected override string CoreName => "Laser Core";
+    protected override CardModel CanonicalCore => ModelDb.Card<LaserCore>();
     protected override string CoreCycleText => "ALL enemies take !Damage! damage.";
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

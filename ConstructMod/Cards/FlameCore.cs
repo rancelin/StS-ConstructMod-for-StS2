@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -12,6 +13,7 @@ namespace ConstructMod.Cards;
 public class FlameCore : AbstractCoreCard
 {
     protected override string CoreName => "Flame Core";
+    protected override CardModel CanonicalCore => ModelDb.Card<FlameCore>();
     protected override string CoreCycleText => "A random enemy takes !Damage! damage.";
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

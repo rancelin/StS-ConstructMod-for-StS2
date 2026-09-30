@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -13,6 +14,7 @@ namespace ConstructMod.Cards;
 public class ScopeCore : AbstractCoreCard
 {
     protected override string CoreName => "Scope Core";
+    protected override CardModel CanonicalCore => ModelDb.Card<ScopeCore>();
     protected override string CoreCycleText => "A random enemy gains {Vuln} Vulnerable.";
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

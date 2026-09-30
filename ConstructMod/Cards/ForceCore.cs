@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -14,6 +15,7 @@ namespace ConstructMod.Cards;
 public class ForceCore : AbstractCoreCard
 {
     protected override string CoreName => "Force Core";
+    protected override CardModel CanonicalCore => ModelDb.Card<ForceCore>();
     protected override string CoreCycleText => "Gain {Str} Strength until the end of this turn.";
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

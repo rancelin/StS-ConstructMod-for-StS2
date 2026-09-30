@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -30,6 +31,7 @@ public abstract class AbstractCoreCard : AbstractCycleCard
     /// The on-cycle effect. Runs before the replacement draw.
     /// </summary>
     protected abstract Task OnCoreCycle(PlayerChoiceContext choiceContext);
+    protected abstract CardModel CanonicalCore { get; }
 
     protected override async Task OnCycle(PlayerChoiceContext choiceContext)
     {
@@ -45,8 +47,8 @@ public abstract class AbstractCoreCard : AbstractCycleCard
 
     private async Task CloneCoreIfNeeded()
     {
-        if (!IsUpgraded) return;
-        var clone = CreateClone();
-        await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Discard, Owner, CardPilePosition.Top);
+        if (!IsUpgraded || CombatState is not { } combat) return;
+        var copy = combat.CreateCard(CanonicalCore, Owner);
+        await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, Owner, CardPilePosition.Top);
     }
 }
