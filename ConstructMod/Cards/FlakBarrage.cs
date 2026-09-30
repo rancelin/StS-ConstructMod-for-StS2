@@ -17,10 +17,20 @@ public class FlakBarrage : AbstractCycleCard
     IsUpgraded
         ?
         [
-            HoverTipFactory.FromKeyword(ConstructKeywords.Cycle),
             HoverTipFactory.FromPower<StrengthPower>(null)
         ]
         : Array.Empty<IHoverTip>();
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords
+    {
+        get
+        {
+            foreach (var k in base.CanonicalKeywords)
+            {
+                if (k != ConstructKeywords.Cycle || IsUpgraded) yield return k;
+            }
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

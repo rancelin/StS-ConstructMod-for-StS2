@@ -16,8 +16,7 @@ public class Electrocute : AbstractConstructCard
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
-        HoverTipFactory.FromPower<StrengthPower>(null),
-        HoverTipFactory.FromPower<VulnerablePower>(null)
+        HoverTipFactory.FromPower<StrengthPower>(null)
     ];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
