@@ -52,7 +52,16 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<SweepLaser>(),
         ModelDb.Card<SyphonStrike>(),
         ModelDb.Card<VentSteam>(),
-        ModelDb.Card<Versatility>()
+        ModelDb.Card<Versatility>(),
+        ModelDb.Card<Forcefield>(),
+        ModelDb.Card<Autoturret>(),
+        ModelDb.Card<PointDefense>(),
+        ModelDb.Card<Enhance>(),
+        ModelDb.Card<ChargeShot>(),
+        ModelDb.Card<Dampening>(),
+        ModelDb.Card<Disrupt>(),
+        ModelDb.Card<Chainstrike>(),
+        ModelDb.Card<CripplingShot>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];

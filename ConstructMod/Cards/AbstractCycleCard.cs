@@ -47,6 +47,7 @@ public abstract class AbstractCycleCard : AbstractConstructCard
         {
             _cycledThisTurn = true;
             await OnCycle(choiceContext);
+            await CycleEvents.NotifyCycle(choiceContext, this);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
         await base.AfterCardDrawnEarly(choiceContext, card, fromHandDraw);
