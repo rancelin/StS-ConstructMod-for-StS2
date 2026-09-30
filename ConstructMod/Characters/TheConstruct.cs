@@ -42,7 +42,15 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<Versatility>(),
-        ModelDb.Card<FlameCore>()
+        ModelDb.Card<HeatedStrike>(),
+        ModelDb.Card<HeatedDefend>(),
+        ModelDb.Card<CriticalHit>(),
+        ModelDb.Card<QuickAttack>(),
+        ModelDb.Card<FierceBash>(),
+        ModelDb.Card<Reserves>(),
+        ModelDb.Card<HeavyBolt>(),
+        ModelDb.Card<MetalShell>(),
+        ModelDb.Card<HastyRepair>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
