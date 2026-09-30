@@ -50,7 +50,7 @@ public class HyperBeam : AbstractConstructCard
         if (cardPlay.Target == null) return;
         if (CombatState is not { } combat) return;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
-            .WithHitFx("vfx/vfx_attack_beam").Execute(choiceContext);
+            .WithHitFx("vfx/vfx_giant_horizontal_slash").Execute(choiceContext);
         for (var i = 0; i < (int)DynamicVars["Dazed"].BaseValue; i++)
         {
             var dazed = combat.CreateCard(ModelDb.Card<Dazed>(), Owner);

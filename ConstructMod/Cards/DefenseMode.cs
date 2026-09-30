@@ -36,7 +36,7 @@ public class DefenseMode : AbstractConstructCard
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
         new PowerVar<DexterityPower>("Dexterity", 2m),
-        new PowerVar<StrengthPower>("Strength", -2m)
+        new PowerVar<StrengthPower>("Strength", 2m)
     };
 
     public override List<(string, string)>? Localization => new CardLoc("Defense Mode",
@@ -47,12 +47,12 @@ public class DefenseMode : AbstractConstructCard
     {
         var creature = Owner.Creature;
         await PowerCmd.Apply<DexterityPower>(choiceContext, creature, DynamicVars["Dexterity"].BaseValue, creature, this);
-        await PowerCmd.Apply<StrengthPower>(choiceContext, creature, DynamicVars["Strength"].BaseValue, creature, this);
+        await PowerCmd.Apply<StrengthPower>(choiceContext, creature, -DynamicVars["Strength"].BaseValue, creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars["Dexterity"].UpgradeValueBy(1m);
-        DynamicVars["Strength"].UpgradeValueBy(-1m);
+        DynamicVars["Strength"].UpgradeValueBy(1m);
     }
 }

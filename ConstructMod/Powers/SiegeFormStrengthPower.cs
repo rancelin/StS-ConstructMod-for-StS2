@@ -7,5 +7,5 @@ namespace ConstructMod.Powers;
 
 public class SiegeFormStrengthPower : TemporaryStrengthPower
 {
-    public override AbstractModel OriginModel => ModelDb.Power<SiegeFormPower>();
+    public override AbstractModel OriginModel => ModelDb.Card<Cards.SiegeForm>();
 }

@@ -36,10 +36,11 @@ public class ShieldGenerator : AbstractConstructCard
         await PowerCmd.Apply<BlurPower>(choiceContext, Owner.Creature,
             DynamicVars["Blur"].BaseValue, Owner.Creature, this);
         await PowerCmd.Apply<VulnerablePower>(choiceContext, Owner.Creature,
-            IsUpgraded ? 1m : DynamicVars["Vulnerable"].BaseValue, Owner.Creature, this);
+            DynamicVars["Vulnerable"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
+        DynamicVars["Vulnerable"].UpgradeValueBy(-1m);
     }
 }

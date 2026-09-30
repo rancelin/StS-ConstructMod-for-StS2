@@ -52,7 +52,7 @@ public class DarkFlames : AbstractConstructCard
         for (var i = 0; i < burns; i++)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_fire").Execute(choiceContext);
+                .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_molten_fist").Execute(choiceContext);
             await PlayerCmd.GainEnergy(1m, Owner);
         }
     }

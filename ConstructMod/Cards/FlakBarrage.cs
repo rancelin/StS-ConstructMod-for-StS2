@@ -14,10 +14,13 @@ namespace ConstructMod.Cards;
 public class FlakBarrage : AbstractCycleCard
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(ConstructKeywords.Cycle),
-        HoverTipFactory.FromPower<StrengthPower>(null)
-    ];
+    IsUpgraded
+        ?
+        [
+            HoverTipFactory.FromKeyword(ConstructKeywords.Cycle),
+            HoverTipFactory.FromPower<StrengthPower>(null)
+        ]
+        : Array.Empty<IHoverTip>();
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

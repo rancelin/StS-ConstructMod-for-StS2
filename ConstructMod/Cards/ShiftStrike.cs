@@ -24,7 +24,7 @@ public class ShiftStrike : AbstractCycleCard
     [
         new DamageVar(6m, ValueProp.Move),
         new PowerVar<StrengthPower>("Str", 1m),
-        new PowerVar<DexterityPower>("Dex", -1m)
+        new PowerVar<DexterityPower>("Dex", 1m)
     ];
 
     public ShiftStrike() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
@@ -52,13 +52,13 @@ public class ShiftStrike : AbstractCycleCard
         await PowerCmd.Apply<StrengthPower>(choiceContext, Owner.Creature,
             DynamicVars["Str"].BaseValue, Owner.Creature, this);
         await PowerCmd.Apply<DexterityPower>(choiceContext, Owner.Creature,
-            DynamicVars["Dex"].BaseValue, Owner.Creature, this);
+            -DynamicVars["Dex"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(1m);
         DynamicVars["Str"].UpgradeValueBy(1m);
-        DynamicVars["Dex"].UpgradeValueBy(-1m);
+        DynamicVars["Dex"].UpgradeValueBy(1m);
     }
 }
