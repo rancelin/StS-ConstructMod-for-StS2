@@ -35,6 +35,10 @@ public class UnbalancingBlast : AbstractConstructCard
         foreach (var c in oldDiscard) drawPile.AddInternal(c);
         foreach (var c in oldDraw) discardPile.AddInternal(c);
         drawPile.RandomizeOrderInternal(Owner, Owner.RunState.Rng.Shuffle, combat);
+        drawPile.InvokeCardAddFinished();
+        drawPile.InvokeCardRemoveFinished();
+        discardPile.InvokeCardAddFinished();
+        discardPile.InvokeCardRemoveFinished();
     }
 
     protected override void OnUpgrade()
