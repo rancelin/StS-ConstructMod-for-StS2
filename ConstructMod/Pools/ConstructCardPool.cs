@@ -14,7 +14,8 @@ public class ConstructCardPool : CustomCardPoolModel
     public override Color EnergyOutlineColor => new Color("5C5440");
     public override bool IsColorless => false;
 
-    // Placeholder energy icons: reuse the red (Ironclad) atlas sprites until custom art ships.
+    // Placeholder energy icons: reuse the red (Ironclad) art until custom art ships.
+    // Big: card-cost atlas sprite. Text: small sprite-font icon (vanilla text icon path format).
     public override string? BigEnergyIconPath => ImageHelper.GetImagePath("atlases/ui_atlas.sprites/card/energy_ironclad.tres");
-    public override string? TextEnergyIconPath => ImageHelper.GetImagePath("atlases/ui_atlas.sprites/card/energy_ironclad.tres");
+    public override string? TextEnergyIconPath => ImageHelper.GetImagePath("packed/sprite_fonts/ironclad_energy_icon.png");
 }
