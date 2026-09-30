@@ -28,14 +28,15 @@ public class CreateCores : AbstractConstructCard
         int count = (int)DynamicVars["Cores"].BaseValue;
         for (int i = 0; i < count; i++)
         {
-            CardModel core = Owner.RunState.Rng.CombatCardSelection.NextInt(0, 5) switch
+            CardModel canonical = Owner.RunState.Rng.CombatCardSelection.NextInt(0, 5) switch
             {
-                0 => ModelDb.Card<FlameCore>().CreateClone(),
-                1 => ModelDb.Card<LaserCore>().CreateClone(),
-                2 => ModelDb.Card<ScopeCore>().CreateClone(),
-                3 => ModelDb.Card<ForceCore>().CreateClone(),
-                _ => ModelDb.Card<GuardCore>().CreateClone()
+                0 => ModelDb.Card<FlameCore>(),
+                1 => ModelDb.Card<LaserCore>(),
+                2 => ModelDb.Card<ScopeCore>(),
+                3 => ModelDb.Card<ForceCore>(),
+                _ => ModelDb.Card<GuardCore>()
             };
+            CardModel core = CombatState.CreateCard(canonical, Owner);
             if (IsUpgraded) CardCmd.Upgrade(core);
             await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
         }
