@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using BaseLib.Abstracts;
@@ -39,5 +41,15 @@ public class FailsafePower : CustomPowerModel
         if (_remaining <= 0) return false;
         _remaining--;
         return true;
+    }
+
+    public override async Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
+    {
+        if (card.Owner.Creature != Owner) return;
+        if (card.Type != CardType.Status) return;
+        if (!TryConsume()) return;
+        Flash();
+        await CycleEvents.NotifyCycle(choiceContext, card);
+        await CardCmd.DiscardAndDraw(choiceContext, [card], 1);
     }
 }
