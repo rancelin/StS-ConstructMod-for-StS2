@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -11,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class ChargeShot : AbstractConstructCard
 {
+    private decimal _chargeAccumulated;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5m, ValueProp.Move),
@@ -26,14 +30,19 @@ public class ChargeShot : AbstractConstructCard
         }
     }
 
-    public override bool HasTurnEndInHandEffect => true;
-
     public ChargeShot() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Charge Shot",
-        "#Deal {Damage} damage, plus {Charge} for each turn this was Retained.");
+        "#Deal !Damage! damage, plus {Charge} for each turn this was Retained.");
+
+    private decimal TrueBaseDamage()
+    {
+        decimal dmg = 5m;
+        if (IsUpgraded) dmg += 2m;
+        return dmg;
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -41,13 +50,29 @@ public class ChargeShot : AbstractConstructCard
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(choiceContext);
+        ResetCharge();
     }
 
-    protected override Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
+    public override Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        DynamicVars.Damage.BaseValue += DynamicVars["Charge"].BaseValue;
-
+        if (side != CombatSide.Player) return Task.CompletedTask;
+        if (PileType.Hand.GetPile(Owner).Cards.Contains(this))
+        {
+            _chargeAccumulated += DynamicVars["Charge"].BaseValue;
+            DynamicVars.Damage.BaseValue = TrueBaseDamage() + _chargeAccumulated;
+        }
+        else
+        {
+            ResetCharge();
+        }
         return Task.CompletedTask;
+    }
+
+    private void ResetCharge()
+    {
+        _chargeAccumulated = 0m;
+        DynamicVars.Damage.BaseValue = TrueBaseDamage();
     }
 
     protected override void OnUpgrade()

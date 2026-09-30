@@ -21,7 +21,7 @@ public class Forcefield : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Forcefield",
-        "#Gain {Block} *Block*.");
+        "#Gain !Block! *Block*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

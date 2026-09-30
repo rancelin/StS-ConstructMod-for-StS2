@@ -22,7 +22,7 @@ public class Backfire : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Backfire",
-        "#Take {HpLoss} damage.\nDeal {Damage} damage.");
+        "#Take {HpLoss} damage.\nDeal !Damage! damage.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -28,7 +28,7 @@ public class Disrupt : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Disrupt",
-        "#Gain {Block} *Block*.\nEnemy loses {StrLoss} *Strength* for the rest of this turn.");
+        "#Gain !Block! *Block*.\nEnemy loses {StrLoss} *Strength* for the rest of this turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

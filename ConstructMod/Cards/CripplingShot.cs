@@ -32,7 +32,7 @@ public class CripplingShot : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Crippling Shot",
-        "#Deal {Damage} damage.\nIf this dealt unblocked damage, apply 99 *Weak*.");
+        "#Deal !Damage! damage.\nIf this dealt unblocked damage, apply 99 *Weak*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

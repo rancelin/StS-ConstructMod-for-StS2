@@ -22,10 +22,10 @@ public class NoCyclePower : CustomPowerModel
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)
     {
-        if (!participants.Contains(Owner)) return;
+        if (side != CombatSide.Player || !participants.Contains(Owner)) return;
         if (Amount > 1)
         {
-            await PowerCmd.Decrement(this);
+            await PowerCmd.TickDownDuration(this);
             return;
         }
         await PowerCmd.Remove(this);

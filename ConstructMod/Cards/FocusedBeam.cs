@@ -19,7 +19,7 @@ public class FocusedBeam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Focused Beam",
-        "#Deal {Damage} damage.\nPut this on top of your draw pile.");
+        "#Deal !Damage! damage.\nPut this on top of your draw pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

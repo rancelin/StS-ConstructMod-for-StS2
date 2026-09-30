@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Cards;using MegaCrit.Sts2.Core.Entities.Powers;using MegaCrit.Sts2.Core.Entities.Players;using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Cards;using MegaCrit.Sts2.Core.Entities.Powers;using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Rooms;using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -54,9 +55,15 @@ public class PointDefensePower : CustomPowerModel
         return Task.CompletedTask;
     }
 
+    public override Task AfterCombatEnd(CombatRoom room)
+    {
+        CycleEvents.CardCycled -= OnCardCycled;
+        return Task.CompletedTask;
+    }
     private async Task OnCardCycled(PlayerChoiceContext choiceContext, CardModel card)
     {
         if (CombatManager.Instance.IsOverOrEnding) return;
+        if (Owner.CombatState == null) return;
         if (Amount <= 0) return;
         SetAmount(Amount - 1);
         Flash();

@@ -22,7 +22,7 @@ public class Reinforce : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Reinforce",
-        "#Gain {Block} *Block* {Repeat} times.");
+        "#Gain !Block! *Block* {Repeat} times.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

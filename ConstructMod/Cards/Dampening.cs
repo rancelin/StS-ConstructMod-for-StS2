@@ -23,7 +23,7 @@ public class Dampening : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Dampening",
-        "#Your cards cannot Cycle until the end of your next turn.\nGain {Block} *Block*.\nDraw {Draw} card(s).");
+        "#Your cards cannot Cycle until the end of your next turn.\nGain !Block! *Block*.\nDraw {Draw} card(s).");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

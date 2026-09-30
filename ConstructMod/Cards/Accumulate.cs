@@ -15,7 +15,6 @@ namespace ConstructMod.Cards;
 
 public class Accumulate : AbstractConstructCard
 {
-    private static readonly LocString CopySelectionPrompt = new("cards", "CONSTRUCTMOD-COPY");
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(13m, ValueProp.Move)];
@@ -25,7 +24,8 @@ public class Accumulate : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Accumulate",
-        "#Deal {Damage} damage.\nMake a copy of a non-Rare card in your draw pile.");
+        "#Deal !Damage! damage.\nMake a copy of a non-Rare card in your draw pile.",
+        ("selectionScreenPrompt", "Choose a card to copy."));
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -40,7 +40,9 @@ public class Accumulate : AbstractConstructCard
         if (candidates.Count == 0) return;
         var selection = candidates.Count == 1
             ? new List<CardModel>(candidates)
-            : [await CardSelectCmd.FromChooseACardScreen(choiceContext, candidates, Owner)];
+            : (await CardSelectCmd.FromCombatPile(choiceContext, drawPile, Owner,
+                new CardSelectorPrefs(new LocString("cards", "CONSTRUCTMOD-ACCUMULATE.selectionScreenPrompt"), 1),
+                c => c.Rarity != CardRarity.Rare)).ToList();
         foreach (var card in selection)
         {
             if (card == null) continue;

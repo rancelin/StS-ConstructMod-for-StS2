@@ -28,7 +28,7 @@ public class ScrapCannon : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Scrap Cannon",
-        "#Deal {Damage} damage.\nExhaust {Exhaust} card.");
+        "#Deal !Damage! damage.\nExhaust {Exhaust} card.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

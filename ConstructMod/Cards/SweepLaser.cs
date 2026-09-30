@@ -19,7 +19,7 @@ public class SweepLaser : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Sweep Laser",
-        "#Deal {Damage} damage, then deal {Damage} damage to ALL enemies.");
+        "#Deal !Damage! damage, then deal !Damage! damage to ALL enemies.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

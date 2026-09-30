@@ -22,7 +22,7 @@ public class Boost : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Boost",
-        "#Deal {Damage} damage.\nGain {Block} *Block*.");
+        "#Deal !Damage! damage.\nGain !Block! *Block*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

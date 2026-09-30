@@ -27,7 +27,7 @@ public class Chainstrike : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Chainstrike",
-        "#Deal {Damage} damage, then play {Cards} random Attack(s) from your draw pile on the same target.");
+        "#Deal !Damage! damage, then play {Cards} random Attack(s) from your draw pile on the same target.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

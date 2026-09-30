@@ -27,7 +27,7 @@ public class SuppressiveFire : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Suppressive Fire",
-        "#Deal {Damage} damage to ALL enemies.\nGain {Blur} *Blur*.");
+        "#Deal !Damage! damage to ALL enemies.\nGain {Blur} *Blur*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

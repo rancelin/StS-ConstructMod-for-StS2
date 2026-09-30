@@ -22,7 +22,7 @@ public class Versatility : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Versatility",
-        "#If the target intends to attack, gain {Block} *Block*. Otherwise, deal {Damage} damage.");
+        "#If the target intends to attack, gain !Block! *Block*. Otherwise, deal !Damage! damage.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

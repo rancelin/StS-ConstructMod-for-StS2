@@ -24,7 +24,7 @@ public class Anticipate : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Anticipate",
-        "#Next turn, gain {Block} *Block*.");
+        "#Next turn, gain !Block! *Block*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

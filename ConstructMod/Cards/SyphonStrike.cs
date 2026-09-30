@@ -24,7 +24,7 @@ public class SyphonStrike : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Syphon Strike",
-        "#Deal {Damage} damage.\nWhenever the enemy takes attack damage this turn, draw 1 card.");
+        "#Deal !Damage! damage.\nWhenever the enemy takes attack damage this turn, draw 1 card.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
