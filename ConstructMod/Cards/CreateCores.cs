@@ -36,7 +36,11 @@ public class CreateCores : AbstractConstructCard
                 3 => ModelDb.Card<ForceCore>(),
                 _ => ModelDb.Card<GuardCore>()
             };
-            CardModel core = CombatState.CreateCard(canonical, Owner);
+            if (CombatState is not { } combat)
+            {
+                break;
+            }
+            CardModel core = combat.CreateCard(canonical, Owner);
             if (IsUpgraded) CardCmd.Upgrade(core);
             await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
         }
