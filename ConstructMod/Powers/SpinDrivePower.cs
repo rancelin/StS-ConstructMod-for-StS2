@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -12,6 +13,7 @@ namespace ConstructMod.Powers;
 public class SpinDrivePower : CustomPowerModel
 {
     private int _limit;
+    private CardModel? _sourceCard;
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -21,15 +23,16 @@ public class SpinDrivePower : CustomPowerModel
         Description: "Whenever you play a card, draw a card. Works {Limit} time(s) per turn.",
         SmartDescription: "Whenever you play a card, draw a card, a limited number of times per turn.");
 
-    public override Task BeforeApplied(MegaCrit.Sts2.Core.Entities.Creatures.Creature target, decimal amount,
-        MegaCrit.Sts2.Core.Entities.Creatures.Creature? applier, CardModel? cardSource)
+    public override Task BeforeApplied(Creature target, decimal amount,
+        Creature? applier, CardModel? cardSource)
     {
+        if (cardSource != null && _sourceCard == null) _sourceCard = cardSource;
         _limit = (int)amount;
         return Task.CompletedTask;
     }
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
-        MegaCrit.Sts2.Core.Entities.Creatures.Creature? applier, CardModel? cardSource)
+        Creature? applier, CardModel? cardSource)
     {
         if (power == this && amount > 0) _limit = Amount;
         return Task.CompletedTask;
@@ -44,6 +47,7 @@ public class SpinDrivePower : CustomPowerModel
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Player != Owner.Player) return;
+        if (ReferenceEquals(cardPlay.Card, _sourceCard)) return;
         if (Amount <= 0) return;
         SetAmount(Amount - 1);
         Flash();
