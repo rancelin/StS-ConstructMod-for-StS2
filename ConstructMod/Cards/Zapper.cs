@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Models.Powers;
 using BaseLib.Abstracts;
 using ConstructMod.Powers;
 
@@ -16,7 +17,10 @@ public class Zapper : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<ZapperPower>(3m)];
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<ZapperPower>(DynamicVars["ZapperPower"].IntValue)];
+    [
+        HoverTipFactory.FromPower<StrengthPower>(null),
+        HoverTipFactory.FromPower<DexterityPower>(null)
+    ];
 
     public Zapper() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {

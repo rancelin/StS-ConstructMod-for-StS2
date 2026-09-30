@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
 
 namespace ConstructMod.Cards;
@@ -23,6 +24,9 @@ public class Tumble : AbstractConstructCard
     public Tumble() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
     }
+
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromKeyword(ConstructKeywords.Cycle)];
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Tumble",
         "#Draw {Cards} cards.\nDeal !Damage! damage to a random enemy for each card drawn that *Cycled*.");

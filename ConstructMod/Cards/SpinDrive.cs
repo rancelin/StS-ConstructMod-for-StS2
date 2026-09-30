@@ -16,9 +16,6 @@ public class SpinDrive : AbstractConstructCard
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<SpinDrivePower>("Draws", 3m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<SpinDrivePower>(DynamicVars["Draws"].IntValue)];
-
     public SpinDrive() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }

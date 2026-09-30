@@ -21,7 +21,7 @@ public class Bunker : AbstractConstructCard
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
-        HoverTipFactory.FromPower<BunkerPower>(DynamicVars["BunkerPower"].IntValue),
+        HoverTipFactory.Static(StaticHoverTip.Block),
         HoverTipFactory.FromKeyword(CardKeyword.Retain)
     ];
 

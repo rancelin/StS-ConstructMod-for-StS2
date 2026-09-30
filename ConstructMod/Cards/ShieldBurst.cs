@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
 
 namespace ConstructMod.Cards;
@@ -17,6 +18,9 @@ public class ShieldBurst : AbstractConstructCard
     public ShieldBurst() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
     {
     }
+
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.Static(StaticHoverTip.Block)];
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Shield Burst",
         "#Lose all *Block*. Deal {IfUpgraded:show:{Mult} times that much damage|one and a half times that much damage} to ALL enemies.");
