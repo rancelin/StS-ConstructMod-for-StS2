@@ -58,6 +58,6 @@ public class PowerUp : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Boost"].UpgradeValueBy(1m);
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

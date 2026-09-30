@@ -18,8 +18,8 @@ public class ReactiveShieldPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Reactive Shield",
-        Description: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.",
-        SmartDescription: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.");
+        Description: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy. It loses 1 Strength this turn.",
+        SmartDescription: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy. It loses 1 Strength this turn.");
 
     public override async Task AfterBlockGained(Creature creature, decimal amount, ValueProp props, CardModel? cardSource)
     {
@@ -30,5 +30,6 @@ public class ReactiveShieldPower : CustomPowerModel
         Flash();
         var target = enemies.OrderBy(e => e.CurrentHp).First()!;
         await CreatureCmd.Damage(new ThrowingPlayerChoiceContext(), target, Amount, ValueProp.Unpowered, Owner);
+        await PowerCmd.Apply<ReactiveShieldStrengthDownPower>(new ThrowingPlayerChoiceContext(), target, 1m, Owner, null);
     }
 }

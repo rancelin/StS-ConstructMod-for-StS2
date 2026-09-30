@@ -30,16 +30,19 @@ public class Bunker : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Bunker",
-        "#Whenever a card is *Retained*, gain {BunkerPower} *Block*.");
+        "#Whenever a card is *Retained*, gain {BunkerPower} *Block*.{IfUpgraded:show:\nAt the end of your turn, *Retain* a random card.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await PowerCmd.Apply<BunkerPower>(choiceContext, Owner.Creature,
             DynamicVars["BunkerPower"].BaseValue, Owner.Creature, this);
+        if (IsUpgraded)
+        {
+            await PowerCmd.Apply<RetainRandomPower>(choiceContext, Owner.Creature, 1m, Owner.Creature, this);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["BunkerPower"].UpgradeValueBy(1m);
     }
 }

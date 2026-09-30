@@ -18,7 +18,7 @@ public class UnbalancingBlast : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Unbalancing Blast",
-        "#Deal !Damage! damage.\nSwap your draw pile and discard pile.");
+        "{IfUpgraded:show:*Retain*.\n|}#Deal !Damage! damage.\nSwap your draw pile and discard pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -39,6 +39,6 @@ public class UnbalancingBlast : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        AddKeyword(CardKeyword.Retain);
     }
 }
