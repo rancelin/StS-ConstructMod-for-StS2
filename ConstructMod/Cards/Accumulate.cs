@@ -24,7 +24,7 @@ public class Accumulate : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Accumulate",
-        "#Deal !Damage! damage.\nMake a copy of a non-Rare card in your draw pile.",
+        "#Deal !Damage! damage.\nMake a copy of a non-*Rare* card in your draw pile.",
         ("selectionScreenPrompt", "Choose a card to copy."));
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

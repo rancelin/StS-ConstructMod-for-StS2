@@ -27,7 +27,7 @@ public class MassProduction : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Mass Production",
-        "#Choose a non-*Rare* card in your draw pile. *Exhaust* your hand and replace it with copies of that card. Exhaust.");
+        "#Choose a non-*Rare* card in your draw pile. *Exhaust* your hand and replace it with copies of that card.");
 
     protected override bool IsPlayable =>
         PileType.Draw.GetPile(Owner).Cards.Any(c => c.Rarity != CardRarity.Rare);

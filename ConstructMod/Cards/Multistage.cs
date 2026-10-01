@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -33,8 +34,17 @@ public class Multistage : AbstractConstructCard
     {
     }
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return EnergyHoverTip;
+        }
+    }
+
     public override List<(string, string)>? Localization => new CardLoc("Multistage",
-        "#Exhaust an Attack of cost [E] or less. NL At the start of your next {Turns} turns, play a copy of that card. Exhaust.");
+        "#Exhaust an Attack of cost [E] or less.\nAt the start of your next {Turns} turns, play a copy of that card.");
 
     protected override bool IsPlayable =>
         PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Type == CardType.Attack);

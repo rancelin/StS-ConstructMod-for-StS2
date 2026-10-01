@@ -27,7 +27,7 @@ public class MemoryTap : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Memory Tap",
-        "#Add a random Ironclad, Silent, and Defect card to your hand. They cost 0 this turn.{IfUpgraded:show: They are *Upgraded*.|} Exhaust.");
+        "#Add a random card from 3 different classes to your hand. They cost 0 this turn.{IfUpgraded:show: Upgrade them.|}");
 
     private async Task AddOneClassCard(PlayerChoiceContext choiceContext, CardPoolModel pool)
     {
@@ -48,9 +48,19 @@ public class MemoryTap : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await AddOneClassCard(choiceContext, ModelDb.CardPool<IroncladCardPool>());
-        await AddOneClassCard(choiceContext, ModelDb.CardPool<SilentCardPool>());
-        await AddOneClassCard(choiceContext, ModelDb.CardPool<DefectCardPool>());
+        var pools = new List<CardPoolModel>
+        {
+            ModelDb.CardPool<IroncladCardPool>(),
+            ModelDb.CardPool<SilentCardPool>(),
+            ModelDb.CardPool<DefectCardPool>(),
+            ModelDb.CardPool<RegentCardPool>(),
+            ModelDb.CardPool<NecrobinderCardPool>()
+        };
+        var shuffled = pools.OrderBy(_ => Owner.RunState.Rng.CombatCardGeneration.NextFloat()).Take(3);
+        foreach (var pool in shuffled)
+        {
+            await AddOneClassCard(choiceContext, pool);
+        }
     }
 
     protected override void OnUpgrade()

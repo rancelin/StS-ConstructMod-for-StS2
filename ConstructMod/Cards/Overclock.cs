@@ -26,7 +26,7 @@ public class Overclock : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Overclock",
-        "{IfUpgraded:show:Draw 4 cards. NL |}At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.");
+        "#{IfUpgraded:show:Draw 4 cards.\n|}At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {

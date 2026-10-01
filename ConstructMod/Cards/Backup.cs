@@ -41,7 +41,7 @@ public class Backup : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Backup",
-        "#Choose a non-*Rare* card in your hand. Put {Copies} copies of it on top of your draw pile.{IfUpgraded:show: Retain.|} Exhaust.");
+        "#Choose a non-*Rare* card in your hand. Put {Copies} copies of it on top of your draw pile.");
 
     protected override bool IsPlayable =>
         PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Rarity != CardRarity.Rare);

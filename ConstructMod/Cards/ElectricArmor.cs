@@ -44,6 +44,6 @@ public class ElectricArmor : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Turns"].UpgradeValueBy(1m);
+        EnergyCost.UpgradeBy(-1);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -18,6 +19,15 @@ public class GatlingGun : AbstractConstructCard
 
     public GatlingGun() : base(-1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
+    }
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return EnergyHoverTip;
+        }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Gatling Gun",

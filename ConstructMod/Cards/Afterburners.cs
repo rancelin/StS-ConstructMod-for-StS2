@@ -32,7 +32,7 @@ public class Afterburners : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Afterburners",
-        "#This turn, your next non-*Rare* card is played {Plays} additional time(s).\\nShuffle {Burns} *Burn* into your draw pile.{IfUpgraded:show:\\nShuffle 1 fewer *Burn*.|}");
+        "#This turn, your next non-*Rare* card is played {Plays} additional time(s).\nShuffle {Burns} *Burn* into your draw pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -49,5 +49,6 @@ public class Afterburners : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        DynamicVars["Burns"].UpgradeValueBy(-1m);
     }
 }

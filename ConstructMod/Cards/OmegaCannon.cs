@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -22,8 +23,18 @@ public class OmegaCannon : AbstractConstructCard
     {
     }
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return EnergyHoverTip;
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+        }
+    }
+
     public override List<(string, string)>? Localization => new CardLoc("Omega Cannon",
-        "#Deal !Damage! damage. NL Costs 1 less [E] for each Strength you have.{IfUpgraded:show: Absolute Strength counts.|}");
+        "#Deal !Damage! damage.\nCosts 1 less [E] for each *Strength* you have.{IfUpgraded:show: Negative *Strength* also counts.|}");
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
