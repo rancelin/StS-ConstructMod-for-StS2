@@ -23,14 +23,20 @@ public class BatteryCore : AbstractCoreCard
     {
     }
 
-    protected override async Task OnCoreCycle(PlayerChoiceContext choiceContext)
+    protected override Task OnCoreCycle(PlayerChoiceContext choiceContext)
     {
         var hand = PileType.Hand.GetPile(Owner).Cards
             .Where(c => c != this && c.EnergyCost.GetResolved() > 0).ToList();
-        if (hand.Count == 0) return;
+        if (hand.Count == 0) return Task.CompletedTask;
         var card = Owner.RunState.Rng.CombatTargets.NextItem(hand) ?? hand[0];
+        if (card == null) return Task.CompletedTask;
         card.EnergyCost.SetThisTurnOrUntilPlayed(
             card.EnergyCost.GetResolved() - DynamicVars["Discount"].IntValue, reduceOnly: true);
-        NCard.FindOnTable(card, null)?.UpdateVisuals(card.Pile.Type, CardPreviewMode.Normal);
+        var node = NCard.FindOnTable(card, null);
+        if (node != null && card.Pile != null)
+        {
+            node.UpdateVisuals(card.Pile.Type, CardPreviewMode.Normal);
+        }
+        return Task.CompletedTask;
     }
 }

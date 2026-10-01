@@ -38,6 +38,7 @@ public class MemoryTap : AbstractConstructCard
             .ToList();
         if (options.Count == 0) return;
         var template = Owner.RunState.Rng.CombatCardGeneration.NextItem(options);
+        if (template == null) return;
         var card = combat.CreateCard(template, Owner);
         if (IsUpgraded && card.IsUpgradable) CardCmd.Upgrade(card);
         card.SetToFreeThisTurn();

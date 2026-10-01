@@ -28,8 +28,9 @@ public class GatlingGun : AbstractConstructCard
         var x = ResolveEnergyXValue();
         if (x <= 0) return;
         var shots = x * DynamicVars["Shots"].IntValue;
+        if (shots <= 0) return;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(shots).FromCard(this, cardPlay)
-            .TargetingRandomOpponents(CombatState)
+            .TargetingRandomOpponents(CombatState!)
             .WithHitFx("vfx/vfx_molten_fist")
             .Execute(choiceContext);
     }
