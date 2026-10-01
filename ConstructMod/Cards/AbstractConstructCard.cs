@@ -12,8 +12,8 @@ namespace ConstructMod.Cards;
 public abstract class AbstractConstructCard : CustomCardModel
 {
     protected AbstractConstructCard(int baseCost, CardType type, CardRarity rarity, TargetType target,
-        bool showInCardLibrary = true)
-        : base(baseCost, type, rarity, target, showInCardLibrary)
+        bool showInCardLibrary = true, bool autoAdd = true)
+        : base(baseCost, type, rarity, target, showInCardLibrary, autoAdd)
     {
     }
 }

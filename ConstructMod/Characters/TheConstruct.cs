@@ -44,7 +44,6 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Backup>(),
         ModelDb.Card<BatteryCore>(),
         ModelDb.Card<ElectricArmor>(),
-        ModelDb.Card<Flamethrower>(),
         ModelDb.Card<GatlingGun>(),
         ModelDb.Card<MassProduction>(),
         ModelDb.Card<MemoryTap>(),

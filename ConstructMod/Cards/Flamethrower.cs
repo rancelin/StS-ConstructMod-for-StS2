@@ -24,7 +24,8 @@ public class Flamethrower : AbstractCycleCard
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(2m, ValueProp.Move)];
 
-    public Flamethrower() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Flamethrower() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy,
+        showInCardLibrary: false, autoAdd: false)
     {
     }
 

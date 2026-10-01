@@ -17,8 +17,8 @@ public abstract class AbstractCycleCard : AbstractConstructCard
     private bool _cycledThisTurn;
 
     protected AbstractCycleCard(int baseCost, CardType type, CardRarity rarity, TargetType target,
-        bool showInCardLibrary = true)
-        : base(baseCost, type, rarity, target, showInCardLibrary)
+        bool showInCardLibrary = true, bool autoAdd = true)
+        : base(baseCost, type, rarity, target, showInCardLibrary, autoAdd)
     {
     }
 
