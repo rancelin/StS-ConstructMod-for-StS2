@@ -49,6 +49,7 @@ public class FailsafePower : CustomPowerModel
         if (card.Type != CardType.Status) return;
         if (!TryConsume()) return;
         Flash();
+        CycleCount.Increment(card.Owner);
         await CycleEvents.NotifyCycle(choiceContext, card);
         await CardCmd.DiscardAndDraw(choiceContext, [card], 1);
     }

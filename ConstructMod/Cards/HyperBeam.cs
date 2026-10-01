@@ -31,7 +31,7 @@ public class HyperBeam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Hyper Beam",
-        "#Deal !Damage! damage.\nPut {Dazed} *Dazed* on top of your draw pile.{IfUpgraded:show:|\\n*Ethereal*.}");
+        "#Deal !Damage! damage.\nPut {Dazed} *Dazed* on top of your draw pile.");
 
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {

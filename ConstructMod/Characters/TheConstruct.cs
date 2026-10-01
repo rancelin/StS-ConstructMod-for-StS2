@@ -41,18 +41,18 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
-        ModelDb.Card<Electrocute>(),
-        ModelDb.Card<FlakBarrage>(),
-        ModelDb.Card<HammerDown>(),
-        ModelDb.Card<HardReboot>(),
-        ModelDb.Card<Hazardproof>(),
-        ModelDb.Card<HyperBeam>(),
-        ModelDb.Card<Impenetrable>(),
-        ModelDb.Card<ShieldGenerator>(),
-        ModelDb.Card<ShiftGuard>(),
-        ModelDb.Card<ShiftingStance>(),
-        ModelDb.Card<SiegeForm>(),
-        ModelDb.Card<ConstructMod.Cards.Synchronize>()
+        ModelDb.Card<Backup>(),
+        ModelDb.Card<BatteryCore>(),
+        ModelDb.Card<ElectricArmor>(),
+        ModelDb.Card<Flamethrower>(),
+        ModelDb.Card<GatlingGun>(),
+        ModelDb.Card<MassProduction>(),
+        ModelDb.Card<MemoryTap>(),
+        ModelDb.Card<Multistage>(),
+        ModelDb.Card<OmegaCannon>(),
+        ModelDb.Card<ConstructMod.Cards.Overclock>(),
+        ModelDb.Card<Afterburners>(),
+        ModelDb.Card<Rollout>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];

@@ -48,6 +48,7 @@ public abstract class AbstractCycleCard : AbstractConstructCard
         {
             _cycledThisTurn = true;
             await OnCycle(choiceContext);
+            CycleCount.Increment(Owner);
             await CycleEvents.NotifyCycle(choiceContext, this);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
@@ -57,6 +58,7 @@ public abstract class AbstractCycleCard : AbstractConstructCard
     public override Task AfterPlayerTurnStartEarly(PlayerChoiceContext choiceContext, Player player)
     {
         _cycledThisTurn = false;
+        if (Owner != null) CycleCount.ResetTurn(Owner);
         return base.AfterPlayerTurnStartEarly(choiceContext, player);
     }
 
