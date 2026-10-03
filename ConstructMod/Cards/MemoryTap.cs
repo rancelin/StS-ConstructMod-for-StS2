@@ -32,9 +32,12 @@ public class MemoryTap : AbstractConstructCard
     private async Task AddOneClassCard(PlayerChoiceContext choiceContext, CardPoolModel pool)
     {
         if (CombatState is not { } combat) return;
+        // Allowlist normal-playable rarities. This excludes Basic/Token/Status/Curse AND the
+        // special reward rarities Ancient/Event/Quest (e.g. Suppress, an Ancient reward card,
+        // which would otherwise be generatable and breaks balance).
         var options = pool.GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
             .Where(c => c.Type != CardType.Curse && c.Type != CardType.Status)
-            .Where(c => c.Rarity != CardRarity.Basic && c.Rarity != CardRarity.Token)
+            .Where(c => c.Rarity is CardRarity.Common or CardRarity.Uncommon or CardRarity.Rare)
             .ToList();
         if (options.Count == 0) return;
         var template = Owner.RunState.Rng.CombatCardGeneration.NextItem(options);

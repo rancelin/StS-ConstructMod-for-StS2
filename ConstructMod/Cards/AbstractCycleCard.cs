@@ -70,14 +70,27 @@ public abstract class AbstractCycleCard : AbstractConstructCard
 
     public override Task AfterPlayerTurnStartEarly(PlayerChoiceContext choiceContext, Player player)
     {
+        // Reset the per-card cycle flag (once per card per turn). Do NOT reset CycleCount here —
+        // AfterPlayerTurnStartEarly fires during/after the draw, so resetting the counter here
+        // would wipe cycles that happened during the draw (e.g. a Strike cycling on draw before
+        // Rollout is played). CycleCount is reset on AfterSideTurnEnd instead (end of the player's
+        // turn), so it's 0 at the start of the next turn's draw.
         _cycledThisTurn = false;
-        if (Owner != null)
+        return base.AfterPlayerTurnStartEarly(choiceContext, player);
+    }
+
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext,
+        MegaCrit.Sts2.Core.Combat.CombatSide side, System.Collections.Generic.IEnumerable<MegaCrit.Sts2.Core.Entities.Creatures.Creature> participants)
+    {
+        if (side == MegaCrit.Sts2.Core.Combat.CombatSide.Player && Owner != null)
         {
             var before = CycleCount.GetCyclesThisTurn(Owner);
-            CycleCount.ResetTurn(Owner);
-            ConstructModMain.Logger.Info($"AbstractCycleCard.AfterPlayerTurnStartEarly: reset CycleCount ({before} -> 0) for {Owner.Character.Title}.");
-        }
-        return base.AfterPlayerTurnStartEarly(choiceContext, player);
+            if (before > 0)
+            {
+                CycleCount.ResetTurn(Owner);
+                ConstructModMain.Logger.Info($"AbstractCycleCard.AfterSideTurnEnd: reset CycleCount ({before} -> 0) at end of player turn.");
+            }
+        }        await base.AfterSideTurnEnd(choiceContext, side, participants);
     }
 
     protected virtual Task OnCycle(PlayerChoiceContext choiceContext)
