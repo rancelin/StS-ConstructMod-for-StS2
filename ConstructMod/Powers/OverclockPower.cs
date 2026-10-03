@@ -19,18 +19,17 @@ public class OverclockPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Overclock",
-        Description: "#At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.",
-        SmartDescription: "#At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.");
+        Description: "#At the start of your turn, draw {Amount} cards and add a *Burn* to your hand.",
+        SmartDescription: "#At the start of your turn, draw {Amount} cards and add a *Burn* to your hand.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner.Player || CombatState is not { } combat) return;
         Flash();
+        // Draw {Amount} cards (Amount is the draw count from the card's "Cards" var), but add exactly
+        // 1 Burn per turn (matching the original StS1 OverclockPower: draw = statMultiplier, Burn = 1).
         await CardPileCmd.Draw(choiceContext, Amount, Owner.Player);
-        for (var i = 0; i < Amount; i++)
-        {
-            var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner.Player);
-            await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, Owner.Player);
-        }
+        var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner.Player);
+        await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, Owner.Player);
     }
 }

@@ -28,9 +28,12 @@ public class ElectricArmorPower : CustomPowerModel
         if (target != Owner || dealer == null || !props.IsPoweredAttack()) return;
         var dexterity = Owner.GetPower<DexterityPower>()?.Amount ?? 0;
         if (dexterity <= 0) return;
+        ConstructModMain.Logger.Info($"ElectricArmorPower.BeforeDamageReceived: reflecting {dexterity} Dexterity damage back at the attacker.");
         Flash();
+        // Pass Owner as the dealer (matching vanilla ThornsPower) — a null dealer can cause the
+        // damage to be dropped (the game suppresses unattributed damage to avoid thorns loops).
         await CreatureCmd.Damage(choiceContext, dealer, (int)dexterity,
-            ValueProp.Unpowered | ValueProp.SkipHurtAnim, null, null);
+            ValueProp.Unpowered | ValueProp.SkipHurtAnim, Owner);
     }
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext,
