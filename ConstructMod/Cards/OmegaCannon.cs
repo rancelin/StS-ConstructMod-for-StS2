@@ -52,7 +52,9 @@ public class OmegaCannon : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        if (cardPlay.Target == null) return;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_giant_horizontal_slash")
             .Execute(choiceContext);
     }
