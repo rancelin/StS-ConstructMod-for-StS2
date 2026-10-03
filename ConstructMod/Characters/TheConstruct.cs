@@ -66,6 +66,8 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<CreateCores>(),
         ModelDb.Card<HeatedStrike>(),
         ModelDb.Card<HeatedDefend>(),
+        // Powers to verify (Metal Shell: Plated Armor unupgraded, Metallicize upgraded).
+        ModelDb.Card<MetalShell>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
