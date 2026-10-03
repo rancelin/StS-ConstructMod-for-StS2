@@ -41,6 +41,7 @@ public class ElectricArmor : AbstractCycleCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        ConstructModMain.Logger.Info($"ElectricArmor.OnPlay: applying ElectricArmorPower for {DynamicVars["Turns"].IntValue} turn(s). Owner Dexterity = {Owner.Creature.GetPower<DexterityPower>()?.Amount ?? 0}.");
         await PowerCmd.Apply<ElectricArmorPower>(choiceContext, Owner.Creature,
             DynamicVars["Turns"].IntValue, Owner.Creature, this);
     }

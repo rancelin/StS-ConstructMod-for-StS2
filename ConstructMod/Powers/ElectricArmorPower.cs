@@ -25,8 +25,11 @@ public class ElectricArmorPower : CustomPowerModel
     public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
+        // Log at the very top so we can see whether the hook fires at all, and why we might bail early.
+        ConstructModMain.Logger.Info($"ElectricArmorPower.BeforeDamageReceived: target={target == Owner}, dealer={(dealer == null ? "null" : "set")}, props={props}, IsPoweredAttack={props.IsPoweredAttack()}, amount={amount}.");
         if (target != Owner || dealer == null || !props.IsPoweredAttack()) return;
         var dexterity = Owner.GetPower<DexterityPower>()?.Amount ?? 0;
+        ConstructModMain.Logger.Info($"ElectricArmorPower.BeforeDamageReceived: Owner Dexterity = {dexterity}.");
         if (dexterity <= 0) return;
         ConstructModMain.Logger.Info($"ElectricArmorPower.BeforeDamageReceived: reflecting {dexterity} Dexterity damage back at the attacker.");
         Flash();
