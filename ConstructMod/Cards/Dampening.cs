@@ -31,7 +31,10 @@ public class Dampening : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<NoCyclePower>(choiceContext, Owner.Creature, 1m, Owner.Creature, this);
+        // Amount = 2 so the power survives this turn's end (tick down to 1) and expires at the end
+        // of the NEXT player turn — matching "cannot Cycle until the end of your next turn".
+        // (Amount = 1 would remove at the end of THIS turn, letting cards cycle next turn.)
+        await PowerCmd.Apply<NoCyclePower>(choiceContext, Owner.Creature, 2m, Owner.Creature, this);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
         await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext,
             DynamicVars["Draw"].BaseValue, Owner, this);
