@@ -38,7 +38,7 @@ public class MultistagePower : CustomPowerModel
 
     public string HeldCardName => _heldCard?.Title ?? "a card";
 
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    public override async Task AfterAutoPrePlayPhaseEntered(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner.Player || _heldCard == null) return;
         if (CombatState is not { } combat) return;
