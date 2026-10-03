@@ -29,6 +29,7 @@ public class TheConstruct : CustomCharacterModel
 
     public override IEnumerable<CardModel> StartingDeck =>
     [
+        // Default starter kit (matches the original StS1 Construct starting deck).
         ModelDb.Card<Strike_Construct>(),
         ModelDb.Card<Strike_Construct>(),
         ModelDb.Card<Strike_Construct>(),
@@ -41,6 +42,9 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
+        ModelDb.Card<ModeShift>(),
+        // One copy of each reviewed card currently in the pool, for verification testing.
+        // (Flamethrower is intentionally excluded — it's disabled pending a multiplayer redesign.)
         ModelDb.Card<Backup>(),
         ModelDb.Card<BatteryCore>(),
         ModelDb.Card<ElectricArmor>(),
@@ -51,7 +55,17 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<OmegaCannon>(),
         ModelDb.Card<ConstructMod.Cards.Overclock>(),
         ModelDb.Card<Afterburners>(),
-        ModelDb.Card<Rollout>()
+        ModelDb.Card<Rollout>(),
+        // Cycle-interaction cards (exercise the Cycle hook / CycleCount).
+        ModelDb.Card<Autoturret>(),
+        ModelDb.Card<PointDefense>(),
+        ModelDb.Card<Failsafe>(),
+        ModelDb.Card<Dampening>(),
+        ModelDb.Card<Tumble>(),
+        // A couple of basic-cycle cards to exercise Cores and conditional cycle.
+        ModelDb.Card<CreateCores>(),
+        ModelDb.Card<HeatedStrike>(),
+        ModelDb.Card<HeatedDefend>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
