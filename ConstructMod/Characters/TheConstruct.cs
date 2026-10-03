@@ -71,7 +71,7 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<MoltenSmash>(),
         ModelDb.Card<OilSpill>(),
         ModelDb.Card<FlashFreeze>(),
-        ModelDb.Card<Coolant>(),
+        ModelDb.Card<ConstructMod.Cards.Coolant>(),
         // Reviewed cards kept for ongoing verification.
         ModelDb.Card<Backup>(),
         ModelDb.Card<GatlingGun>(),
