@@ -55,12 +55,23 @@ public class TheConstruct : CustomCharacterModel
         // Cores (0-cost Cycle cards with an on-cycle bonus; clone to discard when upgraded).
         ModelDb.Card<FlameCore>(),
         ModelDb.Card<ScopeCore>(),
+        ModelDb.Card<NuclearCore>(),
         ModelDb.Card<CreateCores>(),
         // Cycle-interaction cards (react to cycles via IAfterCardCycled).
         ModelDb.Card<Autoturret>(),
         ModelDb.Card<PointDefense>(),
         ModelDb.Card<Dampening>(),
         ModelDb.Card<Tumble>(),
+        // Heat/Overheat cards (overheat threshold → Burn after N cycles; FlashFreeze suppresses,
+        // Coolant raises thresholds, Agitation triggers on overheat).
+        ModelDb.Card<Agitation>(),
+        ModelDb.Card<PhosphorStorm>(),
+        ModelDb.Card<BlazingSpeed>(),
+        ModelDb.Card<FlammableFog>(),
+        ModelDb.Card<MoltenSmash>(),
+        ModelDb.Card<OilSpill>(),
+        ModelDb.Card<FlashFreeze>(),
+        ModelDb.Card<Coolant>(),
         // Reviewed cards kept for ongoing verification.
         ModelDb.Card<Backup>(),
         ModelDb.Card<GatlingGun>(),
