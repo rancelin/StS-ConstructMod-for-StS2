@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
+using ConstructMod.Hooks;
 using ConstructMod.Powers;
 
 namespace ConstructMod.Cards;
@@ -61,7 +62,7 @@ public abstract class AbstractCycleCard : AbstractConstructCard
             _cycledThisTurn = true;
             await OnCycle(choiceContext);
             CycleCount.Increment(Owner);
-            await CycleEvents.NotifyCycle(choiceContext, this);
+            await CycleHook.AfterCardCycled(Owner.Creature.CombatState, choiceContext, this);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
         await base.AfterCardDrawnEarly(choiceContext, card, fromHandDraw);

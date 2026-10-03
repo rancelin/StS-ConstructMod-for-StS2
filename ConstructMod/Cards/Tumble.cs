@@ -8,12 +8,14 @@ using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
+using ConstructMod.Hooks;
 
 namespace ConstructMod.Cards;
 
-public class Tumble : AbstractConstructCard
+public class Tumble : AbstractConstructCard, IAfterCardCycled
 {
     private readonly List<CardModel> _cycledCards = [];
+    private bool _listening;
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -35,7 +37,7 @@ public class Tumble : AbstractConstructCard
     {
         if (cardPlay.Target == null) return;
         _cycledCards.Clear();
-        CycleEvents.CardCycled += OnCardCycled;
+        _listening = true;
         try
         {
             await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext,
@@ -43,7 +45,7 @@ public class Tumble : AbstractConstructCard
         }
         finally
         {
-            CycleEvents.CardCycled -= OnCardCycled;
+            _listening = false;
         }
         if (CombatState is not { } combat) return;
         for (int i = 0; i < _cycledCards.Count; i++)
@@ -55,9 +57,10 @@ public class Tumble : AbstractConstructCard
         }
     }
 
-    private Task OnCardCycled(PlayerChoiceContext choiceContext, CardModel card)
+    public Task AfterCardCycled(PlayerChoiceContext ctx, CardModel card)
     {
-        if (card != this) _cycledCards.Add(card);
+        // Only count cycles that happen during this card's own draw (not other cards' cycles).
+        if (_listening && card != this) _cycledCards.Add(card);
         return Task.CompletedTask;
     }
 

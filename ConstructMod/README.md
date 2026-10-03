@@ -9,7 +9,7 @@ Work in progress. The core character, Cycle mechanic, and ~95 cards are ported a
 ### Ported
 - **Character**: `TheConstruct` (BaseLib `CustomCharacterModel`) with card/relic/potion pools, starting deck, and starting relic. Placeholder Ironclad visuals until a `.pck` ships.
 - **Cycle keyword** (BaseLib `CustomEnum` CardKeyword) and `AbstractCycleCard` base: cycles discard-and-draw once per turn when drawn, if the card's condition is met. Per-turn cycle counter (`CycleCount`) backed by a `SpireField<PlayerCombatState, int>` (per-player-per-combat, multiplayer-safe).
-- **Cycle event hooks**: `CycleEvents.NotifyCycle` broker (to be refactored to proper power hooks — see Roadmap).
+- **Cycle hook**: `IAfterCardCycled` interface dispatched via `CycleHook.AfterCardCycled` (BaseLib `HookUtils.Dispatch`), mirroring Downfall's `DownfallHook`/BaseLib's `BaseLibHooks`. Powers/relics implement the interface; no manual subscribe/unsubscribe.
 - **Cores**: `AbstractCoreCard` base — 0-cost Cycle cards with an on-cycle bonus, cloning to discard when upgraded.
 - **Cards**: ~95 cards across Common/Uncommon/Rare. Starting deck includes the default starter kit (5 Strike, 5 Defend, AttackMode, DefenseMode, ModeShift) plus one copy of each reviewed card for verification.
 - **Powers**: 30 custom powers including `NoCyclePower`, `MultistagePower` (with `{Card}` placeholder via `StringVar`), `ElectricArmorThornsPower` (1-turn Thorns via BaseLib `CustomTemporaryPowerModelWrapper`), `MetallicizePower` and `PlatedArmorPower` (custom, matching Downfall's pattern), temporary Strength/Dexterity down via vanilla `TemporaryStrengthPower`/`TemporaryDexterityPower`.
@@ -17,8 +17,7 @@ Work in progress. The core character, Cycle mechanic, and ~95 cards are ported a
 - **Localization**: in-code via BaseLib `CardLoc`/`PowerLoc`/`RelicLoc`/`CharacterLoc` + `SimpleLoc`. `CycleKeywordLocPatch` injects keyword + selection-screen-prompt loc until a `.pck` ships (`has_pck: false`).
 
 ### Roadmap (not yet ported)
-- **CycleEvents architecture refactor**: replace the hand-rolled static event broker + manual subscribe/unsubscribe with proper StS2 power hooks. Foundation for Heat/Overheat.
-- **Heat/Overheat system**: the original mod's signature mechanic — per-card `overheat` threshold that turns cards into Burns after N cycles in a turn, plus the Heat Meter UI. `Rollout` is the only currently-ported card that referenced it (overheat field not yet ported).
+- **Heat/Overheat system**: the original mod's signature mechanic — per-card `overheat` threshold that turns cards into Burns after N cycles in a turn, plus the Heat Meter UI. `Rollout` is the only currently-ported card that referenced it (overheat field not yet ported). The `IAfterCardCycled` hook is now in place as the foundation.
 - **Mega-upgrade**: second upgrade tier. Currently folded into the normal upgrade for some cards (e.g. OmegaCannon, Overclock); not implemented as a separate tier.
 - **Remaining relics**: ~13 relics from the original mod not yet ported.
 - **Remaining powers**: Agitation, FlashFreeze, LongRangeLance, and other Heat-gated powers not yet ported.

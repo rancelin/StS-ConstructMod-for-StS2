@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using BaseLib.Abstracts;
 using ConstructMod.Cards;
+using ConstructMod.Hooks;
 
 namespace ConstructMod.Powers;
 
@@ -50,7 +51,7 @@ public class FailsafePower : CustomPowerModel
         if (!TryConsume()) return;
         Flash();
         CycleCount.Increment(card.Owner);
-        await CycleEvents.NotifyCycle(choiceContext, card);
+        await CycleHook.AfterCardCycled(card.Owner.Creature.CombatState, choiceContext, card);
         await CardCmd.DiscardAndDraw(choiceContext, [card], 1);
     }
 }
