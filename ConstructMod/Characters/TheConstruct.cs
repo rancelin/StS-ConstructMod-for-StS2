@@ -43,31 +43,37 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // One copy of each reviewed card currently in the pool, for verification testing.
-        // (Flamethrower is intentionally excluded — it's disabled pending a multiplayer redesign.)
-        ModelDb.Card<Backup>(),
-        ModelDb.Card<BatteryCore>(),
+        // Cycle cards (exercise the Cycle hook / CycleCount / conditional cycle).
+        ModelDb.Card<HeatedStrike>(),
+        ModelDb.Card<HeatedDefend>(),
+        ModelDb.Card<ShiftStrike>(),
+        ModelDb.Card<ShiftGuard>(),
         ModelDb.Card<ElectricArmor>(),
+        ModelDb.Card<CriticalHit>(),
+        ModelDb.Card<Isolate>(),
+        ModelDb.Card<Reserves>(),
+        // Cores (0-cost Cycle cards with an on-cycle bonus; clone to discard when upgraded).
+        ModelDb.Card<FlameCore>(),
+        ModelDb.Card<ScopeCore>(),
+        ModelDb.Card<CreateCores>(),
+        // Cycle-interaction cards (react to cycles via IAfterCardCycled).
+        ModelDb.Card<Autoturret>(),
+        ModelDb.Card<PointDefense>(),
+        ModelDb.Card<Dampening>(),
+        ModelDb.Card<Tumble>(),
+        // Reviewed cards kept for ongoing verification.
+        ModelDb.Card<Backup>(),
         ModelDb.Card<GatlingGun>(),
-        ModelDb.Card<MassProduction>(),
-        ModelDb.Card<MemoryTap>(),
         ModelDb.Card<Multistage>(),
         ModelDb.Card<OmegaCannon>(),
         ModelDb.Card<ConstructMod.Cards.Overclock>(),
         ModelDb.Card<Afterburners>(),
         ModelDb.Card<Rollout>(),
-        // Cycle-interaction cards (exercise the Cycle hook / CycleCount).
-        ModelDb.Card<Autoturret>(),
-        ModelDb.Card<PointDefense>(),
-        ModelDb.Card<Failsafe>(),
-        ModelDb.Card<Dampening>(),
-        ModelDb.Card<Tumble>(),
-        // A couple of basic-cycle cards to exercise Cores and conditional cycle.
-        ModelDb.Card<CreateCores>(),
-        ModelDb.Card<HeatedStrike>(),
-        ModelDb.Card<HeatedDefend>(),
-        // Powers to verify (Metal Shell: Plated Armor unupgraded, Metallicize upgraded).
         ModelDb.Card<MetalShell>(),
+        // Failsafe + MassProduction + MemoryTap exercise Status-cycle and selection screens.
+        ModelDb.Card<Failsafe>(),
+        ModelDb.Card<MassProduction>(),
+        ModelDb.Card<MemoryTap>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
