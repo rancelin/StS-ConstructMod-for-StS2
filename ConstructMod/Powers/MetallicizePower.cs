@@ -24,7 +24,7 @@ public class MetallicizePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Metallicize",
-        Description: "#At the end of your turn, gain {Amount} *Block*.",
+        Description: "#At the end of your turn, gain *Block*.",
         SmartDescription: "#At the end of your turn, gain {Amount} *Block*.");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
