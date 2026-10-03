@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -15,8 +14,18 @@ namespace ConstructMod.Cards;
 
 public class Rollout : AbstractConstructCard
 {
+    // Damage = CalculationBase (0) + ExtraDamage (Multiplier) * (cycles this turn).
+    // Uses the vanilla CalculatedDamageVar pattern (same as PerfectedStrike) so the damage
+    // flows through the card's damage pipeline (Strength/Weak/Vulnerable/etc. apply correctly)
+    // and the card preview shows the computed value. The previous DamageCmd.Attack(decimal)
+    // call bypassed the pipeline and hung when actually dealing damage.
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Multiplier", 3m), new DamageVar(0m, ValueProp.Move)];
+        [
+            new CalculationBaseVar(0m),
+            new ExtraDamageVar(3m),
+            new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) =>
+                CycleCount.GetCyclesThisTurn(card.Owner))
+        ];
 
     public Rollout() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
@@ -32,23 +41,22 @@ public class Rollout : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Rollout",
-        "#Deal damage equal to {Multiplier} times the number of cards that have *Cycled* this turn.");
-
+        "#Deal damage equal to {ExtraDamage} times the number of cards that have *Cycled* this turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var cycles = CycleCount.GetCyclesThisTurn(Owner);
-        var damage = cycles * DynamicVars["Multiplier"].IntValue;
-        ConstructModMain.Logger.Info($"Rollout.OnPlay: cycles this turn={cycles}, multiplier={DynamicVars["Multiplier"].IntValue}, damage={damage}.");
-        if (damage <= 0) return;
-        await DamageCmd.Attack(damage).FromCard(this, cardPlay)
+        if (cardPlay.Target == null) return;
+        var dmg = DynamicVars.CalculatedDamage.Calculate(cardPlay.Target);
+        ConstructModMain.Logger.Info($"Rollout.OnPlay: cycles this turn={CycleCount.GetCyclesThisTurn(Owner)}, ExtraDamage={DynamicVars.ExtraDamage.BaseValue}, calculated damage={dmg}.");
+        if (dmg <= 0) return;
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay)
             .WithHitFx("vfx/vfx_giant_horizontal_slash")
             .Execute(choiceContext);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Multiplier"].UpgradeValueBy(1m);
+        DynamicVars.ExtraDamage.UpgradeValueBy(1m);
     }
 }
 
