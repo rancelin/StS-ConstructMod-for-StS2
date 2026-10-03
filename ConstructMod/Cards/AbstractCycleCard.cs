@@ -63,6 +63,8 @@ public abstract class AbstractCycleCard : AbstractConstructCard
             await OnCycle(choiceContext);
             CycleCount.Increment(Owner);
             await CycleHook.AfterCardCycled(Owner.Creature.CombatState, choiceContext, this);
+            // After each cycle, check whether any card has overheated (turns into a Burn).
+            await OverheatCheck.Run(choiceContext, Owner);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
         await base.AfterCardDrawnEarly(choiceContext, card, fromHandDraw);

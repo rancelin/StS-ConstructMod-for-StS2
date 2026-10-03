@@ -52,6 +52,8 @@ public class FailsafePower : CustomPowerModel
         Flash();
         CycleCount.Increment(card.Owner);
         await CycleHook.AfterCardCycled(card.Owner.Creature.CombatState, choiceContext, card);
+        // After the Status-card cycle, check whether any card has overheated.
+        await OverheatCheck.Run(choiceContext, card.Owner);
         await CardCmd.DiscardAndDraw(choiceContext, [card], 1);
     }
 }
