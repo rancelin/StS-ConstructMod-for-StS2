@@ -29,6 +29,7 @@ public class HeatedDefend : AbstractCycleCard
 
     public HeatedDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
+        Overheat = 5;
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Heated Defend",
@@ -49,5 +50,8 @@ public class HeatedDefend : AbstractCycleCard
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(3m);
+        // Original: upgradeOverheat(+5) on upgrade, then mega upgradeOverheat(+10).
+        // Folded: +15 overheat (combined).
+        UpgradeOverheat(15);
     }
 }

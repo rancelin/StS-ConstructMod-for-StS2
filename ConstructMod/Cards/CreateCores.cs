@@ -18,6 +18,7 @@ public class CreateCores : AbstractConstructCard
 
     public CreateCores() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
+        Overheat = 10;
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Create Cores",
@@ -50,5 +51,7 @@ public class CreateCores : AbstractConstructCard
     protected override void OnUpgrade()
     {
         // Upgraded CreateCores generates upgraded Cores; count stays the same.
+        // Original: upgradeOverheat(+5) on upgrade; mega-upgrade is description-only (no overheat delta).
+        UpgradeOverheat(5);
     }
 }

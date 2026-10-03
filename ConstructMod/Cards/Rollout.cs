@@ -29,6 +29,7 @@ public class Rollout : AbstractConstructCard
 
     public Rollout() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
+        Overheat = 10;
     }
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
@@ -59,6 +60,9 @@ public class Rollout : AbstractConstructCard
     protected override void OnUpgrade()
     {
         DynamicVars.ExtraDamage.UpgradeValueBy(1m);
+        // Original: upgradeOverheat(+5) on upgrade, then mega upgradeOverheat(+5).
+        // Folded: +10 overheat (combined), so the card tolerates 10 more cycles before Burning.
+        UpgradeOverheat(10);
     }
 }
 

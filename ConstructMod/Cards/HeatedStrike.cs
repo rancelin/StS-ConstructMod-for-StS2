@@ -28,6 +28,7 @@ public class HeatedStrike : AbstractCycleCard
 
     public HeatedStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
+        Overheat = 5;
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Heated Strike",
@@ -50,5 +51,8 @@ public class HeatedStrike : AbstractCycleCard
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);
+        // Original: upgradeOverheat(+5) on upgrade, then mega upgradeOverheat(+10).
+        // Folded: +15 overheat (combined).
+        UpgradeOverheat(15);
     }
 }
