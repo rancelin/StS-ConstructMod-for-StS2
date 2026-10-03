@@ -58,8 +58,6 @@ public class MultistagePower : CustomPowerModel
         if (CombatState is not { } combat) return;
         Flash();
 
-        ConstructModMain.Logger.Info($"MultistagePower: auto-playing copy of '{_heldCard.Title}' (cycles this turn = {CycleCount.GetCyclesThisTurn(Owner.Player)}).");
-
         // _heldCard is a mutable in-combat card; CreateClone preserves its upgrade state and produces
         // a proper in-combat copy. (combat.CreateCard requires a canonical model.)
         var copy = _heldCard.CreateClone();

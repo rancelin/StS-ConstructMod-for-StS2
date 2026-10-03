@@ -61,7 +61,6 @@ public abstract class AbstractCycleCard : AbstractConstructCard
             _cycledThisTurn = true;
             await OnCycle(choiceContext);
             CycleCount.Increment(Owner);
-            ConstructModMain.Logger.Info($"AbstractCycleCard: '{Title}' cycled. CycleCount now = {CycleCount.GetCyclesThisTurn(Owner)}.");
             await CycleEvents.NotifyCycle(choiceContext, this);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
@@ -84,13 +83,9 @@ public abstract class AbstractCycleCard : AbstractConstructCard
     {
         if (side == MegaCrit.Sts2.Core.Combat.CombatSide.Player && Owner != null)
         {
-            var before = CycleCount.GetCyclesThisTurn(Owner);
-            if (before > 0)
-            {
-                CycleCount.ResetTurn(Owner);
-                ConstructModMain.Logger.Info($"AbstractCycleCard.AfterSideTurnEnd: reset CycleCount ({before} -> 0) at end of player turn.");
-            }
-        }        await base.AfterSideTurnEnd(choiceContext, side, participants);
+            CycleCount.ResetTurn(Owner);
+        }
+        await base.AfterSideTurnEnd(choiceContext, side, participants);
     }
 
     protected virtual Task OnCycle(PlayerChoiceContext choiceContext)
