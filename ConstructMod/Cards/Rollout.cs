@@ -53,18 +53,23 @@ public class Rollout : AbstractConstructCard
 
 public static class CycleCount
 {
-    private static readonly System.Collections.Generic.Dictionary<Player, int> _cycles = new();
+    // Per-PlayerCombatState counter (one per player per combat). Backed by a ConditionalWeakTable via BaseLib's
+    // SpireField, so it is automatically cleaned up when the combat state is GC'd, multiplayer-safe, and never
+    // leaks across combats (unlike a static Dictionary<Player, int>).
+    private static readonly BaseLib.Utils.SpireField<MegaCrit.Sts2.Core.Entities.Players.PlayerCombatState, int> _cycles = new(() => 0);
 
-    public static int GetCyclesThisTurn(Player player) =>
-        _cycles.TryGetValue(player, out var n) ? n : 0;
+    public static int GetCyclesThisTurn(MegaCrit.Sts2.Core.Entities.Players.Player player)
+        => player.PlayerCombatState is { } pcs ? _cycles.Get(pcs) : 0;
 
-    public static void Increment(Player player)
+    public static void Increment(MegaCrit.Sts2.Core.Entities.Players.Player player)
     {
-        _cycles[player] = GetCyclesThisTurn(player) + 1;
+        if (player.PlayerCombatState is not { } pcs) return;
+        _cycles.Set(pcs, _cycles.Get(pcs) + 1);
     }
 
-    public static void ResetTurn(Player player)
+    public static void ResetTurn(MegaCrit.Sts2.Core.Entities.Players.Player player)
     {
-        _cycles.Remove(player);
+        if (player.PlayerCombatState is not { } pcs) return;
+        _cycles.Set(pcs, 0);
     }
 }

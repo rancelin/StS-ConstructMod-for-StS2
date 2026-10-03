@@ -37,7 +37,8 @@ public class Afterburners : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (CombatState is not { } combat) return;
-        var burns = (int)(DynamicVars["Burns"].BaseValue - (IsUpgraded ? 1m : 0m));
+        // OnUpgrade already decrements the Burns var by 1, so just read the resolved value here.
+        var burns = DynamicVars["Burns"].IntValue;
         for (var i = 0; i < burns; i++)
         {
             var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner);

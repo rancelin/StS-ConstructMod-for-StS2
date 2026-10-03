@@ -48,7 +48,10 @@ public class DarkFlames : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Target == null) return;
-        var burns = BurnCount() + (int)DynamicVars["Burns"].BaseValue;
+        // Card text: "Deal !Damage! damage and gain {Energy} for each Burn in your exhaust pile."
+        // (No flat Burns value — the count is dynamic. Note: the hit loop is intentional because
+        // each hit also gains 1 energy, so we can't collapse into a single WithHitCount call.)
+        var burns = BurnCount();
         for (var i = 0; i < burns; i++)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)

@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -32,11 +31,9 @@ public class ShieldBurst : AbstractConstructCard
         await CreatureCmd.LoseBlock(choiceContext, Owner.Creature, block, Owner.Creature);
         if (CombatState is not { } combat) return;
         decimal damage = System.Decimal.Floor(block * DynamicVars["Mult"].BaseValue);
-        foreach (var enemy in combat.HittableEnemies.ToList())
-        {
-            await DamageCmd.Attack(damage).FromCard(this, cardPlay).Targeting(enemy)
-                .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
-        }
+        await DamageCmd.Attack(damage).WithHitCount(1).FromCard(this, cardPlay)
+            .TargetingAllOpponents(combat)
+            .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

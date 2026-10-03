@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using ConstructMod.Powers;
 
@@ -28,6 +29,17 @@ public abstract class AbstractCycleCard : AbstractConstructCard
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
             yield return ConstructKeywords.Cycle;
+        }
+    }
+
+    // Every cycle card gets the Cycle hover tip automatically. Subclasses that add their own tips should
+    // still chain through base.ExtraHoverTips (the standard pattern) so this tip is preserved.
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
         }
     }
 

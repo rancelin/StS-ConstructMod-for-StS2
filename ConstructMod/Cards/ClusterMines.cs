@@ -34,14 +34,12 @@ public class ClusterMines : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        for (var i = 0; i < (int)DynamicVars["Hits"].BaseValue; i++)
-        {
-            if (CombatState is not { } combat || !combat.HittableEnemies.Any()) break;
-            var enemy = Owner.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
-            if (enemy == null) break;
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(enemy)
-                .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
-        }
+        if (CombatState is not { } combat) return;
+        var hits = (int)DynamicVars["Hits"].BaseValue;
+        if (hits <= 0) return;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this, cardPlay)
+            .TargetingRandomOpponents(combat)
+            .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
         if (_discountActive)
         {
             _discountActive = false;

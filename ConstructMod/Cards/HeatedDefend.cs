@@ -15,8 +15,14 @@ public class HeatedDefend : AbstractCycleCard
 {
     public override bool GainsBlock => true;
     protected override System.Collections.Generic.HashSet<CardTag> CanonicalTags => [CardTag.Defend];
-    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<DexterityPower>(null)];
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(5m, ValueProp.Move)];

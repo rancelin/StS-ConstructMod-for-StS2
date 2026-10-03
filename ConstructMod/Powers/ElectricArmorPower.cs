@@ -37,12 +37,11 @@ public class ElectricArmorPower : CustomPowerModel
         MegaCrit.Sts2.Core.Combat.CombatSide side, System.Collections.Generic.IEnumerable<Creature> participants)
     {
         if (!participants.Contains(Owner)) return;
-        if (Amount <= 1)
+        if (Amount > 1)
         {
-            await PowerCmd.Remove(this);
+            await PowerCmd.TickDownDuration(this);
             return;
         }
-        SetAmount(Amount - 1);
-        Flash();
+        await PowerCmd.Remove(this);
     }
 }

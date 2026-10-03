@@ -16,10 +16,14 @@ namespace ConstructMod.Cards;
 
 public class Flamethrower : AbstractCycleCard
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromCard<Burn>()
-    ];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromCard<Burn>();
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(2m, ValueProp.Move)];
@@ -51,14 +55,10 @@ public class Flamethrower : AbstractCycleCard
     {
         if (CombatState is not { } combat) return;
         var hits = StatusCount();
-        for (var i = 0; i < hits; i++)
-        {
-            if (!combat.HittableEnemies.Any()) break;
-            var enemy = Owner.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
-            if (enemy == null) break;
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(enemy)
-                .WithHitFx("vfx/vfx_molten_fist").Execute(choiceContext);
-        }
+        if (hits <= 0) return;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this, cardPlay)
+            .TargetingRandomOpponents(combat)
+            .WithHitFx("vfx/vfx_molten_fist").Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

@@ -14,11 +14,15 @@ namespace ConstructMod.Cards;
 
 public class ShiftStrike : AbstractCycleCard
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromPower<StrengthPower>(null),
-        HoverTipFactory.FromPower<DexterityPower>(null)
-    ];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

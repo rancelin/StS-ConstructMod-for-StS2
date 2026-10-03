@@ -16,9 +16,15 @@ public class CriticalHit : AbstractCycleCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(14m, ValueProp.Move)];
 
-    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<WeakPower>(null),
-            HoverTipFactory.FromPower<VulnerablePower>(null)];
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<WeakPower>(null);
+            yield return HoverTipFactory.FromPower<VulnerablePower>(null);
+        }
+    }
 
     public CriticalHit() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {

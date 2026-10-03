@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -13,13 +12,20 @@ namespace ConstructMod.Cards;
 
 public class FlakBarrage : AbstractCycleCard
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    IsUpgraded
-        ?
-        [
-            HoverTipFactory.FromPower<StrengthPower>(null)
-        ]
-        : Array.Empty<IHoverTip>();
+    // Cycle keyword (and thus its hover tip) only applies when upgraded, matching CanonicalKeywords below.
+    // We deliberately do NOT chain through base.ExtraHoverTips here, because the base (AbstractCycleCard)
+    // unconditionally adds the Cycle tip; we need it gated on IsUpgraded to match the keyword filter.
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            if (IsUpgraded)
+            {
+                yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+                yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            }
+        }
+    }
 
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -54,14 +60,12 @@ public class FlakBarrage : AbstractCycleCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        for (var i = 0; i < (int)DynamicVars["Hits"].BaseValue; i++)
-        {
-            if (CombatState is not { } combat || !combat.HittableEnemies.Any()) break;
-            var enemy = Owner.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
-            if (enemy == null) break;
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(enemy)
-                .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
-        }
+        if (CombatState is not { } combat) return;
+        var hits = (int)DynamicVars["Hits"].BaseValue;
+        if (hits <= 0) return;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this, cardPlay)
+            .TargetingRandomOpponents(combat)
+            .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

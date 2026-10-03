@@ -13,11 +13,14 @@ namespace ConstructMod.Cards;
 
 public class ElectricArmor : AbstractCycleCard
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(ConstructKeywords.Cycle),
-        HoverTipFactory.FromPower<DexterityPower>(null)
-    ];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Turns", 1m)];

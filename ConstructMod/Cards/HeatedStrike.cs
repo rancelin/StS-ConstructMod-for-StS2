@@ -14,8 +14,14 @@ namespace ConstructMod.Cards;
 public class HeatedStrike : AbstractCycleCard
 {
     protected override System.Collections.Generic.HashSet<CardTag> CanonicalTags => [CardTag.Strike];
-    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<StrengthPower>(null)];
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+        }
+    }
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(6m, ValueProp.Move)];

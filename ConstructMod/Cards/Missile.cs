@@ -20,11 +20,15 @@ public class Missile : AbstractCycleCard
         new DynamicVar("Debuff", 2m)
     ];
 
-    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromPower<WeakPower>(null),
-        HoverTipFactory.FromPower<VulnerablePower>(null)
-    ];
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<WeakPower>(null);
+            yield return HoverTipFactory.FromPower<VulnerablePower>(null);
+        }
+    }
 
     public Missile() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {

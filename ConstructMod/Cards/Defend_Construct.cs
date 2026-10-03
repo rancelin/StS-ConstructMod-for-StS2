@@ -17,8 +17,14 @@ public class Defend_Construct : AbstractCycleCard
 
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Defend];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<DexterityPower>(null)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(5m, ValueProp.Move)];

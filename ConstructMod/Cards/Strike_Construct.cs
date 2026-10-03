@@ -17,8 +17,14 @@ public class Strike_Construct : AbstractCycleCard
 {
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<StrengthPower>(null)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(6m, ValueProp.Move)];

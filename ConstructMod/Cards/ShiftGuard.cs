@@ -13,12 +13,15 @@ namespace ConstructMod.Cards;
 
 public class ShiftGuard : AbstractCycleCard
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(ConstructKeywords.Cycle),
-        HoverTipFactory.FromPower<StrengthPower>(null),
-        HoverTipFactory.FromPower<DexterityPower>(null)
-    ];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
