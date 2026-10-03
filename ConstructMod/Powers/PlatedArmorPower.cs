@@ -24,8 +24,8 @@ public class PlatedArmorPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Plated Armor",
-        Description: "#At the end of your turn, gain {Amount} *Block*. Receiving unblocked attack damage reduces *Plated Armor* by 1.",
-        SmartDescription: "#At the end of your turn, gain {Amount} *Block*. Receiving unblocked attack damage reduces *Plated Armor* by 1.");
+        Description: "#At the end of your turn, gain {Amount} *Block*. Receiving unblocked attack damage reduces [gold]Plated Armor[/gold] by 1.",
+        SmartDescription: "#At the end of your turn, gain {Amount} *Block*. Receiving unblocked attack damage reduces [gold]Plated Armor[/gold] by 1.");
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
