@@ -49,7 +49,10 @@ public class Rollout : AbstractConstructCard
         var dmg = DynamicVars.CalculatedDamage.Calculate(cardPlay.Target);
         ConstructModMain.Logger.Info($"Rollout.OnPlay: cycles this turn={CycleCount.GetCyclesThisTurn(Owner)}, ExtraDamage={DynamicVars.ExtraDamage.BaseValue}, calculated damage={dmg}.");
         if (dmg <= 0) return;
+        // DamageCmd.Attack(CalculatedDamageVar) does not auto-target (unlike the decimal overload),
+        // so .Targeting(cardPlay.Target) is required — matches vanilla PerfectedStrike.
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_giant_horizontal_slash")
             .Execute(choiceContext);
     }
