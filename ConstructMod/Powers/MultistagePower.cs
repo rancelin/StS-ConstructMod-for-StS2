@@ -44,7 +44,9 @@ public class MultistagePower : CustomPowerModel
         if (CombatState is not { } combat) return;
         Flash();
 
-        var copy = combat.CreateCard(_heldCard, Owner.Player);
+        // _heldCard is a mutable in-combat card; CreateClone preserves its upgrade state and produces
+        // a proper in-combat copy. (combat.CreateCard requires a canonical model.)
+        var copy = _heldCard.CreateClone();
         copy.SetToFreeThisTurn();
         copy.ExhaustOnNextPlay = true;
         var target = combat.HittableEnemies.Any()

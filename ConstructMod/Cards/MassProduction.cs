@@ -34,7 +34,7 @@ public class MassProduction : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (CombatState is not { } combat) return;
+        if (CombatState == null) return;
         var candidates = PileType.Draw.GetPile(Owner).Cards
             .Where(c => c.Rarity != CardRarity.Rare).ToList();
         if (candidates.Count == 0) return;
@@ -51,9 +51,10 @@ public class MassProduction : AbstractConstructCard
         {
             await CardCmd.Exhaust(choiceContext, c);
         }
+        // chosen is a mutable card from the draw pile; CreateClone preserves its upgrade state.
         foreach (var c in hand)
         {
-            var copy = combat.CreateCard(chosen, Owner);
+            var copy = chosen.CreateClone();
             await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, Owner);
         }
     }

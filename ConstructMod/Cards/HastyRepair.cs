@@ -34,9 +34,10 @@ public class HastyRepair : AbstractConstructCard
     {
         await CreatureCmd.Heal(Owner.Creature, DynamicVars["Heal"].BaseValue);
         await CreatureCmd.LoseMaxHp(choiceContext, Owner.Creature, 2m, isFromCard: true);
-        if (IsUpgraded && CombatState is { } combat)
+        if (IsUpgraded)
         {
-            var copy = combat.CreateCard(this, Owner);
+            // this is a mutable in-combat card; CreateClone preserves its upgrade state.
+            var copy = this.CreateClone();
             await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, Owner, MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition.Top);
         }
     }

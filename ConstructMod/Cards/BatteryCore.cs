@@ -27,11 +27,16 @@ public class BatteryCore : AbstractCoreCard
     {
         var hand = PileType.Hand.GetPile(Owner).Cards
             .Where(c => c != this && c.EnergyCost.GetResolved() > 0).ToList();
-        if (hand.Count == 0) return Task.CompletedTask;
+        if (hand.Count == 0)
+        {
+            ConstructModMain.Logger.Debug($"BatteryCore.OnCoreCycle: no eligible hand cards (hand size = {PileType.Hand.GetPile(Owner).Cards.Count}).");
+            return Task.CompletedTask;
+        }
         var card = Owner.RunState.Rng.CombatTargets.NextItem(hand) ?? hand[0];
         if (card == null) return Task.CompletedTask;
-        card.EnergyCost.SetThisTurnOrUntilPlayed(
-            card.EnergyCost.GetResolved() - DynamicVars["Discount"].IntValue, reduceOnly: true);
+        ConstructModMain.Logger.Debug($"BatteryCore.OnCoreCycle: reducing cost of '{card.Title}' (resolved={card.EnergyCost.GetResolved()}) by {DynamicVars["Discount"].IntValue}.");
+        // Relative reduction ("costs N less this turn") — the canonical pattern for this kind of effect.
+        card.EnergyCost.AddThisTurnOrUntilPlayed(-DynamicVars["Discount"].IntValue, reduceOnly: true);
         var node = NCard.FindOnTable(card, null);
         if (node != null && card.Pile != null)
         {

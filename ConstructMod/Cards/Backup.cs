@@ -48,7 +48,6 @@ public class Backup : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (CombatState is not { } combat) return;
         var candidates = PileType.Hand.GetPile(Owner).Cards
             .Where(c => c != this && c.Rarity != CardRarity.Rare).ToList();
         if (candidates.Count == 0) return;
@@ -59,9 +58,12 @@ public class Backup : AbstractConstructCard
                 context: choiceContext, player: Owner,
                 filter: c => c != this && c.Rarity != CardRarity.Rare, source: this)).FirstOrDefault();
         if (chosen == null) return;
+        // chosen is a mutable in-hand card; CreateClone preserves its upgrade state and produces a
+        // proper in-combat copy. (combat.CreateCard requires a canonical model and would throw
+        // MutableModelException.)
         for (var i = 0; i < DynamicVars["Copies"].IntValue; i++)
         {
-            var copy = combat.CreateCard(chosen, Owner);
+            var copy = chosen.CreateClone();
             await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Draw, Owner, CardPilePosition.Top);
         }
     }
