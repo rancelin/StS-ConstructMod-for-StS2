@@ -24,7 +24,7 @@ public class MetallicizePower : CustomPowerModel
     public override PowerStackType StackType => PowerStackType.Counter;
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.Static(StaticHoverTip.Block, System.Array.Empty<DynamicVar>())];
+        [HoverTipFactory.Static(StaticHoverTip.Block)];
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Metallicize",
