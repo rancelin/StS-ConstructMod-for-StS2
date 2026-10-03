@@ -19,8 +19,8 @@ public class OverclockPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Overclock",
-        Description: "At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.",
-        SmartDescription: "At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.");
+        Description: "#At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.",
+        SmartDescription: "#At the start of your turn, draw {Amount} cards and add {Amount} *Burn* to your hand.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {

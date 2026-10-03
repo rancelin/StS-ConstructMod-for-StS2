@@ -39,6 +39,7 @@ public class Rollout : AbstractConstructCard
     {
         var cycles = CycleCount.GetCyclesThisTurn(Owner);
         var damage = cycles * DynamicVars["Multiplier"].IntValue;
+        ConstructModMain.Logger.Info($"Rollout.OnPlay: cycles this turn={cycles}, multiplier={DynamicVars["Multiplier"].IntValue}, damage={damage}.");
         if (damage <= 0) return;
         await DamageCmd.Attack(damage).FromCard(this, cardPlay)
             .WithHitFx("vfx/vfx_giant_horizontal_slash")

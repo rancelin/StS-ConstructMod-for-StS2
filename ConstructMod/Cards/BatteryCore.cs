@@ -25,16 +25,13 @@ public class BatteryCore : AbstractCoreCard
 
     protected override Task OnCoreCycle(PlayerChoiceContext choiceContext)
     {
-        var hand = PileType.Hand.GetPile(Owner).Cards
-            .Where(c => c != this && c.EnergyCost.GetResolved() > 0).ToList();
-        if (hand.Count == 0)
-        {
-            ConstructModMain.Logger.Debug($"BatteryCore.OnCoreCycle: no eligible hand cards (hand size = {PileType.Hand.GetPile(Owner).Cards.Count}).");
-            return Task.CompletedTask;
-        }
-        var card = Owner.RunState.Rng.CombatTargets.NextItem(hand) ?? hand[0];
+        var allHand = PileType.Hand.GetPile(Owner).Cards.ToList();
+        var eligible = allHand.Where(c => c != this && c.EnergyCost.GetResolved() > 0).ToList();
+        ConstructModMain.Logger.Info($"BatteryCore.OnCoreCycle: hand size={allHand.Count}, eligible={eligible.Count} ({string.Join(", ", allHand.Select(c => $"{c.Title}(cost={c.EnergyCost.GetResolved()})"))})");
+        if (eligible.Count == 0) return Task.CompletedTask;
+        var card = Owner.RunState.Rng.CombatTargets.NextItem(eligible) ?? eligible[0];
         if (card == null) return Task.CompletedTask;
-        ConstructModMain.Logger.Debug($"BatteryCore.OnCoreCycle: reducing cost of '{card.Title}' (resolved={card.EnergyCost.GetResolved()}) by {DynamicVars["Discount"].IntValue}.");
+        ConstructModMain.Logger.Info($"BatteryCore.OnCoreCycle: reducing cost of '{card.Title}' (resolved={card.EnergyCost.GetResolved()}) by {DynamicVars["Discount"].IntValue}.");
         // Relative reduction ("costs N less this turn") — the canonical pattern for this kind of effect.
         card.EnergyCost.AddThisTurnOrUntilPlayed(-DynamicVars["Discount"].IntValue, reduceOnly: true);
         var node = NCard.FindOnTable(card, null);

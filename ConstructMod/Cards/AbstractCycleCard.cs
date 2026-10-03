@@ -61,6 +61,7 @@ public abstract class AbstractCycleCard : AbstractConstructCard
             _cycledThisTurn = true;
             await OnCycle(choiceContext);
             CycleCount.Increment(Owner);
+            ConstructModMain.Logger.Info($"AbstractCycleCard: '{Title}' cycled. CycleCount now = {CycleCount.GetCyclesThisTurn(Owner)}.");
             await CycleEvents.NotifyCycle(choiceContext, this);
             await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
         }
@@ -70,7 +71,12 @@ public abstract class AbstractCycleCard : AbstractConstructCard
     public override Task AfterPlayerTurnStartEarly(PlayerChoiceContext choiceContext, Player player)
     {
         _cycledThisTurn = false;
-        if (Owner != null) CycleCount.ResetTurn(Owner);
+        if (Owner != null)
+        {
+            var before = CycleCount.GetCyclesThisTurn(Owner);
+            CycleCount.ResetTurn(Owner);
+            ConstructModMain.Logger.Info($"AbstractCycleCard.AfterPlayerTurnStartEarly: reset CycleCount ({before} -> 0) for {Owner.Character.Title}.");
+        }
         return base.AfterPlayerTurnStartEarly(choiceContext, player);
     }
 
