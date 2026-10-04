@@ -14,6 +14,9 @@ public class GatlingGun : AbstractConstructCard
 {
     protected override bool HasEnergyCostX => true;
 
+    // 2-tier ladder: +1 = regular upgrade, +2 = mega (the original's tradeoff mega).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(3m, ValueProp.Move), new DynamicVar("Shots", 2m)];
 
@@ -47,6 +50,18 @@ public class GatlingGun : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (called once per UpgradeInternal, and
+        // save/load replays the same order — so this reconstructs both tiers correctly).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +1 damage per shot (3 → 4).
+            DynamicVars.Damage.UpgradeValueBy(1m);
+        }
+        else
+        {
+            // Mega: -1 damage (4 → 3) but +1 shot per energy (2 → 3) — the original's tradeoff.
+            DynamicVars.Damage.UpgradeValueBy(-1m);
+            DynamicVars["Shots"].UpgradeValueBy(1m);
+        }
     }
 }

@@ -16,6 +16,9 @@ namespace ConstructMod.Cards;
 
 public class OmegaCannon : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = regular upgrade, +2 = mega (the Strength-discount behavior).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(15m, ValueProp.Move)];
 
@@ -34,7 +37,7 @@ public class OmegaCannon : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Omega Cannon",
-        "#Deal !Damage! damage.\nCosts 1 less [E] for each *Strength* you have.{IfUpgraded:show: Negative *Strength* also counts.|}");
+        "#Deal !Damage! damage.\nCosts 1 less [E] for each *Strength* you have.{IfMega:show: Negative *Strength* also counts.|}");
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
@@ -44,8 +47,9 @@ public class OmegaCannon : AbstractConstructCard
             return false;
         }
         var str = Owner.Creature.Powers.OfType<StrengthPower>().FirstOrDefault()?.Amount ?? 0;
-        if (!IsUpgraded && str < 0) str = 0;
-        if (IsUpgraded) str = Math.Abs(str);
+        // The negative-Strength clause is the MEGA tier (previously folded into the regular upgrade).
+        if (!IsMegaUpgraded && str < 0) str = 0;
+        if (IsMegaUpgraded) str = Math.Abs(str);
         modifiedCost = Math.Max(0m, originalCost - str);
         return true;
     }
@@ -61,6 +65,13 @@ public class OmegaCannon : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(5m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +5 damage (15 → 20).
+            DynamicVars.Damage.UpgradeValueBy(5m);
+        }
+        // Mega: no stat change — the tier's effect is the Strength-discount behavior
+        // (TryModifyEnergyCostInCombat, gated on IsMegaUpgraded) and the description clause.
     }
 }
