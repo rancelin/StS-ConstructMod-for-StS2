@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using BaseLib.Abstracts;
@@ -19,9 +21,10 @@ public class SunScreenMegaPower : SunScreenPower
         Description: "At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.",
         SmartDescription: "At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.");
 
-    public override Task BeforeFlush(PlayerChoiceContext choiceContext, Player player)
+    public override Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        if (player != Owner.Player) return Task.CompletedTask;
+        if (side != CombatSide.Player || !participants.Contains(Owner)) return Task.CompletedTask;
         return ExhaustRandomCardType(choiceContext, CardType.Curse);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -29,9 +30,13 @@ public class SunScreenPower : CustomPowerModel
         Description: "At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.",
         SmartDescription: "At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.");
 
-    public override async Task BeforeFlush(PlayerChoiceContext choiceContext, Player player)
+    public override async Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        if (player != Owner.Player) return;
+        // BeforeSideTurnEndEarly runs BEFORE end-of-turn-in-hand card triggers (Burn's damage)
+        // and before the hand flush — so the Status is exhausted before it can hurt you.
+        // (The previous BeforeFlush slot ran after the Burn had already triggered.)
+        if (side != CombatSide.Player || !participants.Contains(Owner)) return;
         await ExhaustRandomCardType(choiceContext, CardType.Status);
     }
 
@@ -45,7 +50,8 @@ public class SunScreenPower : CustomPowerModel
         if (card == null) return;
         Flash();
         await CardCmd.Exhaust(choiceContext, card);
-        // Block is not from a card and not boosted by Strength (StS1 GainBlockAction from a power).
+        // Block is deliberately NOT boosted by Dexterity (per design decision; matches the
+        // Downfall convention for power-granted end-of-turn block like Metallicize).
         await CreatureCmd.GainBlock(Owner, (int)Amount, BlockProps.nonCardUnpowered, null);
     }
 }

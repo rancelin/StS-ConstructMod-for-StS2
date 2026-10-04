@@ -34,7 +34,7 @@ public class OilSpill : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Oil Spill",
-        "#Whenever a *Burn* hits the target, it takes {Oil} damage.\n*Overheat*: {Overheat}.{IfUpgraded:show: Targets ALL enemies.|}");
+        "#Whenever a *Burn* hits you, {IfUpgraded:show:ALL enemies|target enemy} take {Oil} damage.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

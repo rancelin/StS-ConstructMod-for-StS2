@@ -13,8 +13,11 @@ namespace ConstructMod.Cards;
 
 public class SunScreen : AbstractConstructCard
 {
+    // Plain DynamicVar (not BlockVar) so the description shows a flat 3 — BlockVar would preview
+    // the Dexterity-modified value, but the power grants nonCardUnpowered block that is
+    // deliberately NOT boosted by Dexterity (display and behavior must agree).
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(3m, ValueProp.Move)];
+        [new DynamicVar("Block", 3m)];
 
     public SunScreen() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
@@ -40,19 +43,20 @@ public class SunScreen : AbstractConstructCard
     {
         // Mega folded into upgrade: the upgraded card applies BOTH powers (Status + Curse exhaust),
         // matching the original mega behavior where the regular power is kept, not replaced.
+        // (DynamicVars["Block"] — the indexer, not the Block property, since this is a plain var.)
         if (IsUpgraded)
         {
             await PowerCmd.Apply<SunScreenMegaPower>(choiceContext, Owner.Creature,
-                DynamicVars.Block.IntValue, Owner.Creature, this);
+                DynamicVars["Block"].IntValue, Owner.Creature, this);
         }
         await PowerCmd.Apply<SunScreenPower>(choiceContext, Owner.Creature,
-            DynamicVars.Block.IntValue, Owner.Creature, this);
+            DynamicVars["Block"].IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         // Original: +2 block on upgrade, then mega +1 block + the Curse-exhaust power.
         // Folded: +3 block (combined); the Curse power is applied in OnPlay above.
-        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars["Block"].UpgradeValueBy(3m);
     }
 }

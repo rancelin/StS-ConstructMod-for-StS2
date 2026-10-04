@@ -16,8 +16,13 @@ public class OilSpillPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Oil",
-        Description: "Whenever a Burn card hits {Owner}, it takes {Amount} damage.",
-        SmartDescription: "Whenever a Burn card hits {Owner}, it takes {Amount} damage.");
+        // Dumb/static description path gets NO variables injected (no {Amount}/{OwnerName} —
+        // an unresolvable selector breaks the whole format string, which is why the enemy
+        // tooltip previously showed raw '{Owner}' '{Amount}'). Static text only, like
+        // vanilla enemy debuffs; the amount shows on the power's counter.
+        Description: "#Whenever a *Burn* card hits this character, it takes damage.",
+        // Smart path (in-combat tooltip) DOES get {Amount} and {OwnerName} injected.
+        SmartDescription: "#Whenever a *Burn* card hits {OwnerName}, it takes {Amount} damage.");
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
