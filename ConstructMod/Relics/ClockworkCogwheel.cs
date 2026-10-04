@@ -12,25 +12,22 @@ using ConstructMod.Pools;
 
 namespace ConstructMod.Relics;
 
+/// <summary>
+/// The upgraded Cogwheel, granted by the Ancient Orobas's "Touch of Orobas" choice
+/// (via <see cref="Cogwheel.GetUpgradeReplacement"/> and BaseLib's StarterUpgradePatches).
+/// Starter rarity means it never rolls as a random reward — it's only obtainable through
+/// the Orobas upgrade, matching vanilla's starter-upgrade relics (Burning Blood → Black Blood).
+/// </summary>
 [Pool(typeof(ConstructRelicPool))]
-public class Cogwheel : CustomRelicModel
+public class ClockworkCogwheel : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        new DynamicVar[] { new PowerVar<ArtifactPower>("Artifact", 1m) };
+        new DynamicVar[] { new PowerVar<ArtifactPower>("Artifact", 2m) };
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new IHoverTip[] { HoverTipFactory.FromPower<ArtifactPower>(null) };
-
-    /// <summary>
-    /// The Orobas "Touch of Orobas" Ancient choice replaces this starter relic with the
-    /// returned relic (BaseLib's StarterUpgradePatches dispatches here for CustomRelicModels;
-    /// vanilla's fallback is the inert Circlet). Returns the upgraded Cogwheel, which grants
-    /// 2 Artifact per combat instead of 1 — matching the vanilla starter-upgrade pattern
-    /// (Burning Blood 6 heal → Black Blood 12 heal).
-    /// </summary>
-    public override RelicModel? GetUpgradeReplacement() => ModelDb.Relic<ClockworkCogwheel>();
 
     public override async Task BeforeCombatStart()
     {
@@ -47,7 +44,7 @@ public class Cogwheel : CustomRelicModel
     }
 
     public override List<(string, string)>? Localization => new RelicLoc(
-        Title: "Cogwheel",
-        Description: "#Gain *1* Artifact at the start of each combat.",
-        Flavor: "A piece of old machinery, carefully preserved.");
+        Title: "Clockwork Cogwheel",
+        Description: "#Gain *2* Artifact at the start of each combat.",
+        Flavor: "A piece of old machinery, lovingly over-engineered.");
 }

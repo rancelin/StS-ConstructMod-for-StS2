@@ -17,7 +17,7 @@ public class GatlingGun : AbstractConstructCard
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(3m, ValueProp.Move), new DynamicVar("Shots", 2m)];
 
-    public GatlingGun() : base(-1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public GatlingGun() : base(-1, CardType.Attack, CardRarity.Rare, TargetType.RandomEnemy)
     {
     }
 

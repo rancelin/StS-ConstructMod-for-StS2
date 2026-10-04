@@ -44,7 +44,7 @@ public class FlakBarrage : AbstractCycleCard
         new DynamicVar("Hits", 4m)
     ];
 
-    public FlakBarrage() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public FlakBarrage() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)
     {
     }
 

@@ -25,7 +25,7 @@ public class ClusterMines : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.Static(StaticHoverTip.Block)];
 
-    public ClusterMines() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public ClusterMines() : base(2, CardType.Attack, CardRarity.Common, TargetType.RandomEnemy)
     {
     }
 
