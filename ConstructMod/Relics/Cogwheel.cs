@@ -26,9 +26,10 @@ public class Cogwheel : CustomRelicModel
     /// <summary>
     /// The Orobas "Touch of Orobas" Ancient choice replaces this starter relic with the
     /// returned relic (BaseLib's StarterUpgradePatches dispatches here for CustomRelicModels;
-    /// vanilla's fallback is the inert Circlet). Returns the upgraded Cogwheel, which grants
-    /// 2 Artifact per combat instead of 1 — matching the vanilla starter-upgrade pattern
-    /// (Burning Blood 6 heal → Black Blood 12 heal).
+    /// vanilla's fallback is the inert Circlet). Returns the upgraded Cogwheel: keeps 1
+    /// Artifact and adds "the first card you Cycle each turn draws 1 additional card" —
+    /// the dominant modded-character upgrade pattern (base effect + new reactive trigger
+    /// on the character's core mechanic, ~1 Uncommon relic of added value).
     /// </summary>
     public override RelicModel? GetUpgradeReplacement() => ModelDb.Relic<ClockworkCogwheel>();
 
