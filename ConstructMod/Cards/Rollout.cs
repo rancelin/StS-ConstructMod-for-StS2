@@ -44,7 +44,7 @@ public class Rollout : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Rollout",
-        "#Deal damage equal to {ExtraDamage} times the number of cards that have *Cycled* this turn.\n*Overheat*: {Overheat}.");
+        "#Deal damage equal to {ExtraDamage} times the number of cards that have *Cycled* this turn.\nDeals !CD! damage.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

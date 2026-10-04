@@ -32,7 +32,7 @@ public class Coolant : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Coolant",
-        "#Gain !Block! *Block*. Increase the *Overheat* threshold of all cards with *Overheat* by {Cooling}.{IfUpgraded:show: *Innate*.|}");
+        "#Gain !Block! *Block*. Increase the *Overheat* threshold of all cards with *Overheat* by {Cooling}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

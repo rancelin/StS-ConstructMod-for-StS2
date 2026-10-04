@@ -30,7 +30,7 @@ public class Agitation : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Agitation",
-        "#Whenever a card *Overheats*, gain {AgitationPower} *Strength* and {AgitationPower} *Dexterity*.{IfUpgraded:show: *Innate*.|}");
+        "#Whenever a card *Overheats*, gain {AgitationPower} *Strength* and {AgitationPower} *Dexterity*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

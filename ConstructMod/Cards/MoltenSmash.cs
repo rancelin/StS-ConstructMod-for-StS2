@@ -16,6 +16,11 @@ namespace ConstructMod.Cards;
 
 public class MoltenSmash : AbstractConstructCard
 {
+    // Neighbors cached by MoltenSmashNeighborPatch (Harmony prefix on CardModel.OnPlayWrapper)
+    // while the card is still in the hand pile — by the time OnPlay runs, the card has already
+    // moved to the Play pile, so its hand position can no longer be queried.
+    private readonly List<CardModel> _cachedNeighbors = [];
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(15m, ValueProp.Move), new BlockVar(15m, ValueProp.Move)];
 
@@ -40,6 +45,22 @@ public class MoltenSmash : AbstractConstructCard
     public override List<(string, string)>? Localization => new CardLoc("Molten Smash",
         "#Deal !Damage! damage.\nGain !Block! *Block*.\n*Overheat* the cards to the left and right of this in your hand.");
 
+    /// <summary>
+    /// Called by <c>MoltenSmashNeighborPatch</c> (Harmony prefix on <see cref="CardModel.OnPlayWrapper"/>)
+    /// while this card is still in the hand pile. Snapshots the left/right neighbors so
+    /// <see cref="OnPlay"/> can overheat them after the card has moved to the Play pile.
+    /// </summary>
+    internal void CacheHandNeighbors()
+    {
+        _cachedNeighbors.Clear();
+        if (Pile?.Type != PileType.Hand) return;
+        var hand = Pile.Cards.ToList();
+        var index = hand.IndexOf(this);
+        if (index < 0) return;
+        if (index > 0) _cachedNeighbors.Add(hand[index - 1]);
+        if (index < hand.Count - 1) _cachedNeighbors.Add(hand[index + 1]);
+    }
+
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Target == null) return;
@@ -47,20 +68,18 @@ public class MoltenSmash : AbstractConstructCard
             .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_heavy_blunt").Execute(choiceContext);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
 
-        // Force-overheat the adjacent hand cards (left and right of this). The original passes
-        // triggerOnOverheat=false, so Agitation/etc. do NOT fire from this — just the Burn
-        // replacement. Find this card's index in hand, grab the neighbors.
-        var hand = PileType.Hand.GetPile(Owner).Cards.ToList();
-        var index = hand.IndexOf(this);
-        if (index < 0) return;
-        var neighbors = new List<CardModel>();
-        if (index > 0) neighbors.Add(hand[index - 1]);
-        if (index < hand.Count - 1) neighbors.Add(hand[index + 1]);
-        foreach (var neighbor in neighbors)
+        // Force-overheat the cached adjacent cards (any card type — a standard Strike overheats
+        // just like a Heat card, matching the original OverheatAction on leftCard/rightCard).
+        // The original passes triggerOnOverheat=false, so Agitation/etc. do NOT fire from this —
+        // just the Burn replacement.
+        foreach (var neighbor in _cachedNeighbors)
         {
-            // TransformTo<Burn> does the in-pile Burn replacement (no overheat hook fires).
+            // TransformTo<Burn> does the in-pile Burn replacement. Skip un-transformable cards
+            // (e.g. some statuses) rather than throwing.
+            if (neighbor.Pile == null || !neighbor.IsTransformable) continue;
             await CardCmd.TransformTo<Burn>(neighbor);
         }
+        _cachedNeighbors.Clear();
     }
 
     protected override void OnUpgrade()

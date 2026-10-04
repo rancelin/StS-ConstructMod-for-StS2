@@ -21,7 +21,7 @@ public class ModeShift : AbstractConstructCard
         [HoverTipFactory.FromPower<StrengthPower>(null),
             HoverTipFactory.FromPower<DexterityPower>(null)];
 
-    public ModeShift() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+    public ModeShift() : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
     }
 
