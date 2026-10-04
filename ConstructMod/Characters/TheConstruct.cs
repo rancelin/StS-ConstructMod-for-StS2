@@ -43,20 +43,9 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // Overheat testing pool (minimal): cards that overheat + tools to suppress/raise/trigger it.
-        // HeatedStrike/HeatedDefend overheat at 5 cycles; Rollout at 10. Cores cycle every draw to
-        // rack up the counter fast. FlashFreeze suppresses, Coolant raises thresholds, Agitation
-        // triggers on overheat, MoltenSmash force-overheats adjacent hand cards.
-        ModelDb.Card<HeatedStrike>(),
-        ModelDb.Card<HeatedDefend>(),
-        ModelDb.Card<Rollout>(),
-        ModelDb.Card<FlameCore>(),
-        ModelDb.Card<ScopeCore>(),
-        ModelDb.Card<CreateCores>(),
-        ModelDb.Card<FlashFreeze>(),
-        ModelDb.Card<ConstructMod.Cards.Coolant>(),
-        ModelDb.Card<Agitation>(),
-        ModelDb.Card<MoltenSmash>(),
+        // Ready-content cards pending verification.
+        ModelDb.Card<LongRangeLance>(),
+        ModelDb.Card<SunScreen>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
