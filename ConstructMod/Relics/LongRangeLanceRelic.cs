@@ -8,14 +8,18 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
+using ConstructMod.Pools;
 
 namespace ConstructMod.Relics;
 
 /// <summary>
 /// Granted by <see cref="Powers.LongRangeLancePower"/> on victory. At the start of the next
 /// combat, deals <see cref="DynamicVars"/>[Damage] damage to a random enemy (unpowered — not
-/// boosted by Strength), then consumes itself. Not in any pool: only obtainable via the power.
+/// boosted by Strength), then consumes itself. Event rarity is never drawn by the reward RNG,
+/// so despite pool membership it's only obtainable via the power (StS1 SPECIAL semantics).
 /// </summary>
+[Pool(typeof(ConstructRelicPool))]
 public class LongRangeLanceRelic : CustomRelicModel
 {
     // StS1 RelicTier.SPECIAL — maps to Event: never randomly generated (no [Pool]).

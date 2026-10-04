@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
+using ConstructMod.Pools;
 
 namespace ConstructMod.Relics;
 
@@ -14,8 +16,10 @@ namespace ConstructMod.Relics;
 /// Granted by <see cref="Powers.ExtraLongRangeLancePower"/> on victory. Does NOT fire this
 /// combat: at the start of the next combat it replaces itself with a
 /// <see cref="LongRangeLanceRelic"/> carrying the same damage counter, so the damage lands at
-/// the start of the combat AFTER next. Not in any pool: only obtainable via the power.
+/// the start of the combat AFTER next. Event rarity is never drawn by the reward RNG, so
+/// despite pool membership it's only obtainable via the power (StS1 SPECIAL semantics).
 /// </summary>
+[Pool(typeof(ConstructRelicPool))]
 public class ExtraLongRangeLanceRelic : CustomRelicModel
 {
     // StS1 RelicTier.SPECIAL — maps to Event: never randomly generated (no [Pool]).
