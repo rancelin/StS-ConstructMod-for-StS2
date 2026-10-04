@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -14,15 +15,24 @@ public class CreateCores : AbstractConstructCard
 {
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Cores", 3m)];
+        [new DynamicVar("Cores", 3m), new OverheatVar()];
 
     public CreateCores() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
         Overheat = 10;
     }
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
+        }
+    }
+
     public override List<(string, string)>? Localization => new CardLoc("Create Cores",
-        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.\n{IfUpgraded:show:The Cores are Upgraded.|}");
+        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.\n{IfUpgraded:show:The Cores are Upgraded.|}\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -15,7 +15,7 @@ namespace ConstructMod.Cards;
 public class OilSpill : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<OilSpillPower>("Oil", 9m)];
+        [new PowerVar<OilSpillPower>("Oil", 9m), new OverheatVar()];
 
     public OilSpill() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
@@ -28,12 +28,13 @@ public class OilSpill : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
             yield return HoverTipFactory.FromCard<MegaCrit.Sts2.Core.Models.Cards.Burn>();
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Oil Spill",
-        "#Whenever a *Burn* hits the target, it takes {Oil} damage.\n*Overheat*: !O!.{IfUpgraded:show: Targets ALL enemies.|}");
+        "#Whenever a *Burn* hits the target, it takes {Oil} damage.\n*Overheat*: {Overheat}.{IfUpgraded:show: Targets ALL enemies.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

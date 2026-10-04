@@ -27,6 +27,11 @@ public static class CycleKeywordLocPatch
         Inject("card_keywords", "CONSTRUCTMOD-CYCLE.description",
             "When drawn, discard this and draw a new card. Only works once per turn.");
 
+        // Overheat keyword (card_keywords table).
+        Inject("card_keywords", "CONSTRUCTMOD-OVERHEAT.title", "Overheat");
+        Inject("card_keywords", "CONSTRUCTMOD-OVERHEAT.description",
+            "When too many cards Cycle in one turn, this card turns into a Burn for the rest of this combat.");
+
         // Card selection screen prompts (cards table). Referenced via LocString("cards", ...)
         // by Backup, MassProduction, Multistage, and Accumulate.
         Inject("cards", "CONSTRUCTMOD-BACKUP.selectionScreenPrompt", "Choose a card to copy.");

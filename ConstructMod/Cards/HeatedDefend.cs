@@ -21,11 +21,12 @@ public class HeatedDefend : AbstractCycleCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromPower<DexterityPower>(null);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(5m, ValueProp.Move)];
+        [new BlockVar(5m, ValueProp.Move), new OverheatVar()];
 
     public HeatedDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
@@ -33,7 +34,7 @@ public class HeatedDefend : AbstractCycleCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Heated Defend",
-        "#*Cycle* if your *Dexterity* is negative.\nGain !Block! *Block*.");
+        "#*Cycle* if your *Dexterity* is negative.\nGain !Block! *Block*.\n*Overheat*: {Overheat}.");
 
     public override bool CanCycle()
     {

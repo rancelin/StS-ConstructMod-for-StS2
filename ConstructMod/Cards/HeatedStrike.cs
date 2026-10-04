@@ -20,11 +20,12 @@ public class HeatedStrike : AbstractCycleCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(6m, ValueProp.Move)];
+        [new DamageVar(6m, ValueProp.Move), new OverheatVar()];
 
     public HeatedStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
@@ -32,7 +33,7 @@ public class HeatedStrike : AbstractCycleCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Heated Strike",
-        "#*Cycle* if your *Strength* is negative.\nDeal !Damage! damage.");
+        "#*Cycle* if your *Strength* is negative.\nDeal !Damage! damage.\n*Overheat*: {Overheat}.");
 
     public override bool CanCycle()
     {

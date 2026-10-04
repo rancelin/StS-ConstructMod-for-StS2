@@ -16,7 +16,7 @@ namespace ConstructMod.Cards;
 public class FlammableFog : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(5m, ValueProp.Move)];
+        [new BlockVar(5m, ValueProp.Move), new OverheatVar()];
 
     public FlammableFog() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
@@ -31,12 +31,13 @@ public class FlammableFog : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
             yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flammable Fog",
-        "#Gain !Block! *Block*. Gain !Block! *Block* next turn.{IfUpgraded:show: Gain !Block! *Block* in 2 turns.|}\n*Overheat*: !O!.");
+        "#Gain !Block! *Block*. Gain !Block! *Block* next turn.{IfUpgraded:show: Gain !Block! *Block* in 2 turns.|}\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

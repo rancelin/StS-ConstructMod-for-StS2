@@ -14,7 +14,7 @@ namespace ConstructMod.Cards;
 public class BlazingSpeed : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(3m, ValueProp.Move), new CardsVar(2)];
+        [new DamageVar(3m, ValueProp.Move), new CardsVar(2), new OverheatVar()];
 
     public BlazingSpeed() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
@@ -27,11 +27,12 @@ public class BlazingSpeed : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Blazing Speed",
-        "#Deal !Damage! damage.\nDraw {Cards} cards.\n*Overheat*: !O!.");
+        "#Deal !Damage! damage.\nDraw {Cards} cards.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

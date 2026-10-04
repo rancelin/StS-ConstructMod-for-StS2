@@ -32,6 +32,7 @@ public class MoltenSmash : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
             yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }
     }

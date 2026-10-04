@@ -24,7 +24,8 @@ public class Rollout : AbstractConstructCard
             new CalculationBaseVar(0m),
             new ExtraDamageVar(3m),
             new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) =>
-                CycleCount.GetCyclesThisTurn(card.Owner))
+                CycleCount.GetCyclesThisTurn(card.Owner)),
+            new OverheatVar()
         ];
 
     public Rollout() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
@@ -38,11 +39,12 @@ public class Rollout : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Rollout",
-        "#Deal damage equal to {ExtraDamage} times the number of cards that have *Cycled* this turn.");
+        "#Deal damage equal to {ExtraDamage} times the number of cards that have *Cycled* this turn.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

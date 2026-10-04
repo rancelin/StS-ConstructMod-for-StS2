@@ -31,8 +31,15 @@ public class FlashFreeze : AbstractConstructCard
         }
     }
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.Static(StaticHoverTip.Block)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.Static(StaticHoverTip.Block);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
+        }
+    }
 
     public override List<(string, string)>? Localization => new CardLoc("Flash Freeze",
         "#Gain !Block! *Block*. Your cards cannot *Overheat* for {FreezeTurns} turn(s). *Exhaust*.{IfUpgraded:show: *Innate*.|}");

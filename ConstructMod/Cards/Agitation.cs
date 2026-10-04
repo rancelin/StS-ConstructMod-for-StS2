@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Commands;
 using BaseLib.Abstracts;
@@ -17,6 +18,15 @@ public class Agitation : AbstractConstructCard
     public Agitation() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
         // No overheat (default -1) — Agitation reacts to overheat events, doesn't generate them.
+    }
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
+        }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Agitation",

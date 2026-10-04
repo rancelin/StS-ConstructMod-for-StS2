@@ -14,7 +14,7 @@ namespace ConstructMod.Cards;
 public class PhosphorStorm : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(7m, ValueProp.Move)];
+        [new DamageVar(7m, ValueProp.Move), new OverheatVar()];
 
     public PhosphorStorm() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
@@ -27,11 +27,12 @@ public class PhosphorStorm : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Phosphor Storm",
-        "#Deal !Damage! damage twice.{IfUpgraded:show: Deal !Damage! damage to a random enemy a third time.|}\n*Overheat*: !O!.");
+        "#Deal !Damage! damage twice.{IfUpgraded:show: Deal !Damage! damage to a random enemy a third time.|}\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
