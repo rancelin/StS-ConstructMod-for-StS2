@@ -43,48 +43,20 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // Cycle cards (exercise the Cycle hook / CycleCount / conditional cycle).
+        // Overheat testing pool (minimal): cards that overheat + tools to suppress/raise/trigger it.
+        // HeatedStrike/HeatedDefend overheat at 5 cycles; Rollout at 10. Cores cycle every draw to
+        // rack up the counter fast. FlashFreeze suppresses, Coolant raises thresholds, Agitation
+        // triggers on overheat, MoltenSmash force-overheats adjacent hand cards.
         ModelDb.Card<HeatedStrike>(),
         ModelDb.Card<HeatedDefend>(),
-        ModelDb.Card<ShiftStrike>(),
-        ModelDb.Card<ShiftGuard>(),
-        ModelDb.Card<ElectricArmor>(),
-        ModelDb.Card<CriticalHit>(),
-        ModelDb.Card<Isolate>(),
-        ModelDb.Card<Reserves>(),
-        // Cores (0-cost Cycle cards with an on-cycle bonus; clone to discard when upgraded).
+        ModelDb.Card<Rollout>(),
         ModelDb.Card<FlameCore>(),
         ModelDb.Card<ScopeCore>(),
-        ModelDb.Card<NuclearCore>(),
         ModelDb.Card<CreateCores>(),
-        // Cycle-interaction cards (react to cycles via IAfterCardCycled).
-        ModelDb.Card<Autoturret>(),
-        ModelDb.Card<PointDefense>(),
-        ModelDb.Card<Dampening>(),
-        ModelDb.Card<Tumble>(),
-        // Heat/Overheat cards (overheat threshold → Burn after N cycles; FlashFreeze suppresses,
-        // Coolant raises thresholds, Agitation triggers on overheat).
-        ModelDb.Card<Agitation>(),
-        ModelDb.Card<PhosphorStorm>(),
-        ModelDb.Card<BlazingSpeed>(),
-        ModelDb.Card<FlammableFog>(),
-        ModelDb.Card<MoltenSmash>(),
-        ModelDb.Card<OilSpill>(),
         ModelDb.Card<FlashFreeze>(),
         ModelDb.Card<ConstructMod.Cards.Coolant>(),
-        // Reviewed cards kept for ongoing verification.
-        ModelDb.Card<Backup>(),
-        ModelDb.Card<GatlingGun>(),
-        ModelDb.Card<Multistage>(),
-        ModelDb.Card<OmegaCannon>(),
-        ModelDb.Card<ConstructMod.Cards.Overclock>(),
-        ModelDb.Card<Afterburners>(),
-        ModelDb.Card<Rollout>(),
-        ModelDb.Card<MetalShell>(),
-        // Failsafe + MassProduction + MemoryTap exercise Status-cycle and selection screens.
-        ModelDb.Card<Failsafe>(),
-        ModelDb.Card<MassProduction>(),
-        ModelDb.Card<MemoryTap>(),
+        ModelDb.Card<Agitation>(),
+        ModelDb.Card<MoltenSmash>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
