@@ -25,6 +25,10 @@ public class SunScreen : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
+            // Matches vanilla Feel No Pain (the canonical 'exhaust a Status' card): Exhaust
+            // keyword tip + Block tip. Vanilla has no Status hover-tip (StaticHoverTip has no
+            // Status member), so the gold-highlighted word stays un-tippped for consistency.
+            yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
             yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }
     }

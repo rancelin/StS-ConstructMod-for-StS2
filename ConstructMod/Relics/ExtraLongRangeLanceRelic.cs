@@ -55,6 +55,6 @@ public class ExtraLongRangeLanceRelic : CustomRelicModel
 
     public override List<(string, string)>? Localization => new RelicLoc(
         Title: "EXTRA-Long-Range Lance",
-        Description: "#Does nothing this combat. At the start of your next combat, this becomes a Long-Range Lance that deals {Damage} damage to a random enemy.",
+        Description: "#Does nothing this combat. At the start of your next combat, this becomes a Long-Range Lance that will deal {Damage} damage to a random enemy.",
         Flavor: "Pointed firmly forwards, and then some.");
 }

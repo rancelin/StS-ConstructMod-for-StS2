@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Commands;
 using BaseLib.Abstracts;
 using ConstructMod.Powers;
+using ConstructMod.Relics;
 
 namespace ConstructMod.Cards;
 
@@ -23,14 +24,27 @@ public class LongRangeLance : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // Visual buff (in-combat feedback that a lance is pending).
         await PowerCmd.Apply<LongRangeLancePower>(choiceContext, Owner.Creature,
             DynamicVars["Damage"].IntValue, Owner.Creature, this);
-        // Mega folded into upgrade: also apply the EXTRA variant (damage lands 2 combats later).
-        // Original: upgrade +4 damage, mega -4 damage (net 0) + this second power.
+
+        // Grant the lance relic directly. It stays inert for the rest of this combat
+        // (BeforeCombatStart has already passed) and fires at the start of the next combat,
+        // dealing the damage and consuming itself — the StS1 outcome. (StS1 spawned the
+        // relic at victory via the power's onVictory, but StS2's AfterCombatVictory hook
+        // never reaches powers — the run-level dispatch only visits relics/potions/cards —
+        // so the card grants the relic itself.)
+        var lance = await RelicCmd.Obtain<LongRangeLanceRelic>(Owner);
+        lance.SetLanceDamage(DynamicVars["Damage"].IntValue);
+
+        // Mega folded into upgrade: also grant the EXTRA lance, which skips the next combat
+        // and replaces itself with a Lance relic, so the second hit lands the combat after.
         if (IsUpgraded)
         {
             await PowerCmd.Apply<ExtraLongRangeLancePower>(choiceContext, Owner.Creature,
                 DynamicVars["Damage"].IntValue, Owner.Creature, this);
+            var extra = await RelicCmd.Obtain<ExtraLongRangeLanceRelic>(Owner);
+            extra.SetLanceDamage(DynamicVars["Damage"].IntValue);
         }
     }
 

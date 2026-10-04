@@ -55,6 +55,6 @@ public class LongRangeLanceRelic : CustomRelicModel
 
     public override List<(string, string)>? Localization => new RelicLoc(
         Title: "Long-Range Lance",
-        Description: "#At the start of this combat, deal {Damage} damage to a random enemy. Vanishes afterwards.",
+        Description: "#At the start of your next combat, deal {Damage} damage to a random enemy. Vanishes afterwards.",
         Flavor: "Pointed firmly forwards.");
 }
