@@ -43,9 +43,15 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // Ready-content cards pending verification.
-        ModelDb.Card<LongRangeLance>(),
+        // Sun Screen / Oil Spill testing: Sun Screen exhausts a random Status (Burn) from hand
+        // at end of turn; Oil Spill triggers when a Burn hits you (its end-of-turn damage —
+        // note Sun Screen will eat the first Burn before it can hurt you, so Oil Spill needs
+        // multiple Burns in hand to trigger). Overclock (1 Burn to hand each turn) and
+        // Afterburners (shuffle 3 Burns into draw) are the generators.
         ModelDb.Card<SunScreen>(),
+        ModelDb.Card<OilSpill>(),
+        ModelDb.Card<ConstructMod.Cards.Overclock>(),
+        ModelDb.Card<Afterburners>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
