@@ -39,14 +39,7 @@ public class CreateCores : AbstractConstructCard
         int count = (int)DynamicVars["Cores"].BaseValue;
         for (int i = 0; i < count; i++)
         {
-            CardModel canonical = Owner.RunState.Rng.CombatCardSelection.NextInt(0, 5) switch
-            {
-                0 => ModelDb.Card<FlameCore>(),
-                1 => ModelDb.Card<LaserCore>(),
-                2 => ModelDb.Card<ScopeCore>(),
-                3 => ModelDb.Card<ForceCore>(),
-                _ => ModelDb.Card<GuardCore>()
-            };
+            CardModel canonical = ConstructCores.RandomCore(Owner);
             if (CombatState is not { } combat)
             {
                 break;

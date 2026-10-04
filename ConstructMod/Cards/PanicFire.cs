@@ -36,14 +36,7 @@ public class PanicFire : AbstractConstructCard
         if (CombatState is not { } combat) return;
         for (int i = 0; i < 3; i++)
         {
-            CardModel canonical = Owner.RunState.Rng.CombatCardSelection.NextInt(0, 5) switch
-            {
-                0 => ModelDb.Card<FlameCore>(),
-                1 => ModelDb.Card<LaserCore>(),
-                2 => ModelDb.Card<ScopeCore>(),
-                3 => ModelDb.Card<ForceCore>(),
-                _ => ModelDb.Card<GuardCore>()
-            };
+            CardModel canonical = ConstructCores.RandomCore(Owner);
             CardModel core = combat.CreateCard(canonical, Owner);
             await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
         }

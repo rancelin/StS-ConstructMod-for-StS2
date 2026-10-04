@@ -33,11 +33,12 @@ public static class CycleKeywordLocPatch
             "When too many cards Cycle in one turn, this card turns into a Burn for the rest of this combat.");
 
         // Card selection screen prompts (cards table). Referenced via LocString("cards", ...)
-        // by Backup, MassProduction, Multistage, and Accumulate.
+        // by Backup, MassProduction, Multistage, Accumulate, and WeddingRing.
         Inject("cards", "CONSTRUCTMOD-BACKUP.selectionScreenPrompt", "Choose a card to copy.");
         Inject("cards", "CONSTRUCTMOD-MASSPRODUCTION.selectionScreenPrompt", "Choose a card to copy.");
         Inject("cards", "CONSTRUCTMOD-MULTISTAGE.selectionScreenPrompt", "Choose an Attack to copy.");
         Inject("cards", "CONSTRUCTMOD-ACCUMULATE.selectionScreenPrompt", "Choose a card to copy.");
+        Inject("cards", "CONSTRUCTMOD-WEDDINGRING.selectionScreenPrompt", "Choose 2 cards to marry.");
     }
 
     private static void Inject(string tableName, string key, string value)

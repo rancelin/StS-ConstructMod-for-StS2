@@ -13,15 +13,17 @@ Work in progress. The core character, Cycle mechanic, and ~95 cards are ported a
 - **Cores**: `AbstractCoreCard` base — 0-cost Cycle cards with an on-cycle bonus, cloning to discard when upgraded.
 - **Cards**: ~95 cards across Common/Uncommon/Rare. Starting deck includes the default starter kit (5 Strike, 5 Defend, AttackMode, DefenseMode, ModeShift) plus one copy of each reviewed card for verification.
 - **Powers**: 30 custom powers including `NoCyclePower`, `MultistagePower` (with `{Card}` placeholder via `StringVar`), `ElectricArmorThornsPower` (1-turn Thorns via BaseLib `CustomTemporaryPowerModelWrapper`), `MetallicizePower` and `PlatedArmorPower` (custom, matching Downfall's pattern), temporary Strength/Dexterity down via vanilla `TemporaryStrengthPower`/`TemporaryDexterityPower`.
-- **Relic**: `Cogwheel` (starter, grants 1 Artifact at the start of each combat).
+- **Relics**: 10 ported — `Cogwheel` (starter), `BoolHorns` (Rare, damage doubles between non-combat rooms), `ClawGrip` (Boss/Ancient, retain a random card + it costs 1 less next turn), `FoamFinger` (Uncommon, +1 draw for 3 turns via `ModifyHandDraw`), `IceCubes` (Shop, no Overheat for 3 turns), `MasterCore` (Common, 3 random Cores per combat), `RocketBooster` (Rare, upgrade a random card on Elite victory), `WeddingRing` (Boss/Ancient, marry 2 cards — once per turn, playing one plays the other; selection is in-memory until the save-support pass), `LongRangeLanceRelic` + `ExtraLongRangeLanceRelic` (Event, granted by the Lance card's powers).
+- **Potions**: `ShiftPotion` (Uncommon — swap Str/Dex, draw 1).
 - **Localization**: in-code via BaseLib `CardLoc`/`PowerLoc`/`RelicLoc`/`CharacterLoc` + `SimpleLoc`. `CycleKeywordLocPatch` injects keyword + selection-screen-prompt loc until a `.pck` ships (`has_pck: false`).
 
 ### Roadmap (not yet ported)
-- **Heat/Overheat system**: the original mod's signature mechanic — per-card `overheat` threshold that turns cards into Burns after N cycles in a turn, plus the Heat Meter UI. `Rollout` is the only currently-ported card that referenced it (overheat field not yet ported). The `IAfterCardCycled` hook is now in place as the foundation.
-- **Mega-upgrade**: second upgrade tier. Currently folded into the normal upgrade for some cards (e.g. OmegaCannon, Overclock); not implemented as a separate tier.
-- **Remaining relics**: ~13 relics from the original mod not yet ported.
-- **Remaining powers**: Agitation, FlashFreeze, LongRangeLance, and other Heat-gated powers not yet ported.
-- **Remaining cards**: ~unported cards beyond the current ~95.
+- **Heat Meter UI**: the visual heat bar (cycles this turn + per-card overheat thresholds). Godot scene + BaseLib ExtraCombatUi integration. (The Heat/Overheat mechanic itself is fully ported.)
+- **Mega-upgrade**: second upgrade tier. Currently folded into the normal upgrade for some cards (e.g. OmegaCannon, Overclock, all Heat cards, LongRangeLance, SunScreen); not implemented as a separate tier. Unblocks Stasis, ClockworkEgg, MegaPotion, and 3 mega relics (ClockworkPhoenix, MegaBattery, PurpleEmber).
+- **Remaining relics**: ClockworkPhoenix, MegaBattery, PurpleEmber (mega-blocked), FreezeFrame (Cycle toggle with right-click activation).
+- **Remaining potion**: MegaPotion (mega-blocked).
+- **Remaining cards**: Stasis, ClockworkEgg (mega-blocked).
+- **Save/load support**: WeddingRing's chosen cards are in-memory only (lost on load); ClawGrip's retained-card reference is combat-only by design. Needs BaseLib SavedSpireField / ExtendedSaveTypes work.
 - **Godot assets**: `.pck` with card art, power icons, character visuals, localization tables.
 - **Flamethrower**: disabled (`showInCardLibrary: false, autoAdd: false`); to be reimagined as a multiplayer card.
 
