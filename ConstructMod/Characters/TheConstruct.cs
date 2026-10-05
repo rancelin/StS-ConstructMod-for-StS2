@@ -43,15 +43,15 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // Sun Screen / Oil Spill testing: Sun Screen exhausts a random Status (Burn) from hand
-        // at end of turn; Oil Spill triggers when a Burn hits you (its end-of-turn damage —
-        // note Sun Screen will eat the first Burn before it can hurt you, so Oil Spill needs
-        // multiple Burns in hand to trigger). Overclock (1 Burn to hand each turn) and
-        // Afterburners (shuffle 3 Burns into draw) are the generators.
-        ModelDb.Card<SunScreen>(),
-        ModelDb.Card<OilSpill>(),
-        ModelDb.Card<ConstructMod.Cards.Overclock>(),
-        ModelDb.Card<Afterburners>(),
+        // Mega-upgrade testing: the two unfolded 2-tier cards. Test via console:
+        //   relic add CONSTRUCTMOD-CLOCKWORK_PHOENIX  (smith gate: +1 cards become upgradeable
+        //     at rest sites only while owned — try smithing Omega Cannon before/after)
+        //   relic add CONSTRUCTMOD-MEGA_BATTERY        (force-mega a random deck card on pickup)
+        //   potion CONSTRUCTMOD-MEGA_POTION            (force-mega a random hand card)
+        // Then verify Omega Cannon+2 (Strength discount incl. negative) and Gatling Gun+2
+        // (-1 dmg / +1 shot per [E]), and save/reload a mega'd card to exercise the replay path.
+        ModelDb.Card<OmegaCannon>(),
+        ModelDb.Card<GatlingGun>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
