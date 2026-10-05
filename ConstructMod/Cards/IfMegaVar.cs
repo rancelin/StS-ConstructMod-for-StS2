@@ -19,9 +19,9 @@ public enum MegaDisplay
 
 /// <summary>
 /// A <see cref="DynamicVar"/> carrying the mega-upgrade display state for card descriptions,
-/// mirroring vanilla's IfUpgradedVar. Referenced in loc as {IfMega:show:megaText|normalText} and
+/// mirroring vanilla's IfUpgradedVar. Referenced in loc as {IfMega:mega:megaText|normalText} and
 /// interpreted by <see cref="ShowIfMegaFormatter"/>. Added to the description by
-/// AbstractConstructCard.AddExtraArgsToDescription.
+/// AbstractConstructCard.AddExtraArgsToDescription. Usage: {IfMega:mega:megaText|normalText}.
 /// </summary>
 public class IfMegaVar : DynamicVar
 {

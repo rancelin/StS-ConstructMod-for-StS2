@@ -9,17 +9,18 @@ using BaseLib.Abstracts;
 namespace ConstructMod.Cards;
 
 /// <summary>
-/// A SmartFormat formatter for {IfMega:show:megaText|normalText} — the mega-upgrade analogue of
-/// vanilla's ShowIfUpgradedFormatter for {IfUpgraded:show:...}. Registered automatically via
-/// BaseLib's <see cref="IAutoRegisterFormatSpecifier"/>; coexists with the vanilla "show"
-/// formatter because each type-checks its variable and returns false for the other's
-/// (<see cref="IfUpgradedVar"/> vs <see cref="IfMegaVar"/>).
+/// A SmartFormat formatter for {IfMega:mega:megaText|normalText} — the mega-upgrade analogue of
+/// vanilla's ShowIfUpgradedFormatter for {IfUpgraded:show:...}. Named "mega" (SmartFormat rejects
+/// duplicate formatter names, so it cannot share the vanilla "show" name). Registered
+/// automatically via BaseLib's <see cref="IAutoRegisterFormatSpecifier"/>.
 /// </summary>
 public class ShowIfMegaFormatter : IFormatter, IAutoRegisterFormatSpecifier
 {
+    // NOT "show" — SmartFormat throws ArgumentException on registering a formatter whose name
+    // already exists (the vanilla ShowIfUpgradedFormatter owns "show").
     public string Name
     {
-        get => "show";
+        get => "mega";
         set => throw new NotSupportedException("Setting the 'Names' property is not supported.");
     }
 

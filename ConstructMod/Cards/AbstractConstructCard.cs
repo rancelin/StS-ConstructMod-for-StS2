@@ -125,8 +125,9 @@ public abstract class AbstractConstructCard : CustomCardModel
 
     /// <summary>
     /// Injects the {IfMega:...} description variable so loc text can branch per tier:
-    /// {IfMega:show:mega-only sentence.|} — handled by ShowIfMegaFormatter (registered via
-    /// BaseLib's IAutoRegisterFormatSpecifier, coexisting with the vanilla "show" formatter).
+    /// {IfMega:mega:mega-only sentence.|} — handled by ShowIfMegaFormatter (registered via
+    /// BaseLib's IAutoRegisterFormatSpecifier; named "mega" since SmartFormat forbids
+    /// duplicate formatter names and vanilla already owns "show").
     /// </summary>
     protected override void AddExtraArgsToDescription(LocString description)
     {
