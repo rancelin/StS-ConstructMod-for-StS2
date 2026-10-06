@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using ConstructMod.Cards;
@@ -21,6 +22,9 @@ public class MegaBattery : CustomRelicModel
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
     public override bool HasUponPickupEffect => true;
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade)];
 
     public override Task AfterObtained()
     {

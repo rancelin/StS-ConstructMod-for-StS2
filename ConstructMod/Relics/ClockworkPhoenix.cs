@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
+using ConstructMod.Cards;
 using ConstructMod.Pools;
 
 namespace ConstructMod.Relics;
@@ -18,6 +20,9 @@ namespace ConstructMod.Relics;
 public class ClockworkPhoenix : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Event;
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade)];
 
     public override List<(string, string)>? Localization => new RelicLoc(
         Title: "Clockwork Phoenix",

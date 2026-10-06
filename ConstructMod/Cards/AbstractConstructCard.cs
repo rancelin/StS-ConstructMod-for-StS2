@@ -63,14 +63,19 @@ public abstract class AbstractConstructCard : CustomCardModel
     /// The engine-facing upgrade cap. Applies the mega gating on top of
     /// <see cref="IntrinsicMaxUpgradeLevel"/>:
     /// <list type="bullet">
+    /// <item>Canonical / unowned instances (compendium grid, save/load replay) → intrinsic, so
+    /// saved mega cards always reconstruct and canonical cards never trip the Owner-assert.
+    /// NOTE: CardModel.get_Owner() asserts mutable — this getter MUST check IsMutable before
+    /// reading Owner (the compendium grid calls IsUpgradable on canonical models).</item>
     /// <item>Forced upgrade in progress → one more level than current (bounded by intrinsic).</item>
-    /// <item>No owner yet (save/load replay, canonical/library instances) → intrinsic, so saved
-    /// mega cards always reconstruct regardless of Phoenix.</item>
     /// <item>In combat → regular tier only (the original never allowed player-chosen mega
     /// mid-combat, even with Phoenix).</item>
     /// <item>Out of combat with <see cref="Relics.ClockworkPhoenix"/> → intrinsic.</item>
     /// <item>Otherwise → regular tier only.</item>
     /// </list>
+    /// The result is floored at <see cref="CardModel.CurrentUpgradeLevel"/> so the vanilla
+    /// multi-level title branch ("Name+2") still triggers for already-mega'd cards even when the
+    /// gate reports a cap of 1 — the floor never re-enables upgrading (level &lt; max).
     /// </summary>
     public override int MaxUpgradeLevel
     {
@@ -80,17 +85,16 @@ public abstract class AbstractConstructCard : CustomCardModel
             {
                 return Math.Min(IntrinsicMaxUpgradeLevel, CurrentUpgradeLevel + 1);
             }
-            if (Owner == null)
+            if (!IsMutable || Owner == null)
             {
                 return IntrinsicMaxUpgradeLevel;
             }
-            if (Owner.Creature.CombatState != null)
-            {
-                return Math.Min(IntrinsicMaxUpgradeLevel, 1);
-            }
-            return HasClockworkPhoenix()
-                ? IntrinsicMaxUpgradeLevel
-                : Math.Min(IntrinsicMaxUpgradeLevel, 1);
+            var gated = Owner.Creature.CombatState != null
+                ? Math.Min(IntrinsicMaxUpgradeLevel, 1)
+                : HasClockworkPhoenix()
+                    ? IntrinsicMaxUpgradeLevel
+                    : Math.Min(IntrinsicMaxUpgradeLevel, 1);
+            return Math.Max(gated, CurrentUpgradeLevel);
         }
     }
 
@@ -132,12 +136,12 @@ public abstract class AbstractConstructCard : CustomCardModel
     protected override void AddExtraArgsToDescription(LocString description)
     {
         base.AddExtraArgsToDescription(description);
+        // Upgrade-preview clones carry the POST-upgrade level already, so IsMegaUpgraded on the
+        // clone is the correct check for both the +1 preview (level 1, not mega → normal branch)
+        // and the +2 preview (level 2 → mega branch). The IsPreview() check only adds the green
+        // wrap, mirroring the vanilla IfUpgraded UpgradePreview handling.
         var display = IsMegaUpgraded ? MegaDisplay.Mega : MegaDisplay.Normal;
-        // Upgrade previews of a card that would reach its mega tier show the mega branch in green
-        // (mirrors the vanilla IfUpgraded UpgradePreview handling).
-        if (UpgradePreviewType.IsPreview()
-            && CurrentUpgradeLevel + 1 >= IntrinsicMaxUpgradeLevel
-            && IntrinsicMaxUpgradeLevel > 1)
+        if (UpgradePreviewType.IsPreview() && IsMegaUpgraded)
         {
             display = MegaDisplay.MegaPreview;
         }

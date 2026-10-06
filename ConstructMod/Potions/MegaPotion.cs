@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using ConstructMod.Cards;
@@ -24,6 +25,9 @@ public class MegaPotion : CustomPotionModel
     public override PotionRarity Rarity => PotionRarity.Rare;
     public override PotionUsage Usage => PotionUsage.CombatOnly;
     public override TargetType TargetType => TargetType.Self;
+
+    public override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade)];
 
     protected override Task OnUse(PlayerChoiceContext choiceContext, Creature? target)
     {

@@ -7,4 +7,5 @@ public class ConstructKeywords
 {
     [CustomEnum] public static CardKeyword Cycle;
     [CustomEnum] public static CardKeyword Overheat;
+    [CustomEnum] public static CardKeyword MegaUpgrade;
 }

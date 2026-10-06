@@ -32,6 +32,11 @@ public static class CycleKeywordLocPatch
         Inject("card_keywords", "CONSTRUCTMOD-OVERHEAT.description",
             "When too many cards Cycle in one turn, this card turns into a Burn for the rest of this combat.");
 
+        // Mega-upgrade keyword (card_keywords table) — matches the original's registered keyword.
+        Inject("card_keywords", "CONSTRUCTMOD-MEGAUPGRADE.title", "Mega-upgrade");
+        Inject("card_keywords", "CONSTRUCTMOD-MEGAUPGRADE.description",
+            "A second, more powerful upgrade tier for Construct cards. Reachable at rest sites with the Clockwork Phoenix, or through effects that Mega-upgrade cards directly.");
+
         // Card selection screen prompts (cards table). Referenced via LocString("cards", ...)
         // by Backup, MassProduction, Multistage, Accumulate, and WeddingRing.
         Inject("cards", "CONSTRUCTMOD-BACKUP.selectionScreenPrompt", "Choose a card to copy.");
