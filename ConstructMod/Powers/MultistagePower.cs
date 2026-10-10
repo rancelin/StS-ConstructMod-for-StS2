@@ -45,13 +45,16 @@ public class MultistagePower : CustomPowerModel
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)
     {
-        // StS1 mints a separate power instance per play (unique ID suffix, "prevents
-        // power stacking"); StS2 Counter powers merge instead, so each play is staged
-        // as its own entry with its own remaining turns. Second plays no longer eat
-        // the first card or merge turn counts.
-        if (cardSource != null)
-            _staged.Add(new StagedCard(cardSource, (int)amount));
+        // Staging is driven by the Multistage card (StageAttack) after Apply:
+        // BeforeApplied does NOT fire reliably on re-application (second plays
+        // never reached the power here), so it must not own staging.
         return Task.CompletedTask;
+    }
+
+    public void StageAttack(CardModel card, int turns)
+    {
+        _staged.Add(new StagedCard(card, turns));
+        SyncDisplay();
     }
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power,

@@ -62,6 +62,10 @@ public class Multistage : AbstractConstructCard
 
         await PowerCmd.Apply<MultistagePower>(choiceContext, Owner.Creature,
             DynamicVars["Turns"].IntValue, Owner.Creature, chosen);
+        // Stage via explicit call: BeforeApplied doesn't fire on re-application,
+        // so the card owns staging (exactly once per play, with its own countdown).
+        Owner.Creature.Powers.OfType<MultistagePower>().FirstOrDefault()
+            ?.StageAttack(chosen, DynamicVars["Turns"].IntValue);
         await CardCmd.Exhaust(choiceContext, chosen);
     }
 
