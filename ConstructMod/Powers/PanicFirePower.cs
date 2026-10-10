@@ -30,6 +30,15 @@ public class PanicFirePower : CustomPowerModel, IAfterCardCycled
         if (CombatManager.Instance.IsOverOrEnding) return;
         Flash();
         await CardCmd.Exhaust(ctx, card);
+        // Resync the pile UI: exhausting mid-draw (inside AfterCardDrawnEarly's
+        // cycle chain) leaves the exhaust-pile badge/visibility stale at 0, and
+        // opening the pile view in that desynced state can crash (same class as
+        // the UnbalancingBlast pile-badge fix — fire the finished events manually).
+        if (Owner.Player?.PlayerCombatState is { } pcs)
+        {
+            pcs.ExhaustPile.InvokeCardAddFinished();
+            pcs.ExhaustPile.InvokeCardRemoveFinished();
+        }
         var enemy = Owner.Player?.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
         if (enemy != null)
         {
