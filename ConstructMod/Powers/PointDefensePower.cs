@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -37,7 +38,18 @@ public class PointDefensePower : CustomPowerModel, IAfterCardCycled
 
     public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        if (Owner == player.Creature)
+        // NOTE: must NOT reset here — AfterPlayerTurnStart fires after the draw phase
+        // (cf. AbstractCycleCard's AfterPlayerTurnStartEarly comment), so resetting here
+        // wipes the draw-phase consumption (5→N→5 bug). Reset happens in AfterSideTurnEnd.
+        return Task.CompletedTask;
+    }
+
+    public override Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
+    {
+        // Refresh the per-turn pool at the end of our turn (CycleCount.ResetTurn pattern),
+        // so the next turn's draw phase starts full and both phases share one pool.
+        if (side == CombatSide.Player && participants.Contains(Owner))
         {
             SetAmount(_limit);
         }
