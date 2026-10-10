@@ -11,7 +11,11 @@ namespace ConstructMod.Powers;
 
 public class SynchronizePower : CustomPowerModel
 {
-    private string? _lastDrawnName;
+    // StS1 matches c.originalName — the base name shared across upgrade levels. StS2
+    // Title carries the +1/+2 suffix, so same-card-different-level draws never matched.
+    // Card type is the level-independent identity (clones preserve it, transforms change
+    // it — same equivalence as originalName for matching purposes).
+    private Type? _lastDrawnType;
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
@@ -24,11 +28,11 @@ public class SynchronizePower : CustomPowerModel
     public override async Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
         if (card.Owner.Creature != Owner) return;
-        var name = card.Title;
-        if (_lastDrawnName == name)
+        var type = card.GetType();
+        if (_lastDrawnType == type)
         {
             Flash();
-            _lastDrawnName = null;
+            _lastDrawnType = null;
             if (CombatState is { } combat)
             {
                 foreach (var enemy in combat.HittableEnemies.ToList())
@@ -39,7 +43,7 @@ public class SynchronizePower : CustomPowerModel
         }
         else
         {
-            _lastDrawnName = name;
+            _lastDrawnType = type;
         }
     }
 }
