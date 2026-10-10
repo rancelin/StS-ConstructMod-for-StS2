@@ -15,8 +15,12 @@ namespace ConstructMod.Cards;
 public abstract class AbstractCoreCard : AbstractCycleCard
 {
     protected AbstractCoreCard(CardType type, TargetType target)
-        : base(0, type, CardRarity.Uncommon, target, showInCardLibrary: false, autoAdd: false)
+        : base(0, type, CardRarity.Uncommon, target, showInCardLibrary: false)
     {
+        // NOTE: autoAdd stays true (cores belong to the Construct pool). Setting
+        // autoAdd:false leaves the card pool-less and CardModel.get_Pool() throws
+        // when the engine renders it (turn-loop death on draw). This also matches
+        // StS1, where cores are registered via addCard() and can appear as rewards.
     }
 
     public override List<(string, string)>? Localization =>
