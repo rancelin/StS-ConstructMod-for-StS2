@@ -24,16 +24,22 @@ public static class ApotheosisMegaPatch
     [HarmonyPostfix]
     static async Task MegaUpgradedConstructCards(Task __result, Apotheosis __instance)
     {
-        await __result;
+        // Snapshot BEFORE the vanilla pass: only cards already upgraded going in may
+        // take the mega top-up. (Without this, cards the vanilla pass just took 0→+1
+        // also qualify post-await and jump straight to +2, skipping the Phoenix gate.)
         var cards = __instance.Owner?.PlayerCombatState?.AllCards;
-        if (cards == null) return;
-        foreach (var card in cards.ToList())
-        {
-            if (card is AbstractConstructCard construct
+        var preUpgraded = cards
+            ?.Where(c => c is AbstractConstructCard construct
                 && construct.IsUpgraded
                 && construct.CurrentUpgradeLevel < construct.IntrinsicMaxUpgradeLevel)
+            .Cast<AbstractConstructCard>()
+            .ToList() ?? [];
+        await __result;
+        foreach (var construct in preUpgraded)
+        {
+            if (construct.CurrentUpgradeLevel < construct.IntrinsicMaxUpgradeLevel)
             {
-                AbstractConstructCard.ForceUpgradeToMax(card);
+                AbstractConstructCard.ForceUpgradeToMax(construct);
             }
         }
     }

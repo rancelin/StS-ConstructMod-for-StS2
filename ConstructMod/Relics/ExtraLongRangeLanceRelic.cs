@@ -29,13 +29,25 @@ public class ExtraLongRangeLanceRelic : CustomRelicModel
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Damage", 12m)];
 
+    // Persisted source of truth, same pattern as LongRangeLanceRelic (DynamicVar
+    // mutations don't survive save/load).
+    private static readonly SavedSpireField<ExtraLongRangeLanceRelic, int> SavedDamage = new(() => 12, "ConstructMod_ExtraLongRangeLance_Damage");
+
     public override bool ShowCounter => true;
-    public override int DisplayAmount => DynamicVars["Damage"].IntValue;
+    public override int DisplayAmount
+    {
+        get
+        {
+            DynamicVars["Damage"].BaseValue = SavedDamage.Get(this);
+            return DynamicVars["Damage"].IntValue;
+        }
+    }
 
     /// <summary>Set the lance's damage counter (called by ExtraLongRangeLancePower on victory).</summary>
     public void SetLanceDamage(int damage)
     {
         DynamicVars["Damage"].BaseValue = damage;
+        SavedDamage.Set(this, damage);
         InvokeDisplayAmountChanged();
     }
 
@@ -46,6 +58,8 @@ public class ExtraLongRangeLanceRelic : CustomRelicModel
     public override Task BeforeCombatStart()
     {
         Flash();
+        // Restore the persisted counter (post-save/load the DynamicVar is back at base).
+        DynamicVars["Damage"].BaseValue = SavedDamage.Get(this);
         // Replace this relic with a LongRangeLanceRelic carrying the same damage counter.
         // The replacement does not fire this combat (its BeforeCombatStart has effectively
         // passed — it was just created), so the damage lands next combat instead.
