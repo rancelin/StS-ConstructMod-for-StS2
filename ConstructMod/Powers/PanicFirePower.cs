@@ -25,20 +25,16 @@ public class PanicFirePower : CustomPowerModel, IAfterCardCycled
 
     public async Task AfterCardCycled(PlayerChoiceContext ctx, CardModel card)
     {
+        // Damage only — the exhaust itself is handled by AbstractCycleCard, which
+        // routes the cycling card straight to the exhaust pile when this power is
+        // up (mirrors StS1, where CycleCardAction takes the exhaust branch up front
+        // and the power's onCycleCard only queues damage). Listeners must NOT move
+        // piles here: anything done to the card is undone by the cycle's
+        // discard/draw step that runs after this hook.
         if (CombatState is not { } combat) return;
         if (card.IsUpgraded) return;
         if (CombatManager.Instance.IsOverOrEnding) return;
         Flash();
-        await CardCmd.Exhaust(ctx, card);
-        // Resync the pile UI: exhausting mid-draw (inside AfterCardDrawnEarly's
-        // cycle chain) leaves the exhaust-pile badge/visibility stale at 0, and
-        // opening the pile view in that desynced state can crash (same class as
-        // the UnbalancingBlast pile-badge fix — fire the finished events manually).
-        if (Owner.Player?.PlayerCombatState is { } pcs)
-        {
-            pcs.ExhaustPile.InvokeCardAddFinished();
-            pcs.ExhaustPile.InvokeCardRemoveFinished();
-        }
         var enemy = Owner.Player?.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
         if (enemy != null)
         {

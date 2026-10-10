@@ -65,7 +65,18 @@ public abstract class AbstractCycleCard : AbstractConstructCard
             await CycleHook.AfterCardCycled(Owner.Creature.CombatState, choiceContext, this);
             // After each cycle, check whether any card has overheated (turns into a Burn).
             await OverheatCheck.Run(choiceContext, Owner);
-            await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
+            // Route the card itself: Panic Fire sends non-upgraded cyclers straight
+            // to exhaust (StS1 CycleCardAction's isExhaust branch — decided up front,
+            // executed here). Listeners above must not move piles; this step owns it.
+            if (Owner.Creature.HasPower<PanicFirePower>() && !IsUpgraded)
+            {
+                await CardCmd.Exhaust(choiceContext, this);
+                await CardPileCmd.Draw(choiceContext, 1m, Owner);
+            }
+            else
+            {
+                await CardCmd.DiscardAndDraw(choiceContext, [this], 1);
+            }
         }
         await base.AfterCardDrawnEarly(choiceContext, card, fromHandDraw);
     }
