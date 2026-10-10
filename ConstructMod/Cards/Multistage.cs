@@ -34,15 +34,6 @@ public class Multistage : AbstractConstructCard
     {
     }
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips
-    {
-        get
-        {
-            foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return EnergyHoverTip;
-        }
-    }
-
     public override List<(string, string)>? Localization => new CardLoc("Multistage",
         "#Exhaust an Attack of cost X or less.\nAt the start of your next {Turns} turns, play a copy of that card.");
 
@@ -71,9 +62,6 @@ public class Multistage : AbstractConstructCard
 
         await PowerCmd.Apply<MultistagePower>(choiceContext, Owner.Creature,
             DynamicVars["Turns"].IntValue, Owner.Creature, chosen);
-        var power = Owner.Creature.Powers.OfType<MultistagePower>()
-            .FirstOrDefault(p => p.Amount == DynamicVars["Turns"].IntValue);
-        power?.SetHeldCard(chosen);
         await CardCmd.Exhaust(choiceContext, chosen);
     }
 
