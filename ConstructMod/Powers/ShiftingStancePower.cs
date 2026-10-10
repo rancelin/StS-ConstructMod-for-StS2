@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using BaseLib.Abstracts;
 
 namespace ConstructMod.Powers;
@@ -18,15 +19,24 @@ public class ShiftingStancePower : CustomPowerModel
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("CardsLeft", 0m)];
+
+    private void SyncCardsLeft() => DynamicVars["CardsLeft"].BaseValue = _remaining;
+
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Shifting Stance",
-        Description: "After you play {CardsLeft} more card(s), swap your Strength and Dexterity.",
-        SmartDescription: "After you play {CardsLeft} more card(s), swap your Strength and Dexterity.");
+        Description: "#After you play {CardsLeft} more card(s), swap your Strength and Dexterity.",
+        SmartDescription: "#After you play {CardsLeft} more card(s), swap your Strength and Dexterity.");
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
         Creature? applier, CardModel? cardSource)
     {
-        if (power == this) _remaining = Amount;
+        if (power == this)
+        {
+            _remaining = Amount;
+            SyncCardsLeft();
+        }
         return Task.CompletedTask;
     }
 
@@ -34,8 +44,13 @@ public class ShiftingStancePower : CustomPowerModel
     {
         if (cardPlay.Player != Owner.Player) return Task.CompletedTask;
         _remaining--;
-        if (_remaining > 0) return Task.CompletedTask;
+        if (_remaining > 0)
+        {
+            SyncCardsLeft();
+            return Task.CompletedTask;
+        }
         _remaining = Amount;
+        SyncCardsLeft();
         Flash();
         return SwapStats(choiceContext);
     }

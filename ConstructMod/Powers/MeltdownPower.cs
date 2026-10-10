@@ -19,8 +19,8 @@ public class MeltdownPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Meltdown",
-        Description: "At the start of your turn, deal {Amount} damage to ALL enemies and add a Burn to your hand.",
-        SmartDescription: "At the start of your turn, deal {Amount} damage to ALL enemies and add a Burn to your hand.");
+        Description: "#At the start of your turn, deal {Amount} damage to ALL enemies and add a Burn to your hand.",
+        SmartDescription: "#At the start of your turn, deal {Amount} damage to ALL enemies and add a Burn to your hand.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {

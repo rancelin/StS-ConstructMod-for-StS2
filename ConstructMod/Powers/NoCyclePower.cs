@@ -16,8 +16,8 @@ public class NoCyclePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "No Cycle",
-        Description: "Your cards cannot Cycle for {Amount} more turn(s).",
-        SmartDescription: "Your cards cannot Cycle.");
+        Description: "#Your cards cannot Cycle for {Amount} more turn(s).",
+        SmartDescription: "#Your cards cannot Cycle.");
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)

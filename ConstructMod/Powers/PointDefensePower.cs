@@ -22,8 +22,8 @@ public class PointDefensePower : CustomPowerModel, IAfterCardCycled
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Point Defense",
-        Description: "Whenever a card Cycles, gain 1 Block. Works {Amount} time(s) per turn.",
-        SmartDescription: "Whenever a card Cycles, gain 1 Block, a limited number of times per turn.");
+        Description: "#Whenever a card Cycles, gain 1 Block. Works {Amount} time(s) per turn.",
+        SmartDescription: "#Whenever a card Cycles, gain 1 Block, a limited number of times per turn.");
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
         Creature? applier, CardModel? cardSource)

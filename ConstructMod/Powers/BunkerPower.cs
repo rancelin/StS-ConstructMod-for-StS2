@@ -18,8 +18,8 @@ public class BunkerPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Bunker",
-        Description: "Whenever a card is Retained, gain {Amount} Block.",
-        SmartDescription: "Whenever a card is Retained, gain {Amount} Block.");
+        Description: "#Whenever a card is Retained, gain {Amount} Block.",
+        SmartDescription: "#Whenever a card is Retained, gain {Amount} Block.");
 
     public override async Task AfterFlush(PlayerChoiceContext choiceContext, Player player,
         IReadOnlyCollection<CardModel> flushedCards, IReadOnlyCollection<CardModel> retainedCards)

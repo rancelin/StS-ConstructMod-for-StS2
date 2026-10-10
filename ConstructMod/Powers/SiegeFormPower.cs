@@ -19,8 +19,8 @@ public class SiegeFormPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Siege Form",
-        Description: "After you play a card, gain {Amount} Strength until the end of your turn.",
-        SmartDescription: "After you play a card, gain {Amount} Strength until the end of your turn.");
+        Description: "#After you play a card, gain {Amount} Strength until the end of your turn.",
+        SmartDescription: "#After you play a card, gain {Amount} Strength until the end of your turn.");
 
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)

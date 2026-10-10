@@ -18,8 +18,8 @@ public class ReactiveShieldPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Reactive Shield",
-        Description: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.",
-        SmartDescription: "Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.");
+        Description: "#Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.",
+        SmartDescription: "#Whenever you gain Block, deal {Amount} damage to the lowest-HP enemy.");
 
     public override async Task AfterBlockGained(Creature creature, decimal amount, ValueProp props, CardModel? cardSource)
     {

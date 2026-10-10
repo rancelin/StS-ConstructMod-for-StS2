@@ -23,8 +23,8 @@ public class AgitationPower : CustomPowerModel, IAfterCardOverheated
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Agitation",
-        Description: "Whenever a card Overheats, gain {Amount} Strength and {Amount} Dexterity.",
-        SmartDescription: "Whenever a card Overheats, gain {Amount} Strength and {Amount} Dexterity.");
+        Description: "#Whenever a card Overheats, gain {Amount} Strength and {Amount} Dexterity.",
+        SmartDescription: "#Whenever a card Overheats, gain {Amount} Strength and {Amount} Dexterity.");
 
     public async Task AfterCardOverheated(PlayerChoiceContext ctx, CardModel overheatedCard)
     {

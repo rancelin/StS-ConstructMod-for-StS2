@@ -23,8 +23,8 @@ public class FlashFreezePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Flash Freeze",
-        Description: "Your cards cannot Overheat.",
-        SmartDescription: "Your cards cannot Overheat for {Amount} more turn(s).");
+        Description: "#Your cards cannot Overheat.",
+        SmartDescription: "#Your cards cannot Overheat for {Amount} more turn(s).");
 
     private bool _justApplied = true;
 

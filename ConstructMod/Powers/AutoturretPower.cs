@@ -20,8 +20,8 @@ public class AutoturretPower : CustomPowerModel, IAfterCardCycled
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Autoturret",
-        Description: "Whenever a card Cycles, deal {Amount} damage to a random enemy.",
-        SmartDescription: "Whenever a card Cycles, deal damage to a random enemy.");
+        Description: "#Whenever a card Cycles, deal {Amount} damage to a random enemy.",
+        SmartDescription: "#Whenever a card Cycles, deal damage to a random enemy.");
 
     public async Task AfterCardCycled(PlayerChoiceContext ctx, CardModel card)
     {

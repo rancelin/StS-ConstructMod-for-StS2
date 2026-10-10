@@ -20,8 +20,8 @@ public class SpinDrivePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Spin Drive",
-        Description: "Whenever you play a card, draw a card. Works {Limit} time(s) per turn.",
-        SmartDescription: "Whenever you play a card, draw a card, a limited number of times per turn.");
+        Description: "#Whenever you play a card, draw a card. Works {Limit} time(s) per turn.",
+        SmartDescription: "#Whenever you play a card, draw a card, a limited number of times per turn.");
 
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)

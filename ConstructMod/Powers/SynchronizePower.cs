@@ -18,8 +18,8 @@ public class SynchronizePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Synchronize",
-        Description: "Whenever you draw 2 of the same card in a row, deal {Amount} damage to ALL enemies.",
-        SmartDescription: "Whenever you draw 2 of the same card in a row, deal {Amount} damage to ALL enemies.");
+        Description: "#Whenever you draw 2 of the same card in a row, deal {Amount} damage to ALL enemies.",
+        SmartDescription: "#Whenever you draw 2 of the same card in a row, deal {Amount} damage to ALL enemies.");
 
     public override async Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
