@@ -44,7 +44,7 @@ public class Multistage : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Multistage",
-        "#Exhaust an Attack of cost [E] or less.\nAt the start of your next {Turns} turns, play a copy of that card.");
+        "#Exhaust an Attack of cost X or less.\nAt the start of your next {Turns} turns, play a copy of that card.");
 
     protected override bool IsPlayable =>
         Owner != null && PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Type == CardType.Attack);
