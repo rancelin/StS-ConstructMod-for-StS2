@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -26,7 +27,7 @@ public class PanicFirePower : CustomPowerModel, IAfterCardCycled
     {
         if (CombatState is not { } combat) return;
         if (card.IsUpgraded) return;
-        if (combat.IsOverOrEnding()) return;
+        if (CombatManager.Instance.IsOverOrEnding) return;
         Flash();
         await CardCmd.Exhaust(ctx, card);
         var enemy = Owner.Player?.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
