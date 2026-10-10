@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -33,9 +34,18 @@ public class LongRangeLance : AbstractConstructCard
         // dealing the damage and consuming itself — the StS1 outcome. (StS1 spawned the
         // relic at victory via the power's onVictory, but StS2's AfterCombatVictory hook
         // never reaches powers — the run-level dispatch only visits relics/potions/cards —
-        // so the card grants the relic itself.)
-        var lance = await RelicCmd.Obtain<LongRangeLanceRelic>(Owner);
-        lance?.SetLanceDamage(DynamicVars["Damage"].IntValue);
+        // so the card grants the relic itself.) Repeat plays in the same combat add to
+        // the held relic (StS1 stacks the power into one summed relic), never duplicates.
+        var held = Owner.Relics?.OfType<LongRangeLanceRelic>().FirstOrDefault();
+        if (held != null)
+        {
+            held.AddLanceDamage(DynamicVars["Damage"].IntValue);
+        }
+        else
+        {
+            var lance = await RelicCmd.Obtain<LongRangeLanceRelic>(Owner);
+            lance?.SetLanceDamage(DynamicVars["Damage"].IntValue);
+        }
 
         // Mega folded into upgrade: also grant the EXTRA lance, which skips the next combat
         // and replaces itself with a Lance relic, so the second hit lands the combat after.
@@ -43,8 +53,16 @@ public class LongRangeLance : AbstractConstructCard
         {
             await PowerCmd.Apply<ExtraLongRangeLancePower>(choiceContext, Owner.Creature,
                 DynamicVars["Damage"].IntValue, Owner.Creature, this);
-            var extra = await RelicCmd.Obtain<ExtraLongRangeLanceRelic>(Owner);
-            extra?.SetLanceDamage(DynamicVars["Damage"].IntValue);
+            var heldExtra = Owner.Relics?.OfType<ExtraLongRangeLanceRelic>().FirstOrDefault();
+            if (heldExtra != null)
+            {
+                heldExtra.AddLanceDamage(DynamicVars["Damage"].IntValue);
+            }
+            else
+            {
+                var extra = await RelicCmd.Obtain<ExtraLongRangeLanceRelic>(Owner);
+                extra?.SetLanceDamage(DynamicVars["Damage"].IntValue);
+            }
         }
     }
 

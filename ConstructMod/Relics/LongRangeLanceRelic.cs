@@ -39,6 +39,10 @@ public class LongRangeLanceRelic : CustomRelicModel
         InvokeDisplayAmountChanged();
     }
 
+    /// <summary>Add to the counter for additional Lance plays in the same combat
+    /// (StS1 stacks the power pre-victory into a single summed relic).</summary>
+    public void AddLanceDamage(int damage) => SetLanceDamage(DynamicVars["Damage"].IntValue + damage);
+
     public override async Task BeforeCombatStart()
     {
         if (Owner.Creature.CombatState is not { } combat) return;
