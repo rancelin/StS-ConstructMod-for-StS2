@@ -21,7 +21,6 @@ public class ElectricArmor : AbstractCycleCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromPower<DexterityPower>(null);
-            yield return HoverTipFactory.FromPower<ThornsPower>(null);
         }
     }
 
@@ -44,17 +43,10 @@ public class ElectricArmor : AbstractCycleCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // Grant 1-turn Thorns equal to current Dexterity, using BaseLib's
-        // CustomTemporaryPowerModelWrapper pattern (same as Downfall's Piercing Hide / Slime Spikes):
-        // the wrapper internally applies vanilla ThornsPower and auto-removes it at the end of the
-        // enemy's turn (UntilEndOfOtherSideTurn => true). This is the blessed BaseLib path — no
-        // custom BeforeDamageReceived, no manual end-of-turn removal.
-        var dexterity = Owner.Creature.GetPower<DexterityPower>()?.Amount ?? 0;
-        if (dexterity > 0)
-        {
-            await PowerCmd.Apply<ElectricArmorThornsPower>(choiceContext, Owner.Creature,
-                dexterity, Owner.Creature, this);
-        }
+        // Faithful StS1 behavior: grant the live-Dexterity reflect power (reads Dexterity
+        // at attack time — Dexterity gained after play still counts).
+        await PowerCmd.Apply<ElectricArmorPower>(choiceContext, Owner.Creature,
+            DynamicVars["Turns"].IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
