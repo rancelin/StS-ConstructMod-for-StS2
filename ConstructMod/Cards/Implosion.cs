@@ -23,7 +23,6 @@ public class Implosion : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            yield return CardKeyword.Exhaust;
         }
     }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -49,6 +48,6 @@ public class Implosion : AbstractConstructCard
     }
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
+        EnergyCost.UpgradeBy(-1);
     }
 }

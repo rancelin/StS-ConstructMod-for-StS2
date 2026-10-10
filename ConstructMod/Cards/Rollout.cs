@@ -61,9 +61,7 @@ public class Rollout : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.ExtraDamage.UpgradeValueBy(1m);
-        // Original: upgradeOverheat(+5) on upgrade, then mega upgradeOverheat(+5).
-        // Folded: +10 overheat (combined), so the card tolerates 10 more cycles before Burning.
+        // Original regular upgrade is overheat-only (+5); the +1 damage multiplier is the mega tier.
         UpgradeOverheat(10);
     }
 }

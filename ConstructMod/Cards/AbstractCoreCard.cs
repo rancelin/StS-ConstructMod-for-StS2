@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using BaseLib.Abstracts;
-using ConstructMod.Cards;
 
 namespace ConstructMod.Cards;
 
@@ -16,7 +15,7 @@ namespace ConstructMod.Cards;
 public abstract class AbstractCoreCard : AbstractCycleCard
 {
     protected AbstractCoreCard(CardType type, TargetType target)
-        : base(0, type, CardRarity.Uncommon, target, showInCardLibrary: false)
+        : base(0, type, CardRarity.Uncommon, target, showInCardLibrary: false, autoAdd: false)
     {
     }
 

@@ -27,8 +27,8 @@ public class SunScreenPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Sun Screen",
-        Description: "At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.",
-        SmartDescription: "At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.");
+        Description: "#At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.",
+        SmartDescription: "#At the end of your turn, Exhaust a random Status card in your hand to gain {Amount} Block.");
 
     public override async Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)

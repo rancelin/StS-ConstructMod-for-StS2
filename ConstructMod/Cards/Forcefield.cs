@@ -11,7 +11,14 @@ namespace ConstructMod.Cards;
 
 public class Forcefield : AbstractConstructCard
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain];
+    public override IEnumerable<CardKeyword> CanonicalKeywords
+    {
+        get
+        {
+            foreach (var k in base.CanonicalKeywords) yield return k;
+            yield return CardKeyword.Retain;
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(6m, ValueProp.Move)];
@@ -31,5 +38,6 @@ public class Forcefield : AbstractConstructCard
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(2m);
+        AddKeyword(CardKeyword.Innate);
     }
 }

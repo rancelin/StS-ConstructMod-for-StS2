@@ -24,7 +24,7 @@ public class Overclock : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Overclock",
-        "#{IfUpgraded:show:Draw 4 cards.\n|}At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.");
+        "#At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
@@ -37,7 +37,6 @@ public class Overclock : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (IsUpgraded) await CardPileCmd.Draw(choiceContext, 4m, Owner);
         await PowerCmd.Apply<OverclockPower>(choiceContext, Owner.Creature,
             DynamicVars["Cards"].IntValue, Owner.Creature, this);
     }

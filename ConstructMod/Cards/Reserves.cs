@@ -24,7 +24,7 @@ public class Reserves : AbstractCycleCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new EnergyVar(3),
-        new DynamicVar("Cards", 3m),
+        new CardsVar(3),
         new DynamicVar("HpThreshold", 10m)
     ];
 

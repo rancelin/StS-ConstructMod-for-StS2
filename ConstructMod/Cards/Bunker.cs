@@ -44,5 +44,6 @@ public class Bunker : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        DynamicVars["BunkerPower"].UpgradeValueBy(1m);
     }
 }

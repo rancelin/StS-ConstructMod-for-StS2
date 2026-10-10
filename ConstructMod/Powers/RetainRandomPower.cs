@@ -19,8 +19,8 @@ public class RetainRandomPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Retain Random",
-        Description: "At the end of your turn, Retain {Amount} random card(s).",
-        SmartDescription: "At the end of your turn, Retain {Amount} random card(s).");
+        Description: "#At the end of your turn, Retain {Amount} random card(s).",
+        SmartDescription: "#At the end of your turn, Retain {Amount} random card(s).");
 
     public override Task BeforeFlush(PlayerChoiceContext choiceContext, Player player)
     {

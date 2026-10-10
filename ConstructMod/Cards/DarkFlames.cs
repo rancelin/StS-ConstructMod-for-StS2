@@ -36,7 +36,7 @@ public class DarkFlames : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            yield return CardKeyword.Exhaust;
+            if (!IsUpgraded) yield return CardKeyword.Exhaust;
         }
     }
 

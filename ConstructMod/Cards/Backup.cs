@@ -21,6 +21,7 @@ public class Backup : AbstractConstructCard
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
             yield return CardKeyword.Exhaust;
+            if (IsUpgraded) yield return CardKeyword.Retain;
         }
     }
 
@@ -44,7 +45,7 @@ public class Backup : AbstractConstructCard
         "#Choose a non-*Rare* card in your hand. Put {Copies} copies of it on top of your draw pile.");
 
     protected override bool IsPlayable =>
-        PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Rarity != CardRarity.Rare);
+        Owner != null && PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Rarity != CardRarity.Rare);
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

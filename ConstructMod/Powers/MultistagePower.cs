@@ -29,8 +29,8 @@ public class MultistagePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Multistage",
-        Description: "At the start of your next {Amount} turns, play a copy of {Card}.",
-        SmartDescription: "At the start of your next turn, play a copy of {Card}.");
+        Description: "#At the start of your next {Amount} turns, play a copy of {Card}.",
+        SmartDescription: "#At the start of your next {Amount} turns, play a copy of {Card}.");
 
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)

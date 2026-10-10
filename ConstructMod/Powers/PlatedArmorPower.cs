@@ -41,7 +41,7 @@ public class PlatedArmorPower : CustomPowerModel
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)
     {
-        if (Owner.Player is { PlayerCombatState: not null } && side != Owner.Side) return;
+        if (side != Owner.Side) return;
         Flash();
         await CreatureCmd.GainBlock(Owner, (int)Amount, BlockProps.nonCardUnpowered, null);
     }

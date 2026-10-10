@@ -22,8 +22,8 @@ public class ZapperPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Zapper",
-        Description: "Whenever you gain Strength or Dexterity, deal {Amount} damage to a random enemy. It loses 1 Strength this turn.",
-        SmartDescription: "Whenever you gain Strength or Dexterity, deal {Amount} damage to a random enemy. It loses 1 Strength this turn.");
+        Description: "#Whenever you gain Strength or Dexterity, deal {Amount} damage to a random enemy. It loses 1 Strength this turn.",
+        SmartDescription: "#Whenever you gain Strength or Dexterity, deal {Amount} damage to a random enemy. It loses 1 Strength this turn.");
 
     public override Task BeforeApplied(Creature target, decimal amount, Creature? applier, CardModel? cardSource)
     {
@@ -41,9 +41,10 @@ public class ZapperPower : CustomPowerModel
         if (power is not (StrengthPower or DexterityPower)) return;
         if (CombatState is not { } combat) return;
         if (!combat.HittableEnemies.Any()) return;
+        if (Owner.Player is not { } player) return;
         Flash();
-        var enemy = Owner.Player!.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies)!;
-        await CreatureCmd.Damage(new ThrowingPlayerChoiceContext(), enemy, Amount, ValueProp.Unpowered, Owner);
+        var enemy = player.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies)!;
+        await CreatureCmd.Damage(choiceContext, enemy, Amount, ValueProp.Unpowered, Owner);
         await PowerCmd.Apply<ZapperStrengthDownPower>(choiceContext, enemy, 1m, Owner, null);
     }
 }

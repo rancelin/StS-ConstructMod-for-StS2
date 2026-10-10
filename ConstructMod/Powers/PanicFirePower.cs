@@ -19,15 +19,16 @@ public class PanicFirePower : CustomPowerModel, IAfterCardCycled
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Panic Fire",
-        Description: "Whenever a non-Upgraded card Cycles, Exhaust it and deal {Amount} damage to a random enemy.",
-        SmartDescription: "Whenever a non-Upgraded card Cycles, Exhaust it and deal {Amount} damage to a random enemy.");
+        Description: "#Whenever a non-Upgraded card Cycles, Exhaust it and deal {Amount} damage to a random enemy.",
+        SmartDescription: "#Whenever a non-Upgraded card Cycles, Exhaust it and deal {Amount} damage to a random enemy.");
 
     public async Task AfterCardCycled(PlayerChoiceContext ctx, CardModel card)
     {
         if (CombatState is not { } combat) return;
         if (card.IsUpgraded) return;
+        if (combat.IsOverOrEnding()) return;
         Flash();
-        await CardPileCmd.RemoveFromCombat(card);
+        await CardCmd.Exhaust(ctx, card);
         var enemy = Owner.Player?.RunState.Rng.CombatTargets.NextItem(combat.HittableEnemies);
         if (enemy != null)
         {

@@ -22,8 +22,8 @@ public class AfterburnersPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Afterburners",
-        Description: "This turn, your next {Amount} non-Rare card(s) is/are played twice.",
-        SmartDescription: "This turn, your next non-Rare card is played twice.");
+        Description: "#This turn, your next {Amount} non-Rare card(s) is/are played twice.",
+        SmartDescription: "#This turn, your next non-Rare card is played twice.");
 
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)

@@ -27,7 +27,6 @@ public class OilSpill : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
             yield return HoverTipFactory.FromCard<MegaCrit.Sts2.Core.Models.Cards.Burn>();
         }

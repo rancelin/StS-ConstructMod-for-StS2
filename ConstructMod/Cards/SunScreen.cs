@@ -37,7 +37,7 @@ public class SunScreen : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Sun Screen",
-        "#At the end of your turn, *Exhaust* a random *Status* card in your hand to gain !Block! *Block*.{IfUpgraded:show:\nAlso *Exhaust* a random *Curse* card in your hand to gain !Block! *Block*.|}");
+        "#At the end of your turn, *Exhaust* a random *Status* card in your hand to gain {Block} *Block*.{IfUpgraded:show:\nAlso *Exhaust* a random *Curse* card in your hand to gain {Block} *Block*.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

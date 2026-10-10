@@ -43,6 +43,7 @@ public class UnbalancingBlast : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        DynamicVars.Damage.UpgradeValueBy(2m);
         AddKeyword(CardKeyword.Retain);
     }
 }

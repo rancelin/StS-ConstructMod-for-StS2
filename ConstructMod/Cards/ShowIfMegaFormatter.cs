@@ -46,7 +46,7 @@ public class ShowIfMegaFormatter : IFormatter, IAutoRegisterFormatSpecifier
         }
         var megaText = options[0];
         var normalText = options.Count > 1 ? options[1] : null;
-        switch (megaVar.megaDisplay)
+        switch (megaVar.MegaDisplay)
         {
             case MegaDisplay.Normal:
                 if (normalText != null)
@@ -63,8 +63,8 @@ public class ShowIfMegaFormatter : IFormatter, IAutoRegisterFormatSpecifier
                 formattingInfo.Write("[/green]");
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(megaVar.megaDisplay),
-                    megaVar.megaDisplay, "Unexpected MegaDisplay value.");
+                throw new ArgumentOutOfRangeException(nameof(megaVar.MegaDisplay),
+                    megaVar.MegaDisplay, "Unexpected MegaDisplay value.");
         }
         return true;
     }

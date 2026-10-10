@@ -18,13 +18,13 @@ public class OverchargePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Overcharge",
-        Description: "At the start of your turn, gain 1 energy and add a Burn to your hand.",
-        SmartDescription: "At the start of your turn, gain 1 energy and add a Burn to your hand.");
+        Description: "#At the start of your turn, gain {Amount} energy and add a Burn to your hand.",
+        SmartDescription: "#At the start of your turn, gain {Amount} energy and add a Burn to your hand.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner.Player || CombatState is not { } combat) return;
-        await PlayerCmd.GainEnergy(1m, player);
+        await PlayerCmd.GainEnergy(Amount, player);
         var burn = combat.CreateCard(ModelDb.Card<Burn>(), player);
         await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, player);
     }

@@ -19,6 +19,6 @@ public class ExtraLongRangeLancePower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "EXTRA-Long-Range Lance",
-        Description: "At the start of the combat after your next one, deal {Amount} damage to a random enemy.",
-        SmartDescription: "At the start of the combat after your next one, deal {Amount} damage to a random enemy.");
+        Description: "#At the start of the combat after your next one, deal {Amount} damage to a random enemy.",
+        SmartDescription: "#At the start of the combat after your next one, deal {Amount} damage to a random enemy.");
 }

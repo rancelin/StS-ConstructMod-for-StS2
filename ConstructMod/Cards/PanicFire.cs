@@ -41,4 +41,9 @@ public class PanicFire : AbstractConstructCard
             await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
         }
     }
+
+    protected override void OnUpgrade()
+    {
+        DynamicVars["PanicFirePower"].UpgradeValueBy(4m);
+    }
 }

@@ -35,7 +35,7 @@ public class LongRangeLance : AbstractConstructCard
         // never reaches powers — the run-level dispatch only visits relics/potions/cards —
         // so the card grants the relic itself.)
         var lance = await RelicCmd.Obtain<LongRangeLanceRelic>(Owner);
-        lance.SetLanceDamage(DynamicVars["Damage"].IntValue);
+        lance?.SetLanceDamage(DynamicVars["Damage"].IntValue);
 
         // Mega folded into upgrade: also grant the EXTRA lance, which skips the next combat
         // and replaces itself with a Lance relic, so the second hit lands the combat after.
@@ -44,7 +44,7 @@ public class LongRangeLance : AbstractConstructCard
             await PowerCmd.Apply<ExtraLongRangeLancePower>(choiceContext, Owner.Creature,
                 DynamicVars["Damage"].IntValue, Owner.Creature, this);
             var extra = await RelicCmd.Obtain<ExtraLongRangeLanceRelic>(Owner);
-            extra.SetLanceDamage(DynamicVars["Damage"].IntValue);
+            extra?.SetLanceDamage(DynamicVars["Damage"].IntValue);
         }
     }
 

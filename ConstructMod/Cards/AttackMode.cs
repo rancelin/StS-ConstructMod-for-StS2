@@ -26,12 +26,16 @@ public class AttackMode : AbstractConstructCard
         }
     }
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        new IHoverTip[]
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
         {
-            HoverTipFactory.FromPower<StrengthPower>(null),
-            HoverTipFactory.FromPower<DexterityPower>(null)
-        };
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromKeyword(CardKeyword.Retain);
+            yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            yield return HoverTipFactory.FromPower<DexterityPower>(null);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {

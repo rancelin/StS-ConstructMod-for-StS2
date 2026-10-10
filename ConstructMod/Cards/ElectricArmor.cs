@@ -33,7 +33,7 @@ public class ElectricArmor : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Electric Armor",
-        "#*Cycle* if your *Dexterity* is less than 1.\\nThis turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.");
+        "#*Cycle* if your *Dexterity* is less than 1.\nThis turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.");
 
     public override bool CanCycle()
     {

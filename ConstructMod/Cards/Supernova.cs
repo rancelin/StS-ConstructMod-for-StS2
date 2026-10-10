@@ -36,7 +36,7 @@ public class Supernova : AbstractConstructCard
             var statuses = pileType.GetPile(Owner).Cards.Where(c => c.Type == CardType.Status).ToList();
             foreach (var status in statuses)
             {
-                await CardPileCmd.RemoveFromCombat(status);
+                await CardCmd.Exhaust(choiceContext, status);
                 var canonical = Owner.RunState.Rng.CombatCardGeneration.NextItem(options);
                 if (canonical == null) continue;
                 var replacement = combat.CreateCard(canonical, Owner);
@@ -49,5 +49,6 @@ public class Supernova : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        EnergyCost.UpgradeBy(-1);
     }
 }

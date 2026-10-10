@@ -22,7 +22,8 @@ namespace ConstructMod.Relics;
 [Pool(typeof(ConstructRelicPool))]
 public class LongRangeLanceRelic : CustomRelicModel
 {
-    // StS1 RelicTier.SPECIAL — maps to Event: never randomly generated (no [Pool]).
+    // StS1 RelicTier.SPECIAL — maps to Event: never randomly generated.
+    // (Pool membership is required for the model to load; Event rarity excludes it from rewards.)
     public override RelicRarity Rarity => RelicRarity.Event;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

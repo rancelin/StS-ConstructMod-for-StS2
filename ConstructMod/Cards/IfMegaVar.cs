@@ -27,10 +27,10 @@ public class IfMegaVar : DynamicVar
 {
     public const string DefaultName = "IfMega";
 
-    public MegaDisplay megaDisplay;
+    public MegaDisplay MegaDisplay;
 
     public IfMegaVar(MegaDisplay display) : base(DefaultName, (int)display)
     {
-        megaDisplay = display;
+        MegaDisplay = display;
     }
 }

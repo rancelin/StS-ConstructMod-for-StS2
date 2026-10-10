@@ -47,7 +47,7 @@ public class Multistage : AbstractConstructCard
         "#Exhaust an Attack of cost [E] or less.\nAt the start of your next {Turns} turns, play a copy of that card.");
 
     protected override bool IsPlayable =>
-        PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Type == CardType.Attack);
+        Owner != null && PileType.Hand.GetPile(Owner).Cards.Any(c => c != this && c.Type == CardType.Attack);
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

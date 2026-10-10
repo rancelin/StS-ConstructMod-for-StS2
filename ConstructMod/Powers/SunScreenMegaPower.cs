@@ -18,8 +18,8 @@ public class SunScreenMegaPower : SunScreenPower
 {
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Sun Screen (Mega)",
-        Description: "At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.",
-        SmartDescription: "At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.");
+        Description: "#At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.",
+        SmartDescription: "#At the end of your turn, Exhaust a random Curse card in your hand to gain {Amount} Block.");
 
     public override Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)

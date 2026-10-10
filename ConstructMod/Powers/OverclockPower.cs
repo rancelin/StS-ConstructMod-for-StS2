@@ -15,7 +15,7 @@ namespace ConstructMod.Powers;
 public class OverclockPower : CustomPowerModel
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Overclock",

@@ -43,15 +43,6 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
         ModelDb.Card<ModeShift>(),
-        // Mega-upgrade testing: the two unfolded 2-tier cards. Test via console:
-        //   relic add CONSTRUCTMOD-CLOCKWORK_PHOENIX  (smith gate: +1 cards become upgradeable
-        //     at rest sites only while owned — try smithing Omega Cannon before/after)
-        //   relic add CONSTRUCTMOD-MEGA_BATTERY        (force-mega a random deck card on pickup)
-        //   potion CONSTRUCTMOD-MEGA_POTION            (force-mega a random hand card)
-        // Then verify Omega Cannon+2 (Strength discount incl. negative) and Gatling Gun+2
-        // (-1 dmg / +1 shot per [E]), and save/reload a mega'd card to exercise the replay path.
-        ModelDb.Card<OmegaCannon>(),
-        ModelDb.Card<GatlingGun>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];
