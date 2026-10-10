@@ -22,8 +22,6 @@ namespace ConstructMod.Powers;
 /// </summary>
 public class ElectricArmorPower : CustomPowerModel
 {
-    private bool _justApplied;
-
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
@@ -32,11 +30,19 @@ public class ElectricArmorPower : CustomPowerModel
         Description: "#This turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.",
         SmartDescription: "#This turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.");
 
-    public override Task BeforeApplied(Creature target, decimal amount,
-        Creature? applier, CardModel? cardSource)
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        _justApplied = true;
-        return Task.CompletedTask;
+        // StS2-first expiry (deliberate deviation from StS1's linger-through-next-turn
+        // ticking): the armor ends when the enemy turn ends, so the icon is never up
+        // during a turn it cannot trigger on. "This turn" on the card is literally true.
+        if (side == Owner.Side) return;
+        if (Amount > 1)
+        {
+            await PowerCmd.TickDownDuration(this);
+            return;
+        }
+        await PowerCmd.Remove(this);
     }
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
@@ -50,23 +56,5 @@ public class ElectricArmorPower : CustomPowerModel
         // powered-only hooks don't chain off it, which covers StS1's THORNS/HP_LOSS
         // exclusion closely enough to avoid reflect loops.
         await CreatureCmd.Damage(choiceContext, dealer, dexterity, ValueProp.Unpowered, Owner);
-    }
-
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
-        IEnumerable<Creature> participants)
-    {
-        if (side != CombatSide.Player || !participants.Contains(Owner)) return;
-        // Skip the first turn-end after application so the armor survives the enemy turn.
-        if (_justApplied)
-        {
-            _justApplied = false;
-            return;
-        }
-        if (Amount > 1)
-        {
-            await PowerCmd.TickDownDuration(this);
-            return;
-        }
-        await PowerCmd.Remove(this);
     }
 }
