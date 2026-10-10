@@ -5,7 +5,7 @@ namespace ConstructMod.Cards;
 
 public static class ConstructKeywords
 {
-    [CustomEnum] public static readonly CardKeyword Cycle;
-    [CustomEnum] public static readonly CardKeyword Overheat;
-    [CustomEnum] public static readonly CardKeyword MegaUpgrade;
+    [CustomEnum] public static CardKeyword Cycle;
+    [CustomEnum] public static CardKeyword Overheat;
+    [CustomEnum] public static CardKeyword MegaUpgrade;
 }
