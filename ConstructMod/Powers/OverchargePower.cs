@@ -25,7 +25,10 @@ public class OverchargePower : CustomPowerModel
     {
         if (player != Owner.Player || CombatState is not { } combat) return;
         await PlayerCmd.GainEnergy(Amount, player);
-        var burn = combat.CreateCard(ModelDb.Card<Burn>(), player);
-        await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, player);
+        for (var i = 0; i < Amount; i++)
+        {
+            var burn = combat.CreateCard(ModelDb.Card<Burn>(), player);
+            await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, player);
+        }
     }
 }

@@ -26,10 +26,13 @@ public class OverclockPower : CustomPowerModel
     {
         if (player != Owner.Player || CombatState is not { } combat) return;
         Flash();
-        // Draw {Amount} cards (Amount is the draw count from the card's "Cards" var), but add exactly
-        // 1 Burn per turn (matching the original StS1 OverclockPower: draw = statMultiplier, Burn = 1).
+        // Draw {Amount} cards and add {Amount} Burns (StS1: draw = amount*mult,
+        // Burns = amount — both scale with stacks).
         await CardPileCmd.Draw(choiceContext, Amount, Owner.Player);
-        var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner.Player);
-        await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, Owner.Player);
+        for (var i = 0; i < Amount; i++)
+        {
+            var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner.Player);
+            await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, Owner.Player);
+        }
     }
 }
