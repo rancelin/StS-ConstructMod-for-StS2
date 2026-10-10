@@ -23,7 +23,7 @@ public class AfterburnersPower : CustomPowerModel
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Afterburners",
         Description: "#This turn, your next {Amount} non-Rare card(s) is/are played twice.",
-        SmartDescription: "#This turn, your next non-Rare card is played twice.");
+        SmartDescription: "#This turn, your next {Amount} non-Rare card(s) is/are played twice.");
 
     public override Task BeforeApplied(Creature target, decimal amount,
         Creature? applier, CardModel? cardSource)
@@ -41,10 +41,12 @@ public class AfterburnersPower : CustomPowerModel
         return playCount + 1;
     }
 
-    public override Task AfterModifyingCardPlayCount(CardModel card)
+    public override async Task AfterModifyingCardPlayCount(CardModel card)
     {
         Flash();
-        return Task.CompletedTask;
+        // Charges spent: remove immediately so the icon/tooltip doesn't linger at 0
+        // until turn end (behavior was already correct — only the display lagged).
+        if (Amount <= 0) await PowerCmd.Remove(this);
     }
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
