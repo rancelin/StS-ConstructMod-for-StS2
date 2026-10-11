@@ -71,7 +71,7 @@ public class ClockworkEgg : AbstractConstructCard
             "#Gain *Confused*. Draw 5 cards.",
         _ when IsMegaUpgraded =>
             "#Gain a random relic.",
-        _ => "#Draw a card.\n*Exhaust*. Can be *Upgraded* 3 more times.",
+        _ => "#Draw a card. Can be *Upgraded* 3 more times.",
     };
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
