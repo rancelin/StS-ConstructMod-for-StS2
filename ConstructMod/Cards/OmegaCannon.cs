@@ -33,6 +33,7 @@ public class OmegaCannon : AbstractConstructCard
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return EnergyHoverTip;
             yield return HoverTipFactory.FromPower<StrengthPower>(null);
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
         }
     }
 

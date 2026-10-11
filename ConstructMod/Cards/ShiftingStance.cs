@@ -18,7 +18,8 @@ public class ShiftingStance : AbstractConstructCard
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromPower<StrengthPower>(null),
-        HoverTipFactory.FromPower<DexterityPower>(null)
+        HoverTipFactory.FromPower<DexterityPower>(null),
+        HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade)
     ];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>

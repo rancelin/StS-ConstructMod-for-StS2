@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using BaseLib.Abstracts;
 using ConstructMod.Powers;
@@ -16,6 +17,15 @@ public class Enhance : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<EnhancePower>("Enhance", 1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
+        }
+    }
 
     public Enhance() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {

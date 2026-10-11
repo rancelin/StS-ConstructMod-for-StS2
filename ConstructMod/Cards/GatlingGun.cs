@@ -30,6 +30,7 @@ public class GatlingGun : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return EnergyHoverTip;
+            yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
         }
     }
 

@@ -22,7 +22,8 @@ public class Zapper : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromPower<StrengthPower>(null),
-        HoverTipFactory.FromPower<DexterityPower>(null)
+        HoverTipFactory.FromPower<DexterityPower>(null),
+        HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade)
     ];
 
     public Zapper() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
