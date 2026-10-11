@@ -97,7 +97,7 @@ public class ClockworkEgg : AbstractConstructCard
                 await ObtainEggRelic<Relics.ClockworkPhoenix>();
                 // Permanently remove this card from the run deck (StS1 UUID removal).
                 if (cardPlay.Card.DeckVersion is { } deckCard)
-                    CardPileCmd.RemoveFromDeck(deckCard, true);
+                    await CardPileCmd.RemoveFromDeck(deckCard, true);
                 break;
             default:
                 if (ScrambledField.Get(this))
