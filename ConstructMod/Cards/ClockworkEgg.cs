@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Models.Relics;
@@ -57,22 +58,21 @@ public class ClockworkEgg : AbstractConstructCard
         }
     }
 
-    // Per-rung text (a C# switch, not formatters: IfMega/IfUpgraded cannot split +1/+2/+3).
-    // The engine evaluates descriptions per level (cf. upgrade-preview handling), so the
-    // hand text always matches the current rung.
-    public override List<(string, string)>? Localization => new CardLoc("Clockwork Egg", CurrentTierText());
+    // Per-rung text via the {EggTier} formatter (NOT a C# switch: the description template
+    // bakes per canonical and only formatter macros re-evaluate — a switch froze at the
+    // base rung everywhere). Tiers follow the live level, including upgrade previews
+    // (whose clones carry the post-upgrade level).
+    public override List<(string, string)>? Localization => new CardLoc("Clockwork Egg",
+        "#{EggTier:eggtier:Draw a card. Can be *Upgraded* 3 more times.|Add an upgraded *Attack Mode* and an upgraded *Defense Mode* to your hand.\nCan be *Upgraded* 2 more times.|Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.|Gain Molten, Toxic and Frozen Eggs and a *Clockwork Phoenix*. Permanently remove this card from your deck.|Gain a random relic.|Gain *Confused*. Draw 5 cards.}");
 
-    private string CurrentTierText() => CurrentUpgradeLevel switch
+    protected override void AddExtraArgsToDescription(LocString description)
     {
-        1 => "#Add an upgraded *Attack Mode* and an upgraded *Defense Mode* to your hand.\nCan be *Upgraded* 2 more times.",
-        2 => "#Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.",
-        3 => "#Gain Molten, Toxic and Frozen Eggs and a *Clockwork Phoenix*. Permanently remove this card from your deck.",
-        _ when IsMegaUpgraded && ScrambledField.Get(this) =>
-            "#Gain *Confused*. Draw 5 cards.",
-        _ when IsMegaUpgraded =>
-            "#Gain a random relic.",
-        _ => "#Draw a card. Can be *Upgraded* 3 more times.",
-    };
+        base.AddExtraArgsToDescription(description);
+        var tier = CurrentUpgradeLevel;
+        if (tier >= IntrinsicMaxUpgradeLevel)
+            tier = ScrambledField.Get(this) ? 5 : 4;
+        description.Add(new EggTierVar(tier));
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
