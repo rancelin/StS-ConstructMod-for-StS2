@@ -15,6 +15,7 @@ namespace ConstructMod.Powers;
 public class ShiftingStancePower : CustomPowerModel
 {
     private decimal _remaining;
+    private CardModel? _sourceCard;
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -28,6 +29,16 @@ public class ShiftingStancePower : CustomPowerModel
         Title: "Shifting Stance",
         Description: "#After you play {CardsLeft} more card(s), swap your Strength and Dexterity.",
         SmartDescription: "#After you play {CardsLeft} more card(s), swap your Strength and Dexterity.");
+
+    public override Task BeforeApplied(Creature target, decimal amount,
+        Creature? applier, CardModel? cardSource)
+    {
+        // StS1 applies the power addToBottom (after the play resolves), so the creating
+        // play never counts itself (SpinDrive/SiegeForm pattern). First apply only —
+        // later ShiftingStance copies correctly count, as in StS1.
+        if (cardSource != null && _sourceCard == null) _sourceCard = cardSource;
+        return Task.CompletedTask;
+    }
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
         Creature? applier, CardModel? cardSource)
@@ -43,6 +54,7 @@ public class ShiftingStancePower : CustomPowerModel
     public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Player != Owner.Player) return Task.CompletedTask;
+        if (ReferenceEquals(cardPlay.Card, _sourceCard)) return Task.CompletedTask;
         _remaining--;
         if (_remaining > 0)
         {
