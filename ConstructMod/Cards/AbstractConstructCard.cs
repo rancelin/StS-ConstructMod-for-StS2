@@ -108,9 +108,17 @@ public abstract class AbstractConstructCard : CustomCardModel
     /// Saturate the card's upgrade ladder (the original's "upgrade(true) x5" idiom): force-upgrade
     /// until the card reaches <see cref="IntrinsicMaxUpgradeLevel"/>. Uses CardCmd.Upgrade so each
     /// level gets the vanilla history/VFX treatment. Safe on already-maxed cards (no-op).
+    /// Non-Construct cards get a SINGLE regular upgrade (StS1 gives outsiders c.upgrade()
+    /// once, never the mega path) — so foreign multi-tier cards (Refracted Beam, Premium)
+    /// climb one rung instead of saturating.
     /// </summary>
     public static void ForceUpgradeToMax(CardModel card)
     {
+        if (card is not AbstractConstructCard)
+        {
+            if (card.IsUpgradable) CardCmd.Upgrade(card);
+            return;
+        }
         var box = ForcingUpgrades.GetOrCreateValue(card);
         var previous = box.Value;
         box.Value = true;
