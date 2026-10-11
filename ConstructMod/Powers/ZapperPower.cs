@@ -27,7 +27,9 @@ public class ZapperPower : CustomPowerModel
 
     public override Task BeforeApplied(Creature target, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        _triggerOnLoss = cardSource?.IsUpgraded == true;
+        // The loss-trigger is the MEGA tier (StS1 MegaZapperPower, folded here):
+        // only a mega-upgraded source enables it. Base tier triggers on gains only.
+        _triggerOnLoss = cardSource is AbstractConstructCard construct && construct.IsMegaUpgraded;
         return Task.CompletedTask;
     }
 

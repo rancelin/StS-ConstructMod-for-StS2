@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class ShiftingStance : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = fewer cards per swap (3 → 2), +2 = mega (swap + adjust).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromPower<StrengthPower>(null),
@@ -29,16 +31,30 @@ public class ShiftingStance : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Shifting Stance",
-        "#Every time you play {ShiftingStancePower} cards, swap your *Strength* and *Dexterity*.");
+        "#Every time you play {ShiftingStancePower} cards, swap your *Strength* and *Dexterity*.{IfMega:mega:\nThen increase the highest and decrease the lowest by 1.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<ShiftingStancePower>(choiceContext, Owner.Creature,
-            DynamicVars["ShiftingStancePower"].BaseValue, Owner.Creature, this);
+        if (IsMegaUpgraded)
+        {
+            await PowerCmd.Apply<ShiftingStanceMegaPower>(choiceContext, Owner.Creature,
+                DynamicVars["ShiftingStancePower"].BaseValue, Owner.Creature, this);
+        }
+        else
+        {
+            await PowerCmd.Apply<ShiftingStancePower>(choiceContext, Owner.Creature,
+                DynamicVars["ShiftingStancePower"].BaseValue, Owner.Creature, this);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["ShiftingStancePower"].UpgradeValueBy(-1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: fewer cards per swap (3 → 2).
+            DynamicVars["ShiftingStancePower"].UpgradeValueBy(-1m);
+        }
+        // Mega: no stat change — the tier swaps the power (OnPlay, gated on IsMegaUpgraded).
     }
 }
