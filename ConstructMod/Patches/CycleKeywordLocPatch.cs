@@ -37,6 +37,12 @@ public static class CycleKeywordLocPatch
         Inject("card_keywords", "CONSTRUCTMOD-MEGAUPGRADE.description",
             "A second, more powerful upgrade tier for Construct cards. Reachable at rest sites with the Clockwork Phoenix, or through effects that Mega-upgrade cards directly.");
 
+        // Married enchantment (enchantments table). Shown on Wedding Ring-linked cards
+        // until the .pck ships with localization/enchantments.json.
+        Inject("enchantments", "CONSTRUCTMOD-MARRIED_ENCHANTMENT.title", "Married");
+        Inject("enchantments", "CONSTRUCTMOD-MARRIED_ENCHANTMENT.description",
+            "Linked by the Wedding Ring. Once per turn, after you play one married card, play the other too.");
+
         // Card selection screen prompts (cards table). Referenced via LocString("cards", ...)
         // by Backup, MassProduction, Multistage, Accumulate, and WeddingRing.
         Inject("cards", "CONSTRUCTMOD-BACKUP.selectionScreenPrompt", "Choose a card to copy.");
