@@ -70,12 +70,20 @@ public class WeddingRing : CustomRelicModel
         var chosen = (await CardSelectCmd.FromDeckGeneric(Owner, prefs,
             c => !c.Keywords.Contains(CardKeyword.Unplayable) && c.Enchantment == null)).ToList();
         if (chosen.Count < 2) return;
+        // Enchant returns null on failure (e.g. a restriction missed by the filter);
+        // only marry when BOTH marks land, else leave the ring inert rather than
+        // half-linked (a half-marked pair can never trigger, since the played card
+        // must bear the marker).
+        var first = CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[0], 1m);
+        var second = CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[1], 1m);
+        if (first == null || second == null)
+        {
+            if (first != null) CardCmd.ClearEnchantment(chosen[0]);
+            if (second != null) CardCmd.ClearEnchantment(chosen[1]);
+            return;
+        }
         _card1 = chosen[0];
         _card2 = chosen[1];
-        // Mark both deck cards (already-enchanted cards were filtered out, so neither
-        // call should fail; a null result leaves that half unmarked and inert).
-        CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[0], 1m);
-        CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[1], 1m);
         Flash();
     }
 
