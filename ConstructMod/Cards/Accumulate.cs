@@ -46,6 +46,7 @@ public class Accumulate : AbstractConstructCard
         {
             if (card == null) continue;
             var clone = card.CreateClone();
+            Relics.WeddingRing.MarkGeneratedCopy(clone);
             await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Draw, Owner, CardPilePosition.Random);
         }
     }

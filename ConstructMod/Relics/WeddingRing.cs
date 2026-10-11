@@ -46,6 +46,19 @@ public class WeddingRing : CustomRelicModel
     private CardModel? _card2;
     private bool _triggeredThisTurn;
 
+    /// <summary>
+    /// Mid-combat generated copies (Backup/MassProduction/Accumulate/Multistage replays)
+    /// must NOT trigger the ring — StS1 parity (isMarried is a non-copying SpireField, so
+    /// copies are never married; cf. Tailor's RemoveStitchOnCopiesPatch). Set at every
+    /// CreateClone site in this mod. CopyOnClone so copies-of-copies stay excluded.
+    /// Genuine deck instances (including Clone-enchant rest duplicates, which ARE deck
+    /// members) are never marked.
+    /// </summary>
+    internal static readonly SpireField<CardModel, bool> GeneratedCopy =
+        new SpireField<CardModel, bool>(_ => false).CopyOnClone();
+
+    internal static void MarkGeneratedCopy(CardModel copy) => GeneratedCopy.Set(copy, true);
+
     public override async Task AfterObtained()
     {
         // FromDeckGeneric is the vanilla pickup-time deck-selection API (same family as
@@ -95,6 +108,7 @@ public class WeddingRing : CustomRelicModel
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Player != Owner) return;
+        if (GeneratedCopy.Get(cardPlay.Card)) return;
         EnsureResolved();
         if (_card1 == null || _card2 == null) return;
         if (_triggeredThisTurn) return;

@@ -65,6 +65,7 @@ public class Backup : AbstractConstructCard
         for (var i = 0; i < DynamicVars["Copies"].IntValue; i++)
         {
             var copy = chosen.CreateClone();
+            Relics.WeddingRing.MarkGeneratedCopy(copy);
             await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Draw, Owner, CardPilePosition.Top);
         }
     }

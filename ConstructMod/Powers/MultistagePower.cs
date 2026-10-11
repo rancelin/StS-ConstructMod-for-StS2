@@ -96,6 +96,7 @@ public class MultistagePower : CustomPowerModel
             // state and produces a proper in-combat copy. (combat.CreateCard requires a
             // canonical model.)
             var copy = entry.Card.CreateClone();
+            Relics.WeddingRing.MarkGeneratedCopy(copy);
             copy.SetToFreeThisTurn();
             copy.ExhaustOnNextPlay = true;
             var target = combat.HittableEnemies.Any()

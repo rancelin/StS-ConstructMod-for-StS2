@@ -55,6 +55,7 @@ public class MassProduction : AbstractConstructCard
         foreach (var c in hand)
         {
             var copy = chosen.CreateClone();
+            Relics.WeddingRing.MarkGeneratedCopy(copy);
             await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, Owner);
         }
     }
