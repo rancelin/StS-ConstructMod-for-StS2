@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Rooms;
@@ -36,9 +37,15 @@ public class PurpleEmber : CustomRelicModel
         return Task.CompletedTask;
     }
 
-    public override Task BeforeCombatStart()
+    // NOTE: this deliberately does NOT use BeforeCombatStart — relic BeforeCombatStart
+    // fires before the opening hand is drawn (observed: armed, flashed, empty hand),
+    // while StS1's atBattleStart sees the drawn hand. Firing on first turn start
+    // (post-draw, cf. the PointDefense AfterPlayerTurnStart ordering) reproduces the
+    // "starting hand" set; turn-1-start bonus draws landing in the same window are
+    // included (harmless, arguably generous).
+    public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        if (!Armed.Get(this)) return Task.CompletedTask;
+        if (player != Owner || !Armed.Get(this)) return Task.CompletedTask;
         Armed.Set(this, false);
         Status = RelicStatus.Normal;
         Flash();
