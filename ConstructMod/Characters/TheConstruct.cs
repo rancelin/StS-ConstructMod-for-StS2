@@ -19,7 +19,7 @@ public class TheConstruct : CustomCharacterModel
 
     public override Color NameColor => ConstructGold;
     public override CharacterGender Gender => CharacterGender.Neutral;
-    public override int StartingHp => 80;
+    public override int StartingHp => 85;
     public override int StartingGold => 99;
     public override int MaxEnergy => 3;
 
@@ -42,7 +42,6 @@ public class TheConstruct : CustomCharacterModel
         ModelDb.Card<Defend_Construct>(),
         ModelDb.Card<AttackMode>(),
         ModelDb.Card<DefenseMode>(),
-        ModelDb.Card<ModeShift>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<Cogwheel>()];

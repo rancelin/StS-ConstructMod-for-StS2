@@ -16,12 +16,16 @@ namespace ConstructMod.Cards;
 /// </summary>
 public class ModeShift : AbstractConstructCard
 {
+    // COMMON in StS1 (not Basic): reward-eligible. A prior testing commit set Basic to
+    // hide it from rewards, but faithful-to-original takes precedence — it belongs in
+    // the pool. (Basic never appears in rewards, which is also why the Basic Heated
+    // challenge cards need no pool action: they're already reward-excluded.)
     private const int DrawAmount = 1;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<StrengthPower>(null),
             HoverTipFactory.FromPower<DexterityPower>(null)];
 
-    public ModeShift() : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
+    public ModeShift() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
