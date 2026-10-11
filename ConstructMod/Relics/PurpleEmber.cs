@@ -56,6 +56,6 @@ public class PurpleEmber : CustomRelicModel
 
     public override List<(string, string)>? Localization => new RelicLoc(
         Title: "Purple Ember",
-        Description: "#When you enter a Rest Site, your starting hand next combat is #yMega-upgraded.",
+        Description: "#When you enter a Rest Site, your starting hand next combat is *Mega-upgraded*.",
         Flavor: "A ghostly, flickering flame. It seems to absorb the power of nearby fires.");
 }
