@@ -50,6 +50,7 @@ public static class CycleKeywordLocPatch
         Inject("cards", "CONSTRUCTMOD-MULTISTAGE.selectionScreenPrompt", "Choose an Attack to copy.");
         Inject("cards", "CONSTRUCTMOD-ACCUMULATE.selectionScreenPrompt", "Choose a card to copy.");
         Inject("cards", "CONSTRUCTMOD-WEDDINGRING.selectionScreenPrompt", "Choose 2 cards to marry.");
+        Inject("cards", "CONSTRUCTMOD-STASIS.selectionScreenPrompt", "Choose a card to bank.");
     }
 
     private static void Inject(string tableName, string key, string value)
