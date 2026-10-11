@@ -54,7 +54,6 @@ public class ClockworkEgg : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
         }
     }
 
