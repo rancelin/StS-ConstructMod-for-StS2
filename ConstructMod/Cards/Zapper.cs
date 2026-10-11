@@ -30,7 +30,7 @@ public class Zapper : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Zapper",
-        "#Whenever you gain{IfMega:mega: or *lose*|} *Strength* or *Dexterity*, deal {ZapperPower} damage to a random enemy. It loses 1 *Strength* this turn.");
+        "#Whenever you gain{IfMega:mega: or lose|} *Strength* or *Dexterity*, deal {ZapperPower} damage to a random enemy. It loses 1 *Strength* this turn.");
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await PowerCmd.Apply<ZapperPower>(choiceContext, Owner.Creature,
