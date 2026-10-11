@@ -60,7 +60,7 @@ public class Stasis : AbstractConstructCard
     // Mega tier grants Innate + Retain via CanonicalKeywords (badges auto-display —
     // never duplicate them in text; cf. the FlashFreeze Exhaust/Innate cleanup).
     public override List<(string, string)>? Localization => new CardLoc("Stasis",
-        "#Exhaust a card.\nNext time you play this, add {Copies} *Mega-upgraded* copy/copies of that card to your hand.");
+        "#Exhaust a card.\nNext time you play this, add {Copies} *Mega-upgraded* {IfUpgraded:show:copies|copy} of that card to your hand.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
