@@ -24,11 +24,11 @@ namespace ConstructMod.Relics;
 /// pile with a DeckVersion back-pointer), so direct reference comparison against the chosen
 /// deck cards never matches — the clone's DeckVersion is the link.
 ///
-/// NOTE (save/load): the two chosen cards are held as live run-deck references, backed
-/// by persisted card-TYPE names (SavedSpireField). Type identity is upgrade-proof
-/// (upgrade keeps the class) and duplicate-indifferent (two identical Strikes are
-/// interchangeable marriage partners); transforms/removals correctly break the link.
-/// Re-resolved lazily on first use after a load via EnsureResolved().
+/// EXPERIMENT (exp/wedding-ring-enchantment): the pair is additionally marked with a
+/// MarriedEnchantment on each deck card — engine-persisted (replaces SavedSpireField
+/// pair storage), player-visible (which exact copies are linked), and Clone-blocking
+/// (enchantments are exclusive). The trigger requires the marker on the played card;
+/// pair identity still resolves through DeckVersion.
 /// </summary>
 [Pool(typeof(ConstructRelicPool))]
 public class WeddingRing : CustomRelicModel
@@ -36,11 +36,6 @@ public class WeddingRing : CustomRelicModel
     public override RelicRarity Rarity => RelicRarity.Ancient; // StS1 BOSS tier → StS2 Ancient (boss-reward tier)
 
     public override bool HasUponPickupEffect => true;
-
-    private static readonly SavedSpireField<WeddingRing, string> SavedCard1 =
-        new(() => "", "ConstructMod_WeddingRing_Card1");
-    private static readonly SavedSpireField<WeddingRing, string> SavedCard2 =
-        new(() => "", "ConstructMod_WeddingRing_Card2");
 
     private CardModel? _card1;
     private CardModel? _card2;
@@ -67,36 +62,31 @@ public class WeddingRing : CustomRelicModel
         var prefs = new CardSelectorPrefs(
             new LocString("cards", "CONSTRUCTMOD-WEDDINGRING.selectionScreenPrompt"), 2, 2);
         var chosen = (await CardSelectCmd.FromDeckGeneric(Owner, prefs,
-            c => !c.Keywords.Contains(CardKeyword.Unplayable))).ToList();
+            c => !c.Keywords.Contains(CardKeyword.Unplayable) && c.Enchantment == null)).ToList();
         if (chosen.Count < 2) return;
         _card1 = chosen[0];
         _card2 = chosen[1];
-        SavedCard1.Set(this, chosen[0].GetType().FullName ?? "");
-        SavedCard2.Set(this, chosen[1].GetType().FullName ?? "");
+        // Mark both deck cards (already-enchanted cards were filtered out, so neither
+        // call should fail; a null result leaves that half unmarked and inert).
+        CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[0], 1m);
+        CardCmd.Enchant<Enchantments.MarriedEnchantment>(chosen[1], 1m);
         Flash();
     }
 
     /// <summary>
     /// Re-link the live deck references after a save/load (which re-instantiates every
-    /// card, killing the in-memory references). Matches by card type: first deck card
-    /// of the saved class. No-op when references are alive or nothing was ever chosen.
+    /// card): the Married markers persist natively, so the pair is rediscovered by
+    /// scanning the deck. No-op when references are alive or nothing was ever chosen.
     /// </summary>
     private void EnsureResolved()
     {
         if (_card1 != null && _card2 != null) return;
-        var deck = PileType.Deck.GetPile(Owner).Cards;
-        if (_card1 == null)
-        {
-            var saved = SavedCard1.Get(this);
-            if (!string.IsNullOrEmpty(saved))
-                _card1 = deck.FirstOrDefault(c => c.GetType().FullName == saved);
-        }
-        if (_card2 == null)
-        {
-            var saved = SavedCard2.Get(this);
-            if (!string.IsNullOrEmpty(saved))
-                _card2 = deck.FirstOrDefault(c => c.GetType().FullName == saved);
-        }
+        var married = PileType.Deck.GetPile(Owner).Cards
+            .Where(c => c.Enchantment is Enchantments.MarriedEnchantment)
+            .ToList();
+        if (married.Count < 2) return;
+        _card1 ??= married[0];
+        _card2 ??= married.FirstOrDefault(c => !ReferenceEquals(c, _card1)) ?? married[1];
     }
 
     public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -109,6 +99,9 @@ public class WeddingRing : CustomRelicModel
     {
         if (cardPlay.Player != Owner) return;
         if (GeneratedCopy.Get(cardPlay.Card)) return;
+        // Trigger requires the marker (copies inherit it, hence the guard above —
+        // StS1 parity: copies never trigger).
+        if (cardPlay.Card.Enchantment is not Enchantments.MarriedEnchantment) return;
         EnsureResolved();
         if (_card1 == null || _card2 == null) return;
         if (_triggeredThisTurn) return;
