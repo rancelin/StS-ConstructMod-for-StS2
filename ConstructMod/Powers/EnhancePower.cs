@@ -18,7 +18,7 @@ public class EnhancePower : CustomPowerModel
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Enhance",
         Description: "#At the end of your turn, Upgrade {Amount} random card(s) in your discard pile for the rest of this combat.",
-        SmartDescription: "#At the end of your turn, Upgrade random card(s) in your discard pile for the rest of this combat.");
+        SmartDescription: "#At the end of your turn, Upgrade {Amount} random card(s) in your discard pile for the rest of this combat.");
 
     public override Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)
