@@ -24,8 +24,11 @@ namespace ConstructMod.Relics;
 /// pile with a DeckVersion back-pointer), so direct reference comparison against the chosen
 /// deck cards never matches — the clone's DeckVersion is the link.
 ///
-/// NOTE (save/load limitation): the two chosen cards are held as in-memory references.
-/// Persisting the selection (card id + upgrade state) is deferred until the save-support pass.
+/// NOTE (save/load): the two chosen cards are held as live run-deck references, backed
+/// by persisted card-TYPE names (SavedSpireField). Type identity is upgrade-proof
+/// (upgrade keeps the class) and duplicate-indifferent (two identical Strikes are
+/// interchangeable marriage partners); transforms/removals correctly break the link.
+/// Re-resolved lazily on first use after a load via EnsureResolved().
 /// </summary>
 [Pool(typeof(ConstructRelicPool))]
 public class WeddingRing : CustomRelicModel
@@ -33,6 +36,11 @@ public class WeddingRing : CustomRelicModel
     public override RelicRarity Rarity => RelicRarity.Ancient; // StS1 BOSS tier → StS2 Ancient (boss-reward tier)
 
     public override bool HasUponPickupEffect => true;
+
+    private static readonly SavedSpireField<WeddingRing, string> SavedCard1 =
+        new(() => "", "ConstructMod_WeddingRing_Card1");
+    private static readonly SavedSpireField<WeddingRing, string> SavedCard2 =
+        new(() => "", "ConstructMod_WeddingRing_Card2");
 
     private CardModel? _card1;
     private CardModel? _card2;
@@ -50,7 +58,32 @@ public class WeddingRing : CustomRelicModel
         if (chosen.Count < 2) return;
         _card1 = chosen[0];
         _card2 = chosen[1];
+        SavedCard1.Set(this, chosen[0].GetType().FullName ?? "");
+        SavedCard2.Set(this, chosen[1].GetType().FullName ?? "");
         Flash();
+    }
+
+    /// <summary>
+    /// Re-link the live deck references after a save/load (which re-instantiates every
+    /// card, killing the in-memory references). Matches by card type: first deck card
+    /// of the saved class. No-op when references are alive or nothing was ever chosen.
+    /// </summary>
+    private void EnsureResolved()
+    {
+        if (_card1 != null && _card2 != null) return;
+        var deck = PileType.Deck.GetPile(Owner).Cards;
+        if (_card1 == null)
+        {
+            var saved = SavedCard1.Get(this);
+            if (!string.IsNullOrEmpty(saved))
+                _card1 = deck.FirstOrDefault(c => c.GetType().FullName == saved);
+        }
+        if (_card2 == null)
+        {
+            var saved = SavedCard2.Get(this);
+            if (!string.IsNullOrEmpty(saved))
+                _card2 = deck.FirstOrDefault(c => c.GetType().FullName == saved);
+        }
     }
 
     public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -62,6 +95,7 @@ public class WeddingRing : CustomRelicModel
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Player != Owner) return;
+        EnsureResolved();
         if (_card1 == null || _card2 == null) return;
         if (_triggeredThisTurn) return;
 
