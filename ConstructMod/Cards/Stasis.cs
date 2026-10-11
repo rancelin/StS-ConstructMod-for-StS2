@@ -63,39 +63,52 @@ public class Stasis : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var copies = DynamicVars["Copies"].IntValue;
-        // 1. Reclaim the previously banked card (if any): force-mega it, return N copies.
+        // 1. Read and clear the previously banked card (if any). The upgraded reclaim is
+        // prepared here but lands AFTER the new banking (StS1 queues the return
+        // addToBottom): otherwise an empty hand would immediately re-bank the very
+        // cards just returned.
+        CardModel? reclaimed = null;
+        var reclaimCount = 0;
         var old = Owner.Creature.Powers.OfType<ConstructStasisPower>().FirstOrDefault();
         if (old?.HeldCard != null)
         {
-            var count = (int)old.Amount;
-            var reclaimed = old.HeldCard.CreateClone();
+            reclaimCount = (int)old.Amount;
+            reclaimed = old.HeldCard.CreateClone();
             if (reclaimed is AbstractConstructCard construct)
                 ForceUpgradeToMax(reclaimed);
             else if (reclaimed.IsUpgradable)
                 CardCmd.Upgrade(reclaimed);
-            for (var i = 0; i < count; i++)
-            {
-                var copy = reclaimed.CreateClone();
-                await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, Owner);
-            }
             await PowerCmd.Remove(old);
         }
         // 2. Bank a new card from hand (StS1 banks anything — no filter). This Stasis
         // itself is in the Play pile, so it can't self-select.
         var candidates = PileType.Hand.GetPile(Owner).Cards.ToList();
-        if (candidates.Count == 0) return;
-        CardModel? chosen = candidates.Count == 1
-            ? candidates[0]
-            : (await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(
-                    new LocString("cards", "CONSTRUCTMOD-STASIS.selectionScreenPrompt"), 1),
-                context: choiceContext, player: Owner,
-                filter: c => true, source: this)).FirstOrDefault();
-        if (chosen == null) return;
-        var banked = chosen.CreateClone();
-        await PowerCmd.Apply<ConstructStasisPower>(choiceContext, Owner.Creature,
-            copies, Owner.Creature, this);
-        Owner.Creature.Powers.OfType<ConstructStasisPower>().FirstOrDefault()?.SetHeldCard(banked);
-        await CardCmd.Exhaust(choiceContext, chosen);
+        if (candidates.Count != 0)
+        {
+            CardModel? chosen = candidates.Count == 1
+                ? candidates[0]
+                : (await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(
+                        new LocString("cards", "CONSTRUCTMOD-STASIS.selectionScreenPrompt"), 1),
+                    context: choiceContext, player: Owner,
+                    filter: c => true, source: this)).FirstOrDefault();
+            if (chosen != null)
+            {
+                var banked = chosen.CreateClone();
+                await PowerCmd.Apply<ConstructStasisPower>(choiceContext, Owner.Creature,
+                    copies, Owner.Creature, this);
+                Owner.Creature.Powers.OfType<ConstructStasisPower>().FirstOrDefault()?.SetHeldCard(banked);
+                await CardCmd.Exhaust(choiceContext, chosen);
+            }
+        }
+        // 3. Land the reclaim (if any) after banking.
+        if (reclaimed != null)
+        {
+            for (var i = 0; i < reclaimCount; i++)
+            {
+                var copy = reclaimed.CreateClone();
+                await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, Owner);
+            }
+        }
     }
 
     protected override void OnUpgrade()
