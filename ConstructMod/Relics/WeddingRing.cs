@@ -52,7 +52,13 @@ public class WeddingRing : CustomRelicModel
     internal static readonly SpireField<CardModel, bool> GeneratedCopy =
         new SpireField<CardModel, bool>(_ => false).CopyOnClone();
 
-    internal static void MarkGeneratedCopy(CardModel copy) => GeneratedCopy.Set(copy, true);
+    internal static void MarkGeneratedCopy(CardModel copy)
+    {
+        GeneratedCopy.Set(copy, true);
+        // Copies inherit the marker visually; strip it so players never mistake a copy
+        // for a marriage partner (it is also trigger-inert via the guard above).
+        CardCmd.ClearEnchantment(copy);
+    }
 
     public override async Task AfterObtained()
     {
