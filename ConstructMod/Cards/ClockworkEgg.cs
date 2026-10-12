@@ -36,6 +36,15 @@ public class ClockworkEgg : AbstractConstructCard
     private static readonly SpireField<CardModel, bool> ScrambledField =
         new SpireField<CardModel, bool>(_ => false).CopyOnClone();
 
+    // StS1 exhaust parity: tiers 0/3/mega always exhaust; tiers 1-2 exhaust only once
+    // the card has exhausted itself at tier 0 (the flag sticks across upgrades).
+    // (Save/load drops it in both versions — StS1 doesn't persist the flag either.)
+    private static readonly SpireField<CardModel, bool> EverExhaustedField =
+        new SpireField<CardModel, bool>(_ => false).CopyOnClone();
+
+    private bool ExhaustsAtCurrentTier =>
+        CurrentUpgradeLevel is not (1 or 2) || EverExhaustedField.Get(this);
+
     public ClockworkEgg() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
@@ -45,7 +54,8 @@ public class ClockworkEgg : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            yield return CardKeyword.Exhaust;
+            if (ExhaustsAtCurrentTier)
+                yield return CardKeyword.Exhaust;
         }
     }
 
@@ -54,7 +64,8 @@ public class ClockworkEgg : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
+            if (ExhaustsAtCurrentTier)
+                yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
         }
     }
 
@@ -63,7 +74,7 @@ public class ClockworkEgg : AbstractConstructCard
     // base rung everywhere). Tiers follow the live level, including upgrade previews
     // (whose clones carry the post-upgrade level).
     public override List<(string, string)>? Localization => new CardLoc("Clockwork Egg",
-        "#{EggTier:eggtier:Draw a card. Can be *Upgraded* 3 more times.|Add an upgraded *Attack Mode* and an upgraded *Defense Mode* to your hand.\nCan be *Upgraded* 2 more times.|Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.|Gain Molten, Toxic and Frozen Eggs and a *Clockwork Phoenix*. Permanently remove this card from your deck.|Gain a random relic.|Gain *Confused*. Draw 5 cards.}");
+        "#{EggTier:eggtier:Draw a card. Can be *Upgraded* 3 more times.|Add an upgraded Attack Mode and an upgraded Defense Mode to your hand.\nCan be *Upgraded* 2 more times.|Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.|Gain Molten, Toxic and Frozen Eggs and a *Clockwork Phoenix*. Permanently remove this card from your deck.|Gain a random relic.|Gain *Confused*. Draw 5 cards.}");
 
     protected override void AddExtraArgsToDescription(LocString description)
     {
@@ -77,6 +88,7 @@ public class ClockworkEgg : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (CombatState is not { } combat) return;
+        EverExhaustedField.Set(this, ExhaustsAtCurrentTier);
         switch (CurrentUpgradeLevel)
         {
             case 0:
