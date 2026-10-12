@@ -89,11 +89,18 @@ public abstract class AbstractConstructCard : CustomCardModel
             {
                 return IntrinsicMaxUpgradeLevel;
             }
+            // StS1 gate (AbstractConstructCard.canUpgrade): the regular ladder
+            // (super.canUpgrade() / timesUpgraded<N) climbs FREELY — only the mega rung
+            // needs Phoenix-out-of-combat or forcing. So the no-Phoenix cap is every rung
+            // below mega: max(1, intrinsic-1) keeps single/2-tier behavior identical
+            // (cap 1) while letting the Egg reach +3 to earn its Phoenix. (An earlier
+            // version capped everything at 1 — a deadlock: Phoenix needs +3, +3 needed
+            // Phoenix.) The combat branch stays Mega-locked even with Phoenix (StS1's
+            // phase check; protects the Apotheosis design).
+            var regularCap = Math.Max(1, IntrinsicMaxUpgradeLevel - 1);
             var gated = Owner.Creature.CombatState != null
-                ? Math.Min(IntrinsicMaxUpgradeLevel, 1)
-                : HasClockworkPhoenix()
-                    ? IntrinsicMaxUpgradeLevel
-                    : Math.Min(IntrinsicMaxUpgradeLevel, 1);
+                ? regularCap
+                : HasClockworkPhoenix() ? IntrinsicMaxUpgradeLevel : regularCap;
             return Math.Max(gated, CurrentUpgradeLevel);
         }
     }
