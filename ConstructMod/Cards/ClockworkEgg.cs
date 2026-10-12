@@ -36,14 +36,10 @@ public class ClockworkEgg : AbstractConstructCard
     private static readonly SpireField<CardModel, bool> ScrambledField =
         new SpireField<CardModel, bool>(_ => false).CopyOnClone();
 
-    // StS1 exhaust parity: tiers 0/3/mega always exhaust; tiers 1-2 exhaust only once
-    // the card has exhausted itself at tier 0 (the flag sticks across upgrades).
-    // (Save/load drops it in both versions — StS1 doesn't persist the flag either.)
-    private static readonly SpireField<CardModel, bool> EverExhaustedField =
-        new SpireField<CardModel, bool>(_ => false).CopyOnClone();
-
-    private bool ExhaustsAtCurrentTier =>
-        CurrentUpgradeLevel is not (1 or 2) || EverExhaustedField.Get(this);
+    // Always exhausts. (StS1 only sets the flag at tiers 0/3/mega, so tiers 1-2
+    // exhaust solely by flag leakage from an earlier tier-0 play — an undiscoverable,
+    // history-dependent accident: nothing in the text, events, or unlocks explains or
+    // justifies it, so it reads as a bug rather than a rule. Deliberate simplification.)
 
     public ClockworkEgg() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -54,8 +50,7 @@ public class ClockworkEgg : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            if (ExhaustsAtCurrentTier)
-                yield return CardKeyword.Exhaust;
+            yield return CardKeyword.Exhaust;
         }
     }
 
@@ -64,8 +59,7 @@ public class ClockworkEgg : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            if (ExhaustsAtCurrentTier)
-                yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
+            yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
             // +2 rung names Strength/Dexterity (single-word gold spans only — the
             // formatter terminates highlights at spaces).
             if (CurrentUpgradeLevel == 2)
@@ -95,7 +89,6 @@ public class ClockworkEgg : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (CombatState is not { } combat) return;
-        EverExhaustedField.Set(this, ExhaustsAtCurrentTier);
         switch (CurrentUpgradeLevel)
         {
             case 0:
