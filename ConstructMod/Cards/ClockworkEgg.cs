@@ -66,6 +66,13 @@ public class ClockworkEgg : AbstractConstructCard
             foreach (var t in base.ExtraHoverTips) yield return t;
             if (ExhaustsAtCurrentTier)
                 yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
+            // +2 rung names Strength/Dexterity (single-word gold spans only — the
+            // formatter terminates highlights at spaces).
+            if (CurrentUpgradeLevel == 2)
+            {
+                yield return HoverTipFactory.FromPower<StrengthPower>(null);
+                yield return HoverTipFactory.FromPower<DexterityPower>(null);
+            }
         }
     }
 
@@ -74,7 +81,7 @@ public class ClockworkEgg : AbstractConstructCard
     // base rung everywhere). Tiers follow the live level, including upgrade previews
     // (whose clones carry the post-upgrade level).
     public override List<(string, string)>? Localization => new CardLoc("Clockwork Egg",
-        "#{EggTier:eggtier:Draw a card. Can be *Upgraded* 3 more times.|Add an upgraded Attack Mode and an upgraded Defense Mode to your hand.\nCan be *Upgraded* 2 more times.|Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.|Gain Molten, Toxic and Frozen Eggs and a *Clockwork Phoenix*. Permanently remove this card from your deck.|Gain a random relic.|Gain *Confused*. Draw 5 cards.}");
+        "#{EggTier:eggtier:Draw a card. Can be *Upgraded* 3 more times.|Add an upgraded Attack Mode and an upgraded Defense Mode to your hand.\nCan be *Upgraded* 2 more times.|Gain 3 *Strength*. Gain 3 *Dexterity*.\nCan be *Upgraded* 1 more time.|Gain Molten, Toxic and Frozen Eggs and a Clockwork Phoenix. Permanently remove this card from your deck.|Gain a random relic.|Gain *Confused*. Draw 5 cards.}");
 
     protected override void AddExtraArgsToDescription(LocString description)
     {
