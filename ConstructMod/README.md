@@ -29,7 +29,7 @@ Work in progress. The core character, Cycle mechanic, and ~95 cards are ported a
 - **Save/load support**: ClawGrip's retained-card reference is combat-only by design. (WeddingRing persistence is done via the Marriage enchantment.)
 - **Godot assets**: `.pck` with card art, power icons, character visuals, localization tables.
 - **Flamethrower**: disabled (`showInCardLibrary: false, autoAdd: false`); to be reimagined as a multiplayer card.
-- **Future rework notes (parked)**: ClockworkEgg mega path (two-copy smith route vs forced-mega shortcuts — candidate for a rework and/or multiplayer options) alongside Flamethrower. Revisit together, not during Phase 2/3.
+- **Future rework notes (parked)**: new card(s)/event(s)/relic designs around the ClockworkEgg mega path (two-copy smith route vs forced-mega shortcuts) for solo and/or multiplayer — revisit together with the Flamethrower rework, not during Phase 2/3. (Regular Egg testing/porting continues normally.)
 
 ## Building
 
