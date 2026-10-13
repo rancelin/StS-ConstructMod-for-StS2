@@ -14,6 +14,8 @@ namespace ConstructMod.Cards;
 
 public class OilSpill : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +2 oil, +2 = mega (+3 oil, hits ALL enemies).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<OilSpillPower>("Oil", 9m), new OverheatVar()];
 
@@ -33,11 +35,11 @@ public class OilSpill : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Oil Spill",
-        "#Whenever a *Burn* hits you, {IfUpgraded:show:ALL enemies|target enemy} take {Oil} damage.\n*Overheat*: {Overheat}.");
+        "#Whenever a *Burn* hits you, {IfMega:mega:ALL enemies|target enemy} take {Oil} damage.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (IsUpgraded)
+        if (IsMegaUpgraded)
         {
             // Mega folded into upgrade: targets ALL enemies.
             if (CombatState is { } combat)
@@ -59,8 +61,16 @@ public class OilSpill : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +2 oil dmg on upgrade, then mega = +3 oil dmg + target ALL_ENEMY.
-        // Folded: +5 oil dmg (combined) + target ALL enemies in OnPlay.
-        DynamicVars["Oil"].UpgradeValueBy(5m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +2 oil (9 → 11).
+            DynamicVars["Oil"].UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: +3 oil (11 → 14); ALL-enemies targeting moves here.
+            DynamicVars["Oil"].UpgradeValueBy(3m);
+        }
     }
 }

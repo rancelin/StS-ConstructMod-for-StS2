@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class Dampening : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +1 draw (1 → 2), +2 = mega (+2 draw → 4).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromKeyword(ConstructKeywords.Cycle)];
 
@@ -42,6 +44,8 @@ public class Dampening : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Draw"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 draw (1 → 2). Mega: +2 draw (2 → 4).
+        DynamicVars["Draw"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 1m : 2m);
     }
 }

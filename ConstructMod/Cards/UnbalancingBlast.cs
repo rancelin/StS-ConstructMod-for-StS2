@@ -10,6 +10,17 @@ namespace ConstructMod.Cards;
 
 public class UnbalancingBlast : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +2 damage + Retain, +2 = mega (cost → 0).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
+    public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
+    {
+        get
+        {
+            foreach (var k in base.CanonicalKeywords) yield return k;
+            if (IsUpgraded) yield return CardKeyword.Retain;
+        }
+    }
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(10m, ValueProp.Move)];
 
@@ -43,7 +54,17 @@ public class UnbalancingBlast : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        AddKeyword(CardKeyword.Retain);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +2 damage (10 → 12) + Retain.
+            DynamicVars.Damage.UpgradeValueBy(2m);
+            AddKeyword(CardKeyword.Retain);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: cost 1 → 0.
+            EnergyCost.UpgradeBy(-1);
+        }
     }
 }

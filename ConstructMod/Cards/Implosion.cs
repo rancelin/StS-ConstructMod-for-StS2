@@ -10,6 +10,8 @@ using BaseLib.Abstracts;
 namespace ConstructMod.Cards;
 public class Implosion : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = cost 2 → 1, +2 = mega (cost → 0, Retain).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromCard<Burn>()];
 
@@ -23,6 +25,8 @@ public class Implosion : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
+            // Mega tier only (StS1 sets retain in the mega branch, not the regular one).
+            if (IsMegaUpgraded) yield return CardKeyword.Retain;
         }
     }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -48,6 +52,12 @@ public class Implosion : AbstractConstructCard
     }
     protected override void OnUpgrade()
     {
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 2 → 1. Mega: cost → 0 + Retain (badge via CanonicalKeywords).
         EnergyCost.UpgradeBy(-1);
+        if (CurrentUpgradeLevel == 2)
+        {
+            AddKeyword(CardKeyword.Retain);
+        }
     }
 }

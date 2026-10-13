@@ -14,6 +14,8 @@ namespace ConstructMod.Cards;
 
 public class Chainstrike : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +1 card played (1 → 2), +2 = mega (cost → 1).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5m, ValueProp.Move),
@@ -53,6 +55,15 @@ public class Chainstrike : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Cards"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 card (1 → 2). Mega: cost 2 → 1.
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Cards"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            EnergyCost.UpgradeBy(-1);
+        }
     }
 }

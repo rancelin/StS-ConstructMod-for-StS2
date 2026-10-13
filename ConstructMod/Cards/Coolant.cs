@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class Coolant : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = Innate (no stat change), +2 = mega (+4 cooling).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(8m, ValueProp.Move), new DynamicVar("Cooling", 5m)];
 
@@ -55,9 +57,16 @@ public class Coolant : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: upgrade grants Innate + new description (no stat change), then mega = +4 cooling.
-        // Folded: +4 cooling + Innate.
-        DynamicVars["Cooling"].UpgradeValueBy(4m);
-        AddKeyword(CardKeyword.Innate);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: Innate only (matches the original — the old +4 here was over-generous).
+        // Mega: +4 cooling (5 → 9).
+        if (CurrentUpgradeLevel == 1)
+        {
+            AddKeyword(CardKeyword.Innate);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Cooling"].UpgradeValueBy(4m);
+        }
     }
 }

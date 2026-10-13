@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class LongRangeLance : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +4 damage (12 → 16), +2 = mega (−4 back to 12, EXTRA lance).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Damage", 12m)];
 
@@ -21,7 +23,7 @@ public class LongRangeLance : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Long-Range Lance",
-        "#At the start of your next combat, deal {Damage} damage to a random enemy.{IfUpgraded:show:\nAt the start of the combat after, deal {Damage} damage to a random enemy.|}");
+        "#At the start of your next combat, deal {Damage} damage to a random enemy.{IfMega:mega:\nAt the start of the combat after, deal {Damage} damage to a random enemy.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -47,9 +49,9 @@ public class LongRangeLance : AbstractConstructCard
             lance?.SetLanceDamage(DynamicVars["Damage"].IntValue);
         }
 
-        // Mega folded into upgrade: also grant the EXTRA lance, which skips the next combat
+        // Mega tier: also grant the EXTRA lance, which skips the next combat
         // and replaces itself with a Lance relic, so the second hit lands the combat after.
-        if (IsUpgraded)
+        if (IsMegaUpgraded)
         {
             await PowerCmd.Apply<ExtraLongRangeLancePower>(choiceContext, Owner.Creature,
                 DynamicVars["Damage"].IntValue, Owner.Creature, this);
@@ -68,7 +70,9 @@ public class LongRangeLance : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +4 damage on upgrade, then mega -4 (net 0) + the EXTRA-Long-Range power.
-        // Folded: no stat change; the upgrade adds the EXTRA power (applied in OnPlay above).
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage (12 → 16). Mega: −4 (16 → 12, net 0); the EXTRA power
+        // moves here (OnPlay, gated on IsMegaUpgraded).
+        DynamicVars["Damage"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 4m : -4m);
     }
 }

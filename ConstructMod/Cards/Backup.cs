@@ -15,12 +15,15 @@ namespace ConstructMod.Cards;
 
 public class Backup : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = Retain, +2 = mega (cost → 0, lose Exhaust).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            yield return CardKeyword.Exhaust;
+            // Exhaust leaves at the mega tier (StS1 sets exhaust = false there).
+            if (!IsMegaUpgraded) yield return CardKeyword.Exhaust;
             if (IsUpgraded) yield return CardKeyword.Retain;
         }
     }
@@ -72,6 +75,17 @@ public class Backup : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: Retain.
+            AddKeyword(CardKeyword.Retain);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: cost 1 → 0, lose Exhaust.
+            EnergyCost.UpgradeBy(-1);
+            RemoveKeyword(CardKeyword.Exhaust);
+        }
     }
 }

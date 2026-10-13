@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class Rollout : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +5 overheat, +2 = mega (+1 multiplier, +5 overheat).
     // Damage = CalculationBase (0) + ExtraDamage (Multiplier) * (cycles this turn).
     // Uses the vanilla CalculatedDamageVar pattern (same as PerfectedStrike) so the damage
     // flows through the card's damage pipeline (Strength/Weak/Vulnerable/etc. apply correctly)
@@ -61,8 +62,17 @@ public class Rollout : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original regular upgrade is overheat-only (+5); the +1 damage multiplier is the mega tier.
-        UpgradeOverheat(10);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +5 overheat tolerance. Mega: +1 multiplier +5 overheat.
+        if (CurrentUpgradeLevel == 1)
+        {
+            UpgradeOverheat(5);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.ExtraDamage.UpgradeValueBy(1m);
+            UpgradeOverheat(5);
+        }
     }
 }
 

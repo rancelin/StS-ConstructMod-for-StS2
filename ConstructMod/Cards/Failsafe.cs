@@ -11,6 +11,8 @@ namespace ConstructMod.Cards;
 
 public class Failsafe : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +1 card (2 → 3), +2 = mega (+4 cards → 7).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<FailsafePower>(2m)];
 
@@ -32,6 +34,8 @@ public class Failsafe : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["FailsafePower"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 (2 → 3). Mega: +4 (3 → 7).
+        DynamicVars["FailsafePower"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 1m : 4m);
     }
 }

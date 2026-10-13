@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using BaseLib.Abstracts;
@@ -20,7 +21,22 @@ public class ModeShift : AbstractConstructCard
     // hide it from rewards, but faithful-to-original takes precedence — it belongs in
     // the pool. (Basic never appears in rewards, which is also why the Basic Heated
     // challenge cards need no pool action: they're already reward-excluded.)
-    private const int DrawAmount = 1;
+
+    // 2-tier ladder: +1 = cost 1 → 0, +2 = mega (+1 draw, Retain).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new CardsVar("Cards", 1)];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords
+    {
+        get
+        {
+            foreach (var k in base.CanonicalKeywords) yield return k;
+            // Mega tier only.
+            if (IsMegaUpgraded) yield return CardKeyword.Retain;
+        }
+    }
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<StrengthPower>(null),
             HoverTipFactory.FromPower<DexterityPower>(null)];
@@ -30,7 +46,7 @@ public class ModeShift : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Mode Shift",
-        "#Swap your *Strength* and *Dexterity*. Draw a card.");
+        "#Swap your *Strength* and *Dexterity*. Draw {Cards} card(s).");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -41,11 +57,22 @@ public class ModeShift : AbstractConstructCard
             await PowerCmd.Apply<StrengthPower>(choiceContext, creature, dexterity - strength, creature, this);
         if (strength - dexterity != 0)
             await PowerCmd.Apply<DexterityPower>(choiceContext, creature, strength - dexterity, creature, this);
-        await CardPileCmd.Draw(choiceContext, DrawAmount, Owner);
+        await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, Owner);
     }
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: cost 1 → 0.
+            EnergyCost.UpgradeBy(-1);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: +1 draw (1 → 2), Retain.
+            DynamicVars["Cards"].UpgradeValueBy(1m);
+            AddKeyword(CardKeyword.Retain);
+        }
     }
 }

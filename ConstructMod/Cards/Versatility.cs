@@ -11,6 +11,8 @@ namespace ConstructMod.Cards;
 
 public class Versatility : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +3/+3, +2 = mega (+1/+1, draw 2 on play).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
@@ -22,7 +24,7 @@ public class Versatility : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Versatility",
-        "#If the target intends to attack, gain !Block! *Block*. Otherwise, deal !Damage! damage.");
+        "#If the target intends to attack, gain !Block! *Block*. Otherwise, deal !Damage! damage.{IfMega:mega:\nDraw 2 cards.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -36,11 +38,26 @@ public class Versatility : AbstractConstructCard
                 .WithHitFx("vfx/vfx_attack_blunt")
                 .Execute(choiceContext);
         }
+        if (IsMegaUpgraded)
+        {
+            await CardPileCmd.Draw(choiceContext, 2m, Owner);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars.Block.UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +3/+3 (7 → 10).
+            DynamicVars.Damage.UpgradeValueBy(3m);
+            DynamicVars.Block.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: +1/+1 (10 → 11); the Draw 2 moves here (OnPlay, gated on IsMegaUpgraded).
+            DynamicVars.Damage.UpgradeValueBy(1m);
+            DynamicVars.Block.UpgradeValueBy(1m);
+        }
     }
 }

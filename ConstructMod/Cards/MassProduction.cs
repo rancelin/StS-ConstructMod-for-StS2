@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class MassProduction : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = cost 3 → 2, +2 = mega (cost → 1).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
         get
@@ -62,6 +64,8 @@ public class MassProduction : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 3 → 2. Mega: cost → 1.
         EnergyCost.UpgradeBy(-1);
     }
 }

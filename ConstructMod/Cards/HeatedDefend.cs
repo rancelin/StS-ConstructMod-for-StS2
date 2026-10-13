@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class HeatedDefend : AbstractCycleCard
 {
+    // 2-tier ladder: +1 = +5 overheat, +2 = mega (+10 overheat). No block delta
+    // at any tier (matches the original — the port's old +3 is dropped).
     public override bool GainsBlock => true;
     protected override System.Collections.Generic.HashSet<CardTag> CanonicalTags => [CardTag.Defend];
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
@@ -50,9 +52,8 @@ public class HeatedDefend : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(3m);
-        // Original: upgradeOverheat(+5) on upgrade, then mega upgradeOverheat(+10).
-        // Folded: +15 overheat (combined).
-        UpgradeOverheat(15);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +5 overheat. Mega: +10 overheat.
+        UpgradeOverheat(CurrentUpgradeLevel == 1 ? 5 : 10);
     }
 }

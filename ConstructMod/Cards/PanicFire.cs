@@ -12,6 +12,8 @@ namespace ConstructMod.Cards;
 
 public class PanicFire : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +4 damage, +2 = mega (shuffle 3 Cores).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<PanicFirePower>(8m)];
 
@@ -26,13 +28,13 @@ public class PanicFire : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Panic Fire",
-        "#Whenever a non-Upgraded card *Cycles*, *Exhaust* it and deal {PanicFirePower} damage to a random enemy.{IfUpgraded:show:\nShuffle 3 random Cores into your draw pile.|}");
+        "#Whenever a non-Upgraded card *Cycles*, *Exhaust* it and deal {PanicFirePower} damage to a random enemy.{IfMega:mega:\nShuffle 3 random Cores into your draw pile.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await PowerCmd.Apply<PanicFirePower>(choiceContext, Owner.Creature,
             DynamicVars["PanicFirePower"].BaseValue, Owner.Creature, this);
-        if (!IsUpgraded) return;
+        if (!IsMegaUpgraded) return;
         if (CombatState is not { } combat) return;
         for (int i = 0; i < 3; i++)
         {
@@ -44,6 +46,12 @@ public class PanicFire : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["PanicFirePower"].UpgradeValueBy(4m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +4 damage (8 → 12).
+            DynamicVars["PanicFirePower"].UpgradeValueBy(4m);
+        }
+        // Mega: no stat change — the Cores move here (OnPlay, gated on IsMegaUpgraded).
     }
 }

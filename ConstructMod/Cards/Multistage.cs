@@ -16,6 +16,8 @@ namespace ConstructMod.Cards;
 
 public class Multistage : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +1 turn (2 → 3), +2 = mega (+2 turns → 5).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override bool HasEnergyCostX => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -71,6 +73,8 @@ public class Multistage : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Turns"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 turn (2 → 3). Mega: +2 turns (3 → 5).
+        DynamicVars["Turns"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 1m : 2m);
     }
 }

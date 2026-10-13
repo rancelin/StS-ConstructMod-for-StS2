@@ -11,12 +11,16 @@ namespace ConstructMod.Cards;
 
 public class Supernova : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = cost 3 → 2, +2 = mega (cost → 1, replacements upgraded).
+    // (StS1 upgrades replacements only when mega — SupernovaAction(megaUpgraded) —
+    // despite the regular text; code over text.)
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public Supernova() : base(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Supernova",
-        "#Exhaust ALL *Status* cards and replace them with random{IfUpgraded:show: *upgraded*|} cards.\nThose cards cost 0 this combat.");
+        "#Exhaust ALL *Status* cards and replace them with random{IfMega:mega: *upgraded*|} cards.\nThose cards cost 0 this combat.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -56,7 +60,7 @@ public class Supernova : AbstractConstructCard
                 var canonical = Owner.RunState.Rng.CombatCardGeneration.NextItem(options);
                 if (canonical == null) continue;
                 var replacement = combat.CreateCard(canonical, Owner);
-                if (IsUpgraded && replacement.IsUpgradable) CardCmd.Upgrade(replacement);
+                if (IsMegaUpgraded && replacement.IsUpgradable) CardCmd.Upgrade(replacement);
                 replacement.EnergyCost.AddThisCombat(-9, reduceOnly: true);
                 await CardPileCmd.AddGeneratedCardToCombat(replacement, pileType, Owner, CardPilePosition.Top);
             }
@@ -65,6 +69,8 @@ public class Supernova : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 3 → 2. Mega: cost → 1 (replacement upgrades move here too).
         EnergyCost.UpgradeBy(-1);
     }
 }

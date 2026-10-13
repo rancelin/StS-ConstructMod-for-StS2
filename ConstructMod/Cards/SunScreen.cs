@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class SunScreen : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +2 block, +2 = mega (+1 block, Curse-exhaust power added).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     // Plain DynamicVar (not BlockVar) so the description shows a flat 3 — BlockVar would preview
     // the Dexterity-modified value, but the power grants nonCardUnpowered block that is
     // deliberately NOT boosted by Dexterity (display and behavior must agree).
@@ -37,14 +39,14 @@ public class SunScreen : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Sun Screen",
-        "#At the end of your turn, *Exhaust* a random *Status* card in your hand to gain {Block} *Block*.{IfUpgraded:show:\nAlso *Exhaust* a random *Curse* card in your hand to gain {Block} *Block*.|}");
+        "#At the end of your turn, *Exhaust* a random *Status* card in your hand to gain {Block} *Block*.{IfMega:mega:\nAlso *Exhaust* a random *Curse* card in your hand to gain {Block} *Block*.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // Mega folded into upgrade: the upgraded card applies BOTH powers (Status + Curse exhaust),
+        // Mega tier: the upgraded card applies BOTH powers (Status + Curse exhaust),
         // matching the original mega behavior where the regular power is kept, not replaced.
         // (DynamicVars["Block"] — the indexer, not the Block property, since this is a plain var.)
-        if (IsUpgraded)
+        if (IsMegaUpgraded)
         {
             await PowerCmd.Apply<SunScreenMegaPower>(choiceContext, Owner.Creature,
                 DynamicVars["Block"].IntValue, Owner.Creature, this);
@@ -55,8 +57,8 @@ public class SunScreen : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +2 block on upgrade, then mega +1 block + the Curse-exhaust power.
-        // Folded: +3 block (combined); the Curse power is applied in OnPlay above.
-        DynamicVars["Block"].UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 block (3 → 5). Mega: +1 block (5 → 6); the Curse power moves here.
+        DynamicVars["Block"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 2m : 1m);
     }
 }

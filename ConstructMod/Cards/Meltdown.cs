@@ -12,6 +12,8 @@ namespace ConstructMod.Cards;
 
 public class Meltdown : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +2/turn (12 → 14), +2 = mega (+4/turn → 18).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<MeltdownPower>(12m)];
 
@@ -33,6 +35,8 @@ public class Meltdown : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["MeltdownPower"].UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 (12 → 14). Mega: +4 (14 → 18).
+        DynamicVars["MeltdownPower"].UpgradeValueBy(CurrentUpgradeLevel == 1 ? 2m : 4m);
     }
 }

@@ -16,6 +16,7 @@ namespace ConstructMod.Cards;
 
 public class MoltenSmash : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +3/+3, +2 = mega (+4/+4).
     // Neighbors cached by MoltenSmashNeighborPatch (Harmony prefix on CardModel.OnPlayWrapper)
     // while the card is still in the hand pile — by the time OnPlay runs, the card has already
     // moved to the Play pile, so its hand position can no longer be queried.
@@ -83,9 +84,18 @@ public class MoltenSmash : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +3 dmg/+3 block on upgrade, then mega = +4 dmg/+4 block.
-        // Folded: +7 dmg AND +7 block (combined deltas).
-        DynamicVars.Damage.UpgradeValueBy(7m);
-        DynamicVars.Block.UpgradeValueBy(7m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        if (CurrentUpgradeLevel == 1)
+        {
+            // Regular: +3/+3 (15 → 18).
+            DynamicVars.Damage.UpgradeValueBy(3m);
+            DynamicVars.Block.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            // Mega: +4/+4 (18 → 22).
+            DynamicVars.Damage.UpgradeValueBy(4m);
+            DynamicVars.Block.UpgradeValueBy(4m);
+        }
     }
 }

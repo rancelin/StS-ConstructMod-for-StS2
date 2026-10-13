@@ -16,6 +16,8 @@ namespace ConstructMod.Cards;
 
 public class Overclock : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = cost 1 → 0, +2 = mega (draw 4 immediately on play).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Cards", 2m)];
 
@@ -24,7 +26,7 @@ public class Overclock : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Overclock",
-        "#At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.");
+        "#At the start of your turn, draw {Cards} cards and add a *Burn* to your hand.{IfMega:mega:\nDraw 4 cards.|}");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
@@ -37,12 +39,18 @@ public class Overclock : AbstractConstructCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        if (IsMegaUpgraded)
+        {
+            await CardPileCmd.Draw(choiceContext, 4m, Owner);
+        }
         await PowerCmd.Apply<OverclockPower>(choiceContext, Owner.Creature,
             DynamicVars["Cards"].IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 1 → 0. Mega: no cost change — the immediate Draw 4 moves here.
         EnergyCost.UpgradeBy(-1);
     }
 }

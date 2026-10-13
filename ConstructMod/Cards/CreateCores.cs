@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class CreateCores : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +5 overheat, +2 = mega (Cores generated Upgraded).
+    public override int IntrinsicMaxUpgradeLevel => 2;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Cores", 3m), new OverheatVar()];
@@ -32,7 +34,7 @@ public class CreateCores : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Create Cores",
-        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.\n{IfUpgraded:show:The Cores are Upgraded.\n|}*Overheat*: {Overheat}.");
+        "#Shuffle {Cores} random Core(s) into your draw pile.\nDraw 1 card.\n{IfMega:mega:The Cores are Upgraded.\n|}*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -45,7 +47,7 @@ public class CreateCores : AbstractConstructCard
                 break;
             }
             CardModel core = combat.CreateCard(canonical, Owner);
-            if (IsUpgraded) CardCmd.Upgrade(core);
+            if (IsMegaUpgraded) CardCmd.Upgrade(core);
             await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
         }
         await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, Owner, this);
@@ -53,8 +55,9 @@ public class CreateCores : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Upgraded CreateCores generates upgraded Cores; count stays the same.
-        // Original: upgradeOverheat(+5) on upgrade; mega-upgrade is description-only (no overheat delta).
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +5 overheat tolerance. Mega: description-only (upgraded Cores move
+        // here — OnPlay, gated on IsMegaUpgraded).
         UpgradeOverheat(5);
     }
 }

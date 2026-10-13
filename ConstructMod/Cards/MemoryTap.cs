@@ -13,6 +13,8 @@ namespace ConstructMod.Cards;
 
 public class MemoryTap : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = cards arrive Upgraded, +2 = mega (twice the cards, cost → 3).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
         get
@@ -27,7 +29,7 @@ public class MemoryTap : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Memory Tap",
-        "#Add a random card from 3 different classes to your hand. They cost 0 this turn.{IfUpgraded:show: Upgrade them.|}");
+        "#Add a random card from 3 different classes to your hand{IfMega:mega: twice|}. They cost 0 this turn.{IfUpgraded:show: Upgrade them.|}");
 
     private async Task AddOneClassCard(PlayerChoiceContext choiceContext, CardPoolModel pool)
     {
@@ -60,13 +62,24 @@ public class MemoryTap : AbstractConstructCard
             ModelDb.CardPool<NecrobinderCardPool>()
         };
         var shuffled = pools.OrderBy(_ => Owner.RunState.Rng.CombatCardGeneration.NextFloat()).Take(3);
-        foreach (var pool in shuffled)
+        // Mega tier: the whole set twice (6 cards).
+        for (var round = 0; round < (IsMegaUpgraded ? 2 : 1); round++)
         {
-            await AddOneClassCard(choiceContext, pool);
+            foreach (var pool in shuffled)
+            {
+                await AddOneClassCard(choiceContext, pool);
+            }
         }
     }
 
     protected override void OnUpgrade()
     {
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: no stat change (cards arrive Upgraded — text only). Mega: cost 2 → 3;
+        // the doubled set moves here (OnPlay, gated on IsMegaUpgraded).
+        if (CurrentUpgradeLevel == 2)
+        {
+            EnergyCost.UpgradeBy(1);
+        }
     }
 }
