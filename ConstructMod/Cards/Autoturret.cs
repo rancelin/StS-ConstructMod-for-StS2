@@ -14,7 +14,7 @@ namespace ConstructMod.Cards;
 public class Autoturret : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<AutoturretPower>("Turret", 1m)];
+        [new DynamicVar("Turret", 1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {

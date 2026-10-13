@@ -14,7 +14,7 @@ public class Failsafe : AbstractConstructCard
     // 2-tier ladder: +1 = +1 card (2 → 3), +2 = mega (+4 cards → 7).
     public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<FailsafePower>(2m)];
+        [new DynamicVar("FailsafePower", 2m)];
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromKeyword(ConstructKeywords.Cycle)];

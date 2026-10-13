@@ -17,7 +17,7 @@ public class OneWayMirror : AbstractConstructCard
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new BlockVar(12m, ValueProp.Move),
-        new PowerVar<VulnerablePower>("Vuln", 2m)
+        new DynamicVar("Vuln", 2m)
     ];
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>

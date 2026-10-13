@@ -19,7 +19,7 @@ public class Bunker : AbstractConstructCard
     // 2-tier ladder: +1 = +1 Block, +2 = mega (Retain a random card at turn end).
     public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<BunkerPower>(2m)];
+        [new DynamicVar("BunkerPower", 2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [

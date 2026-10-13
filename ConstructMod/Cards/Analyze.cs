@@ -19,7 +19,7 @@ public class Analyze : AbstractConstructCard
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new EnergyVar(1),
-        new PowerVar<DrawCardsNextTurnPower>("Draw", 2)
+        new DynamicVar("Draw", 2)
     ];
 
     public Analyze() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)

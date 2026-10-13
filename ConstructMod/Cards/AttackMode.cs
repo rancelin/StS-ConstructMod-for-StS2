@@ -39,8 +39,8 @@ public class AttackMode : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new PowerVar<StrengthPower>("Strength", 2m),
-        new PowerVar<DexterityPower>("Dexterity", 2m)
+        new DynamicVar("Strength", 2m),
+        new DynamicVar("Dexterity", 2m)
     };
 
     public override List<(string, string)>? Localization => new CardLoc("Attack Mode",

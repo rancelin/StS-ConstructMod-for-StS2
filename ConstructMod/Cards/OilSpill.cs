@@ -17,7 +17,7 @@ public class OilSpill : AbstractConstructCard
     // 2-tier ladder: +1 = +2 oil, +2 = mega (+3 oil, hits ALL enemies).
     public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<OilSpillPower>("Oil", 9m), new OverheatVar()];
+        [new DynamicVar("Oil", 9m), new OverheatVar()];
 
     public OilSpill() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {

@@ -14,7 +14,7 @@ namespace ConstructMod.Cards;
 public class PointDefense : AbstractConstructCard
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<PointDefensePower>("Limit", 5m)];
+        [new DynamicVar("Limit", 5m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {

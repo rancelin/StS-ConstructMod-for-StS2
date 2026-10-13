@@ -23,8 +23,8 @@ public class VentSteam : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new PowerVar<WeakPower>("Weak", 1m),
-        new PowerVar<VulnerablePower>("Vuln", 1m)
+        new DynamicVar("Weak", 1m),
+        new DynamicVar("Vuln", 1m)
     ];
 
     public VentSteam() : base(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)

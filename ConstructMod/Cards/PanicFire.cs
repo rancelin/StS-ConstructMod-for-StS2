@@ -15,7 +15,7 @@ public class PanicFire : AbstractConstructCard
     // 2-tier ladder: +1 = +4 damage, +2 = mega (shuffle 3 Cores).
     public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<PanicFirePower>(8m)];
+        [new DynamicVar("PanicFirePower", 8m)];
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
     [

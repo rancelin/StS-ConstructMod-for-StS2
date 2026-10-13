@@ -18,7 +18,7 @@ public class SiegeForm : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new PowerVar<SiegeFormPower>(2m)
+        new DynamicVar("SiegeFormPower", 2m)
     ];
 
     public SiegeForm() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self)

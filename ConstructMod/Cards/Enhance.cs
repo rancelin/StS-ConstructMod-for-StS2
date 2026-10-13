@@ -16,7 +16,7 @@ public class Enhance : AbstractConstructCard
     public override int IntrinsicMaxUpgradeLevel => 2;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<EnhancePower>("Enhance", 1m)];
+        [new DynamicVar("Enhance", 1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {

@@ -15,7 +15,7 @@ public class Meltdown : AbstractConstructCard
     // 2-tier ladder: +1 = +2/turn (12 → 14), +2 = mega (+4/turn → 18).
     public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<MeltdownPower>(12m)];
+        [new DynamicVar("MeltdownPower", 12m)];
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromCard<Burn>()];

@@ -23,7 +23,7 @@ public class ShiftingStance : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new PowerVar<ShiftingStancePower>(3m)
+        new DynamicVar("ShiftingStancePower", 3m)
     ];
 
     public ShiftingStance() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)

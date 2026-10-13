@@ -27,8 +27,8 @@ public class ShiftStrike : AbstractCycleCard
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(6m, ValueProp.Move),
-        new PowerVar<StrengthPower>("Str", 1m),
-        new PowerVar<DexterityPower>("Dex", 1m)
+        new DynamicVar("Str", 1m),
+        new DynamicVar("Dex", 1m)
     ];
 
     public ShiftStrike() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
