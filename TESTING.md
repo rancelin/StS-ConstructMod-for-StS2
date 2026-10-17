@@ -35,37 +35,37 @@ IDs are `CONSTRUCTMOD-` + SCREAMING_SNAKE_CASE of the class name.
 ## A. Targeted tests for the 8 fixes
 
 ### 1.1 Dead mega branches
-- [ ] **Heated Strike** (`CONSTRUCTMOD-HEATED_STRIKE`) — Basic Attack, 1⚡, Cycle if Strength < 0.
-  - [ ] +0: **6** damage, Overheat **5**.
-  - [ ] +1: **6** damage, Overheat **10**.
-  - [ ] **+2 (mega): 12** damage (6+6), Overheat **20** (5+5+10). ← was unreachable/no damage
-- [ ] **Heated Defend** (`CONSTRUCTMOD-HEATED_DEFEND`) — Basic Skill, 1⚡, Cycle if Dexterity < 0.
-  - [ ] +0: **5** Block, Overheat **5**.
-  - [ ] +1: **5** Block, Overheat **10**.
-  - [ ] **+2: 11** Block (5+6), Overheat **20**.
-- [ ] **Molten Smash** (`CONSTRUCTMOD-MOLTEN_SMASH`) — Uncommon Attack, 2⚡, 15 dmg + 15 Block.
-  - [ ] +1: 18/18. **+2: 22/22** (was unreachable).
-  - [ ] Confirm it still overheats the cards to the left/right in hand (turns them into Burns).
-- [ ] **Rollout** (`CONSTRUCTMOD-ROLLOUT`) — Common Attack, 1⚡, damage = 3 × cards Cycled this turn.
-  - [ ] +1: multiplier 3, Overheat 15. **+2: multiplier 4**, Overheat 20 (was unreachable).
-  - [ ] Play with 3+ Cycles this turn → damage preview matches.
-  - [ ] **With 0 cards Cycled: the "Deals x damage" line reads 0 even if you have Strength** (and the card deals 0).
+- [x] **Heated Strike** (`CONSTRUCTMOD-HEATED_STRIKE`) — Basic Attack, 1⚡, Cycle if Strength < 0.
+  - [x] +0: **6** damage, Overheat **5**.
+  - [x] +1: **6** damage, Overheat **10**.
+  - [x] **+2 (mega): 12** damage (6+6), Overheat **20** (5+5+10). ← was unreachable/no damage
+- [x] **Heated Defend** (`CONSTRUCTMOD-HEATED_DEFEND`) — Basic Skill, 1⚡, Cycle if Dexterity < 0.
+  - [x] +0: **5** Block, Overheat **5**.
+  - [x] +1: **5** Block, Overheat **10**.
+  - [x] **+2: 11** Block (5+6), Overheat **20**.
+- [x] **Molten Smash** (`CONSTRUCTMOD-MOLTEN_SMASH`) — Uncommon Attack, 2⚡, 15 dmg + 15 Block.
+  - [x] +1: 18/18. **+2: 22/22** (was unreachable).
+  - [x] Confirm it still overheats the cards to the left/right in hand (turns them into Burns).
+- [x] **Rollout** (`CONSTRUCTMOD-ROLLOUT`) — Common Attack, 1⚡, damage = 3 × cards Cycled this turn.
+  - [x] +1: multiplier 3, Overheat 15. **+2: multiplier 4**, Overheat 20 (was unreachable).
+  - [x] Play with 3+ Cycles this turn → damage preview matches.
+  - [x] **With 0 cards Cycled: the "Deals x damage" line reads 0 even if you have Strength** (and the card deals 0).
 
 ### 1.2 Create Cores
-- [ ] **Create Cores** (`CONSTRUCTMOD-CREATE_CORES`) — Common Skill, 1⚡, Overheat 10.
-  - [ ] +0: Overheat **10**. +1: Overheat **15**.
-  - [ ] **+2: Overheat stays 15** (was 20), and the 3 Cores generated are **Upgraded** (show "+").
+- [x] **Create Cores** (`CONSTRUCTMOD-CREATE_CORES`) — Common Skill, 1⚡, Overheat 10.
+  - [x] +0: Overheat **10**. +1: Overheat **15**.
+  - [x] **+2: Overheat stays 15** (was 20), and the 3 Cores generated are **Upgraded** (show "+").
 
 ### 1.3 Isolate
-- [ ] **Isolate** (`CONSTRUCTMOD-ISOLATE`) — Uncommon Skill, 1⚡, Cycles only with >1 enemy.
-  - [ ] +0: play, then attack a **second** time → only the **first** attack is doubled.
-  - [ ] +1: **all** attacks this turn are doubled.
-  - [ ] **+2: all attacks doubled this turn AND next turn.**
-  - [ ] Text updates correctly per tier ("next attack" → "your attacks" → "…and next turn").
+- [x] **Isolate** (`CONSTRUCTMOD-ISOLATE`) — Uncommon Skill, 1⚡, Cycles only with >1 enemy.
+  - [x] +0: play, then attack a **second** time → only the **first** attack is doubled.
+  - [x] +1: **all** attacks this turn are doubled.
+  - [x] **+2: all attacks doubled this turn AND next turn.**
+  - [x] Text updates correctly per tier ("next attack" → "your attacks" → "…and next turn").
 
 ### 1.4 Syphon (applied by Syphon Strike)
 - [ ] **Syphon Strike** (`CONSTRUCTMOD-SYPHON_STRIKE`) — Common Attack, 1⚡, 7 dmg.
-  - [ ] Play it on an enemy → the enemy shows a **Syphon** debuff.
+  - [x] Play it on an enemy → the enemy shows a **Syphon** debuff. **Debuff tip description shows "Whenever {Owner}..."**
   - [ ] Attack that enemy again → you **draw a card** each attack.
   - [ ] **At the end of the enemy's turn (end of round) the Syphon power expires/ticks down** (icon gone after 1 round). It must **not** persist for the whole combat.
 
