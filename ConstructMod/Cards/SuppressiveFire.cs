@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class SuppressiveFire : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<BlurPower>(null)];
 
@@ -41,6 +42,17 @@ public class SuppressiveFire : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 damage. Mega: +2 Blur / +2 more damage
+        // (StS1 M_UPGRADE_PLUS_BLUR_AMT / M_UPGRADE_PLUS_ATTACK_DMG).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Blur"].UpgradeValueBy(2m);
+            DynamicVars.Damage.UpgradeValueBy(2m);
+        }
     }
 }

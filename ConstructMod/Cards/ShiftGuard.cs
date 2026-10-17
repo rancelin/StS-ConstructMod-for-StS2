@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class ShiftGuard : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
         get
@@ -53,7 +54,18 @@ public class ShiftGuard : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(1m);
-        DynamicVars["Shift"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 Block / +1 shift. Mega: +2 more Block / +1 more shift
+        // (StS1 M_UPGRADE_PLUS_BLOCK / M_UPGRADE_PLUS_GAIN_DEX).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Block.UpgradeValueBy(1m);
+            DynamicVars["Shift"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Block.UpgradeValueBy(2m);
+            DynamicVars["Shift"].UpgradeValueBy(1m);
+        }
     }
 }

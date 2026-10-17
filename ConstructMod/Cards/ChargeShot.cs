@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class ChargeShot : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     private decimal _chargeAccumulated;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -77,7 +78,18 @@ public class ChargeShot : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["Charge"].UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 damage / +2 charge. Mega: +3 more of each
+        // (StS1 M_UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_CHARGE_DMG).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+            DynamicVars["Charge"].UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(3m);
+            DynamicVars["Charge"].UpgradeValueBy(3m);
+        }
     }
 }

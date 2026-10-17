@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class GoldenBullet : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(18m, ValueProp.Move),
@@ -34,7 +35,19 @@ public class GoldenBullet : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
-        DynamicVars["Gold"].UpgradeValueBy(-5m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage and 5 less gold lost (20 → 15). Mega: +18 damage and
+        // 35 more gold lost (15 → 50; StS1 M_UPGRADE_PLUS_ATTACK_DMG /
+        // M_UPGRADE_PLUS_LOSE_GOLD_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(4m);
+            DynamicVars["Gold"].UpgradeValueBy(-5m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Gold"].UpgradeValueBy(35m);
+            DynamicVars.Damage.UpgradeValueBy(18m);
+        }
     }
 }

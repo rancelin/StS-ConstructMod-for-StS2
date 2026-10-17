@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class Autoturret : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Turret", 1m)];
 
@@ -40,6 +41,15 @@ public class Autoturret : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Turret"].UpgradeValueBy(1m);
+        // Regular: +1 damage per Cycle (1 → 2). Mega: +2 more (2 → 4;
+        // StS1 M_UPGRADE_POWER_DAMAGE).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Turret"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Turret"].UpgradeValueBy(2m);
+        }
     }
 }

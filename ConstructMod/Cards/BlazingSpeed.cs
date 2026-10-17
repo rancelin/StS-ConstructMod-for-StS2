@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class BlazingSpeed : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(3m, ValueProp.Move), new CardsVar(2), new OverheatVar()];
 
@@ -44,9 +45,17 @@ public class BlazingSpeed : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +1 draw on upgrade, then mega = +2 dmg AND +2 draw.
-        // Folded: +2 dmg AND +3 draw (combined deltas).
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars.Cards.UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 card drawn (2 → 3). Mega: +2 damage AND +2 more cards
+        // (StS1 M_UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_DRAW).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Cards.UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+            DynamicVars.Cards.UpgradeValueBy(2m);
+        }
     }
 }

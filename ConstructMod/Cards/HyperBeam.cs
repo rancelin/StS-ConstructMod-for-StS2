@@ -15,6 +15,7 @@ namespace ConstructMod.Cards;
 
 public class HyperBeam : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromCard<Dazed>()
@@ -57,6 +58,17 @@ public class HyperBeam : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        RemoveKeyword(CardKeyword.Ethereal);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: drop Ethereal. Mega: +35 damage / +1 Dazed (StS1
+        // M_UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_DAZED_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            RemoveKeyword(CardKeyword.Ethereal);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(35m);
+            DynamicVars["Dazed"].UpgradeValueBy(1m);
+        }
     }
 }

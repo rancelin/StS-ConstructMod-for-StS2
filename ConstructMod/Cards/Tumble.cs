@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class Tumble : AbstractConstructCard, IAfterCardCycled
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     private readonly List<CardModel> _cycledCards = [];
     private bool _listening;
 
@@ -66,6 +67,15 @@ public class Tumble : AbstractConstructCard, IAfterCardCycled
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 damage. Mega: +2 cards (3 → 5; StS1 M_UPGRADE_PLUS_CARDS).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Cards"].UpgradeValueBy(2m);
+        }
     }
 }

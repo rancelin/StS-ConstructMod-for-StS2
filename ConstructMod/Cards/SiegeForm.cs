@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class SiegeForm : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<StrengthPower>(null)];
 
@@ -36,6 +37,8 @@ public class SiegeForm : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // Both rungs add +1 Strength (UPGRADE_POWER_DAMAGE and
+        // M_UPGRADE_POWER_DAMAGE are both 1).
         DynamicVars["SiegeFormPower"].UpgradeValueBy(1m);
     }
 }

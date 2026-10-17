@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class Hazardproof : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.Static(StaticHoverTip.Block),
@@ -41,6 +42,15 @@ public class Hazardproof : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(3m);
+        // Regular: +3 Block (2 → 5). Mega: +2 Artifact (1 → 3;
+        // StS1 M_UPGRADE_PLUS_ARTIFACT_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Block.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Artifact"].UpgradeValueBy(2m);
+        }
     }
 }

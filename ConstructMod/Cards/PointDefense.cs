@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class PointDefense : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Limit", 5m)];
 
@@ -41,6 +42,15 @@ public class PointDefense : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Limit"].UpgradeValueBy(5m);
+        // Regular: +5 uses per turn (5 → 10). Mega: +89 more (10 → 99; StS1
+        // M_UPGRADE_PLUS_POWER_BLOCK_LIMIT — effectively unlimited).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Limit"].UpgradeValueBy(5m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Limit"].UpgradeValueBy(89m);
+        }
     }
 }

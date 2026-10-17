@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class Analyze : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [EnergyHoverTip];
 
@@ -39,6 +40,17 @@ public class Analyze : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Draw"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 card drawn (2 → 3). Mega: +1 energy AND +1 card
+        // (StS1 M_UPGRADE_PLUS_ENERGIZE_AMT / M_UPGRADE_PLUS_DRAW_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Draw"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Energy.UpgradeValueBy(1m);
+            DynamicVars["Draw"].UpgradeValueBy(1m);
+        }
     }
 }

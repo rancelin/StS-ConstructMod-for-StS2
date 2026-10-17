@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class Electrocute : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromPower<StrengthPower>(null)
@@ -44,7 +45,18 @@ public class Electrocute : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
-        DynamicVars["StrLoss"].UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage / +2 Strength loss. Mega: cost 3 → 2 and +4 more damage
+        // (StS1 M_UPGRADE_NEW_COST / M_UPGRADE_PLUS_ATTACK_DMG).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(4m);
+            DynamicVars["StrLoss"].UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            EnergyCost.UpgradeBy(-1);
+            DynamicVars.Damage.UpgradeValueBy(4m);
+        }
     }
 }

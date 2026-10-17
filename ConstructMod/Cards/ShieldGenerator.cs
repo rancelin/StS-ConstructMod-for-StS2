@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class ShieldGenerator : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromPower<BlurPower>(null),
@@ -41,6 +42,16 @@ public class ShieldGenerator : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Vulnerable"].UpgradeValueBy(-1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: 1 less Vulnerable on yourself (2 → 1). Mega: +2 Blur
+        // (StS1 M_UPGRADE_PLUS_BLUR_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Vulnerable"].UpgradeValueBy(-1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Blur"].UpgradeValueBy(2m);
+        }
     }
 }

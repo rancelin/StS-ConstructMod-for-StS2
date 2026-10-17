@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class Synchronize : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromKeyword(CardKeyword.Innate)];
 
@@ -35,6 +36,16 @@ public class Synchronize : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Innate);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: Innate only. Mega: +4 damage per matched pair
+        // (StS1 M_UPGRADE_PLUS_POWER_DAMAGE).
+        if (CurrentUpgradeLevel == 1)
+        {
+            AddKeyword(CardKeyword.Innate);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["SynchronizePower"].UpgradeValueBy(4m);
+        }
     }
 }

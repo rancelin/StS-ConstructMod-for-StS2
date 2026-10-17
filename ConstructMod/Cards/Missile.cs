@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class Missile : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     private bool _hasBeenPlayed;
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
@@ -56,6 +57,15 @@ public class Missile : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage. Mega: cost 2 → 1 (StS1 M_UPGRADE_NEW_COST).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(4m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            EnergyCost.UpgradeBy(-1);
+        }
     }
 }

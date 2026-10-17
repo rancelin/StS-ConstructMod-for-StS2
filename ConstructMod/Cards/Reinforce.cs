@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class Reinforce : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new BlockVar(3m, ValueProp.Move),
@@ -34,6 +35,15 @@ public class Reinforce : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Repeat.UpgradeValueBy(1);
+        // Regular: +1 repetition (2 → 3). Mega: +2 more (3 → 5;
+        // StS1 M_UPGRADE_TIMES_APPLIED).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Repeat.UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Repeat.UpgradeValueBy(2m);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class Anticipate : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.Static(StaticHoverTip.Block)];
 
@@ -34,6 +35,14 @@ public class Anticipate : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(3m);
+        // Regular: +3 Block (11 → 14). Mega: +6 more (14 → 20; StS1 M_UPGRADE_BLOCK_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Block.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Block.UpgradeValueBy(6m);
+        }
     }
 }

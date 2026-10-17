@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class ShiftStrike : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
         get
@@ -61,8 +62,20 @@ public class ShiftStrike : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);
-        DynamicVars["Str"].UpgradeValueBy(1m);
-        DynamicVars["Dex"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1/+1/+1. Mega: +2 more damage / +1 more Strength / +1 more Dexterity
+        // (StS1 M_UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_GAIN_STR).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(1m);
+            DynamicVars["Str"].UpgradeValueBy(1m);
+            DynamicVars["Dex"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+            DynamicVars["Str"].UpgradeValueBy(1m);
+            DynamicVars["Dex"].UpgradeValueBy(1m);
+        }
     }
 }

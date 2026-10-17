@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class DefenseMode : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public DefenseMode() : base(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
     }
@@ -56,6 +57,8 @@ public class DefenseMode : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // StS1 uses one magic number for both halves; both rungs add +1/+1
+        // (UPGRADE_PLUS_DEX and M_UPGRADE_PLUS_DEX are both 1).
         DynamicVars["Dexterity"].UpgradeValueBy(1m);
         DynamicVars["Strength"].UpgradeValueBy(1m);
     }

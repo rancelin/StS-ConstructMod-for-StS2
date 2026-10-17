@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class SpinDrive : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<SpinDrivePower>("Draws", 3m)];
 
@@ -31,6 +32,16 @@ public class SpinDrive : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 3 → 2. Mega: +5 free draws (3 → 8;
+        // StS1 M_UPGRADE_PLUS_FREE_DRAWS).
+        if (CurrentUpgradeLevel == 1)
+        {
+            EnergyCost.UpgradeBy(-1);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Draws"].UpgradeValueBy(5m);
+        }
     }
 }

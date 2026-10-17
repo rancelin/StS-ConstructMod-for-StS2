@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class OneWayMirror : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public override bool GainsBlock => true;
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
@@ -42,7 +43,17 @@ public class OneWayMirror : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(2m);
-        DynamicVars["Vuln"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 Block / +1 Vulnerable. Mega: +3 more Vulnerable
+        // (StS1 M_UPGRADE_VULN_AMT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Block.UpgradeValueBy(2m);
+            DynamicVars["Vuln"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Vuln"].UpgradeValueBy(3m);
+        }
     }
 }
