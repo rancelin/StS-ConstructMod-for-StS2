@@ -19,7 +19,8 @@ public class BatteryCore : AbstractCoreCard
     protected override System.Collections.Generic.IEnumerable<MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar> CanonicalVars =>
         [new MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar("Discount", 1m)];
 
-    public BatteryCore() : base(CardType.Skill, TargetType.Self)
+    // Battery Core is the only Rare core in StS1 (all the others are Uncommon).
+    public BatteryCore() : base(CardType.Skill, TargetType.Self, CardRarity.Rare)
     {
     }
 

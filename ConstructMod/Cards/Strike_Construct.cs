@@ -15,6 +15,9 @@ namespace ConstructMod.Cards;
 
 public class Strike_Construct : AbstractCycleCard
 {
+    // 2-tier ladder: +1 = +3 damage, +2 = mega (+6 more).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
@@ -53,6 +56,9 @@ public class Strike_Construct : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +3 damage (6 → 9). Mega: +6 more (9 → 15). StS1 Strike_Gold
+        // UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_ATTACK_DMG.
+        DynamicVars.Damage.UpgradeValueBy(CurrentUpgradeLevel == 1 ? 3m : 6m);
     }
 }

@@ -13,6 +13,9 @@ namespace ConstructMod.Cards;
 
 public class Defend_Construct : AbstractCycleCard
 {
+    // 2-tier ladder: +1 = +3 Block, +2 = mega (+6 more).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     public override bool GainsBlock => true;
 
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Defend];
@@ -50,6 +53,9 @@ public class Defend_Construct : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +3 Block (5 → 8). Mega: +6 more (8 → 14). StS1 Defend_Gold
+        // UPGRADE_PLUS_BLOCK / M_UPGRADE_PLUS_BLOCK.
+        DynamicVars.Block.UpgradeValueBy(CurrentUpgradeLevel == 1 ? 3m : 6m);
     }
 }

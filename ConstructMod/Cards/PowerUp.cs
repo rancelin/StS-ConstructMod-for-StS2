@@ -12,6 +12,10 @@ namespace ConstructMod.Cards;
 
 public class PowerUp : AbstractConstructCard
 {
+    // 2-tier ladder: +1 = +1 Boost and drop Exhaust, +2 = mega (description-only; the
+    // original's mega also just clears exhaust, which the regular rung already did).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
@@ -58,6 +62,14 @@ public class PowerUp : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        RemoveKeyword(CardKeyword.Exhaust);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: drop Exhaust and +1 Boost (2 → 3; StS1 UPGRADE_PLUS_POWER_PLUS). Mega:
+        // the original only clears exhaust (already cleared) and re-renders the same text —
+        // no stat change, so the mega rung is description/eligibility only.
+        if (CurrentUpgradeLevel == 1)
+        {
+            RemoveKeyword(CardKeyword.Exhaust);
+            DynamicVars["Boost"].UpgradeValueBy(1m);
+        }
     }
 }
