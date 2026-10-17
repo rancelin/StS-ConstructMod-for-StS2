@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -48,13 +49,22 @@ public class PowerUp : AbstractConstructCard
         {
             foreach (var card in pile.GetPile(Owner).Cards)
             {
-                if (card is Strike_Construct strike)
+                // StS1 BoostBasicCardsAction: boost anything tagged BASIC_STRIKE / BASIC_DEFEND.
+                // StS2 has no "basic" tag, so the faithful equivalent is CardTag.Strike /
+                // CardTag.Defend combined with a Basic rarity check (the engine's own convention
+                // for basic Strikes/Defends — cf. Pandora's Box). That covers the Construct's
+                // Strike, Defend, Heated Strike and Heated Defend plus any vanilla starter
+                // Strikes/Defends in your piles. The original applies the two tags independently.
+                if (card.Rarity != CardRarity.Basic) continue;
+                if (card.Tags.Contains(CardTag.Strike)
+                    && card.DynamicVars.TryGetValue("Damage", out var damage))
                 {
-                    strike.DynamicVars.Damage.UpgradeValueBy(boost);
+                    damage.UpgradeValueBy(boost);
                 }
-                else if (card is Defend_Construct defend)
+                if (card.Tags.Contains(CardTag.Defend)
+                    && card.DynamicVars.TryGetValue("Block", out var block))
                 {
-                    defend.DynamicVars.Block.UpgradeValueBy(boost);
+                    block.UpgradeValueBy(boost);
                 }
             }
         }
