@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Commands;
@@ -13,10 +14,12 @@ namespace ConstructMod.Cards;
 
 public class DarkFlames : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(3m, ValueProp.Move),
-        new EnergyVar(1)
+        new EnergyVar(1),
+        new DynamicVar("Burns", 0m)
     ];
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -29,7 +32,7 @@ public class DarkFlames : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Dark Flames",
-        "#Deal !Damage! damage and gain {Energy:energyIcons()} for each *Burn* in your exhaust pile.");
+        "#{IfMega:mega:Add {Burns} *Burns* to your exhaust pile.\n|}Deal !Damage! damage and gain {Energy:energyIcons()} for each *Burn* in your exhaust pile.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -51,6 +54,14 @@ public class DarkFlames : AbstractConstructCard
         // Card text: "Deal !Damage! damage and gain {Energy} for each Burn in your exhaust pile."
         // (No flat Burns value — the count is dynamic. Note: the hit loop is intentional because
         // each hit also gains 1 energy, so we can't collapse into a single WithHitCount call.)
+        if (CombatState is { } c && DynamicVars["Burns"].BaseValue > 0)
+        {
+            for (var i = 0; i < (int)DynamicVars["Burns"].BaseValue; i++)
+            {
+                var burn = c.CreateCard(ModelDb.Card<Burn>(), Owner);
+                await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Exhaust, Owner, CardPilePosition.Bottom);
+            }
+        }
         var burns = BurnCount();
         for (var i = 0; i < burns; i++)
         {
@@ -62,6 +73,16 @@ public class DarkFlames : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        RemoveKeyword(CardKeyword.Exhaust);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: drop Exhaust. Mega: +2 Burns, seeded into the exhaust pile before the
+        // damage loop (StS1 M_UPGRADE_ADD_BURNS).
+        if (CurrentUpgradeLevel == 1)
+        {
+            RemoveKeyword(CardKeyword.Exhaust);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Burns"].UpgradeValueBy(2m);
+        }
     }
 }

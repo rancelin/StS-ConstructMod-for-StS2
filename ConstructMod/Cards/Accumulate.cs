@@ -15,16 +15,17 @@ namespace ConstructMod.Cards;
 
 public class Accumulate : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(13m, ValueProp.Move)];
+        [new DamageVar(13m, ValueProp.Move), new DynamicVar("Copies", 1m)];
 
     public Accumulate() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Accumulate",
-        "#Deal !Damage! damage.\nMake a copy of a non-*Rare* card in your draw pile.");
+        "#Deal !Damage! damage.\nMake {IfMega:mega:{Copies} copies|a copy} of a non-*Rare* card in your draw pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -42,17 +43,32 @@ public class Accumulate : AbstractConstructCard
             : (await CardSelectCmd.FromCombatPile(choiceContext, drawPile, Owner,
                 new CardSelectorPrefs(new LocString("cards", "CONSTRUCTMOD-ACCUMULATE.selectionScreenPrompt"), 1),
                 c => c.Rarity != CardRarity.Rare)).ToList();
+        // Mega copies the chosen card several times (StS1's M_UPGRADE_PLUS_COPIES).
+        var copies = (int)DynamicVars["Copies"].BaseValue;
         foreach (var card in selection)
         {
             if (card == null) continue;
-            var clone = card.CreateClone();
-            Relics.WeddingRing.MarkGeneratedCopy(clone);
-            await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Draw, Owner, CardPilePosition.Random);
+            for (var i = 0; i < copies; i++)
+            {
+                var clone = card.CreateClone();
+                Relics.WeddingRing.MarkGeneratedCopy(clone);
+                await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Draw, Owner, CardPilePosition.Random);
+            }
         }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage (13 → 17). Mega: copy instead of a copy — +2 copies, so the
+        // text flips to "Make N copies" (StS1 M_UPGRADE_PLUS_COPIES).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(4m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Copies"].UpgradeValueBy(2m);
+        }
     }
 }

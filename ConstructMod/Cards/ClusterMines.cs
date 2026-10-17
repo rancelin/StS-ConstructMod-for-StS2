@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class ClusterMines : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     private bool _discountActive;
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
@@ -30,7 +31,7 @@ public class ClusterMines : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Cluster Mines",
-        "#Deal !Damage! damage to a random enemy {Hits} times.\nWhenever your *Block* is broken, this card costs 0{IfUpgraded:show: for this combat| until played}.");
+        "#Deal !Damage! damage to a random enemy {Hits} times.\nWhenever your *Block* is broken, this card costs 0{IfMega:mega: for this combat| until played}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -51,7 +52,7 @@ public class ClusterMines : AbstractConstructCard
         if (target == Owner.Creature && !_discountActive)
         {
             _discountActive = true;
-            if (IsUpgraded) EnergyCost.AddThisCombat(-9, reduceOnly: true);
+            if (IsMegaUpgraded) EnergyCost.AddThisCombat(-9, reduceOnly: true);
             else EnergyCost.SetUntilPlayed(0, reduceOnly: true);
         }
         return Task.CompletedTask;
@@ -59,6 +60,11 @@ public class ClusterMines : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        // Regular: +1 damage (4 → 5). Mega: no stat change — the break discount now lasts the
+        // whole combat instead of one play (StS1 modifyCostForCombat vs freeToPlayOnce).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(1m);
+        }
     }
 }

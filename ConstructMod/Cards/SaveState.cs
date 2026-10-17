@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class SaveState : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("RetainTurns", 1m)];
 
@@ -23,7 +24,7 @@ public class SaveState : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Save State",
-        "#*Retain* your hand this turn.{IfUpgraded:show:\\nDraw 1 card.|}");
+        "#*Retain* your hand this{IfMega:mega: and next|} turn.{IfUpgraded:show:\nDraw 1 card.|}");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -49,5 +50,11 @@ public class SaveState : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // Regular: no stat change — the "Draw 1 card" line is +1-only (see OnPlay).
+        // Mega: Retain lasts a second turn (1 → 2; StS1 M_UPGRADE_PLUS_TURNS).
+        if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["RetainTurns"].UpgradeValueBy(1m);
+        }
     }
 }

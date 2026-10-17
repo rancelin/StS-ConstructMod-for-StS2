@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class Agitation : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<AgitationPower>(1m)];
 
@@ -40,10 +41,20 @@ public class Agitation : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +Innate on upgrade, then mega = cost 0 + startInPlay (free application at combat start).
-        // Folded: +Innate + cost 0 (the startInPlay auto-application at combat start is harder to
-        // replicate in StS2 without a dedicated hook; the Innate + 0-cost covers most of the value).
-        AddKeyword(CardKeyword.Innate);
-        EnergyCost.UpgradeBy(-1);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: Innate. Mega: cost 1 → 0.
+        //
+        // StS1's mega tier also sets startInPlay = true ("start combat with this card in play").
+        // StS2 has no card-level equivalent: a BeforeCombatStart hook fires on the *deck* card
+        // while the combat still holds a separate clone in the draw pile, so auto-applying there
+        // would hand out the power twice. Innate + 0-cost is the closest safe approximation.
+        if (CurrentUpgradeLevel == 1)
+        {
+            AddKeyword(CardKeyword.Innate);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            EnergyCost.UpgradeBy(-1);
+        }
     }
 }

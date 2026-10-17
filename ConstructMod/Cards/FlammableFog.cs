@@ -15,6 +15,7 @@ namespace ConstructMod.Cards;
 
 public class FlammableFog : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(5m, ValueProp.Move), new OverheatVar()];
 
@@ -37,7 +38,7 @@ public class FlammableFog : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flammable Fog",
-        "#Gain !Block! *Block*. Gain !Block! *Block* next turn.{IfUpgraded:show: Gain !Block! *Block* in 2 turns.|}\n*Overheat*: {Overheat}.");
+        "#Gain !Block! *Block*. Gain !Block! *Block* next turn.{IfMega:mega: Gain !Block! *Block* in 2 turns.|}\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -45,8 +46,8 @@ public class FlammableFog : AbstractConstructCard
         // Block next turn (vanilla BlockNextTurnPower fires on AfterBlockCleared = start of next turn).
         await PowerCmd.Apply<BlockNextTurnPower>(choiceContext, Owner.Creature,
             DynamicVars.Block.IntValue, Owner.Creature, this);
-        // Mega folded into upgrade: also block 2 turns from now (FutureTurnBlockPower).
-        if (IsUpgraded)
+        // Mega tier: also block 2 turns from now (FutureTurnBlockPower).
+        if (IsMegaUpgraded)
         {
             await PowerCmd.Apply<FutureTurnBlockPower>(choiceContext, Owner.Creature,
                 DynamicVars.Block.IntValue, Owner.Creature, this);
@@ -55,8 +56,11 @@ public class FlammableFog : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +2 block on upgrade, then mega = no stat change but adds FutureTurnBlockPower.
-        // Folded: +2 block, and the upgraded OnPlay applies FutureTurnBlockPower.
-        DynamicVars.Block.UpgradeValueBy(2m);
+        // Regular: +2 Block (5 → 7). Mega: no stat change — the fog pays Block a third time,
+        // two turns out (see OnPlay).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Block.UpgradeValueBy(2m);
+        }
     }
 }

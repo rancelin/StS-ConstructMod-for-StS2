@@ -16,6 +16,7 @@ namespace ConstructMod.Cards;
 
 public class Flamethrower : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
         get
@@ -34,7 +35,7 @@ public class Flamethrower : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flamethrower",
-        "#Deal !Damage! damage to a random enemy for each *Burn* in your piles.{IfUpgraded:show:\\n*Cycle* if there are fewer than 2 *Burn*s.|}");
+        "#Deal !Damage! damage to a random enemy for each {IfMega:mega:*Burn* or *Status* card|*Burn*} in your piles.{IfUpgraded:show:\n*Cycle* if there are fewer than 2 *Burn*s.|}");
 
     public override bool CanCycle()
     {
@@ -46,10 +47,14 @@ public class Flamethrower : AbstractCycleCard
     private int StatusCount()
     {
         var player = Owner;
-        return PileType.Draw.GetPile(player).Cards.Sum(c => c is Burn ? 1 : 0)
-            + PileType.Hand.GetPile(player).Cards.Sum(c => c is Burn ? 1 : 0)
-            + PileType.Discard.GetPile(player).Cards.Sum(c => c is Burn ? 1 : 0);
+        return PileType.Draw.GetPile(player).Cards.Sum(Counts)
+            + PileType.Hand.GetPile(player).Cards.Sum(Counts)
+            + PileType.Discard.GetPile(player).Cards.Sum(Counts);
     }
+
+    // StS1's mega tier widens the tally from "Burn cards" to "any Status card".
+    private int Counts(CardModel c) =>
+        c is Burn || (IsMegaUpgraded && c.Type == CardType.Status) ? 1 : 0;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -63,5 +68,7 @@ public class Flamethrower : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
+        // Neither rung changes a number: +1 unlocks Cycle (see CanCycle) and the mega tier
+        // widens the tally to every Status card (see Counts).
     }
 }
