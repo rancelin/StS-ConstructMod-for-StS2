@@ -37,7 +37,7 @@ public class OmegaCannon : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Omega Cannon",
-        "#Deal !Damage! damage.\nCosts 1 less [E] for each *Strength* you have.{IfMega:mega: Negative *Strength* also counts.|}");
+        "#Deal !Damage! damage.\nCosts 1 less energy for each *Strength* you have.{IfMega:mega: Negative *Strength* also counts.|}");
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {

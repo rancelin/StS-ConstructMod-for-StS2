@@ -21,14 +21,14 @@ public class Overcharge : AbstractConstructCard
     ];
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
-        [new EnergyVar(1)];
+        [new EnergyVar(1), new EnergyVar("OnPlay", 2)];
 
     public Overcharge() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Overcharge",
-        "#At the start of your turn, gain {Energy:energyIcons()} and add a *Burn* to your hand.{IfMega:mega:\nGain 2 [E].|}");
+        "#At the start of your turn, gain {Energy:energyIcons()} and add a *Burn* to your hand.{IfMega:mega:\nGain {OnPlay:energyIcons()} energy now.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
