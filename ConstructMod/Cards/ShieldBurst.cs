@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class ShieldBurst : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Mult", 1.5m)];
 
@@ -38,6 +39,16 @@ public class ShieldBurst : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Mult"].UpgradeValueBy(0.5m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: ×1.5 → ×2. Mega: ×2 → ×3 (StS1 UPGRADE_PLUS_DMG_MULT /
+        // M_UPGRADE_PLUS_DMG_MULT).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Mult"].UpgradeValueBy(0.5m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Mult"].UpgradeValueBy(1m);
+        }
     }
 }

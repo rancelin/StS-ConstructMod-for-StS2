@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class Disrupt : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<StrengthPower>(null)];
 
@@ -28,7 +29,7 @@ public class Disrupt : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Disrupt",
-        "#Gain !Block! *Block*.\nEnemy loses {StrLoss} *Strength* for the rest of this turn.");
+        "{IfMega:mega:Retain.\n|}Gain !Block! *Block*.\nEnemy loses {StrLoss} *Strength* for the rest of this turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -42,6 +43,17 @@ public class Disrupt : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["StrLoss"].UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: -1 more Strength (2 → 3). Mega: -1 more (3 → 4) and the card becomes
+        // Retain (StS1 sets retain = true only in the mega tier).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["StrLoss"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["StrLoss"].UpgradeValueBy(1m);
+            AddKeyword(CardKeyword.Retain);
+        }
     }
 }

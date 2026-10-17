@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class FlashFreeze : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(10m, ValueProp.Move), new DynamicVar("FreezeTurns", 2m)];
 
@@ -53,9 +54,18 @@ public class FlashFreeze : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +1 freeze turn + Innate on upgrade, then mega = +2 freeze turns.
-        // Folded: +3 freeze turns + Innate.
-        DynamicVars["FreezeTurns"].UpgradeValueBy(3m);
-        AddKeyword(CardKeyword.Innate);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +1 freeze turn (2 → 3) and Innate. Mega: +2 more freeze turns (3 → 5)
+        // and Retain (StS1's EXTENDED_DESCRIPTION[0] leads with "Retain.").
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["FreezeTurns"].UpgradeValueBy(1m);
+            AddKeyword(CardKeyword.Innate);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["FreezeTurns"].UpgradeValueBy(2m);
+            AddKeyword(CardKeyword.Retain);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class SyphonStrike : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
@@ -24,7 +25,7 @@ public class SyphonStrike : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Syphon Strike",
-        "#Deal !Damage! damage.\nWhenever the enemy takes attack damage this turn, draw 1 card.");
+        "#Deal !Damage! damage.\nWhenever the enemy takes attack damage this{IfMega:mega: and next|} turn, draw 1 card.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -38,6 +39,17 @@ public class SyphonStrike : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +3 damage (7 → 10). Mega: +2 more damage and the effect lasts an extra
+        // turn (StS1 M_UPGRADE_PLUS_ATTACK_DMG / M_UPGRADE_PLUS_TURNS).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+            DynamicVars["Turns"].UpgradeValueBy(1m);
+        }
     }
 }

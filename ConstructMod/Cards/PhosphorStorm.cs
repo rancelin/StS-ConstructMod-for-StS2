@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class PhosphorStorm : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(7m, ValueProp.Move), new OverheatVar()];
 
@@ -32,16 +33,16 @@ public class PhosphorStorm : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Phosphor Storm",
-        "#Deal !Damage! damage twice.{IfUpgraded:show: Deal !Damage! damage to a random enemy a third time.|}\n*Overheat*: {Overheat}.");
+        "#Deal !Damage! damage twice.{IfMega:mega: Deal !Damage! damage to a random enemy a third time.|}\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Target == null) return;
-        // Two hits to the target. (Mega folded into upgrade: a third hit to a random enemy.)
+        // Two hits to the target, plus a third to a random enemy at the mega tier.
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
             .Targeting(cardPlay.Target).WithHitCount(2)
             .WithHitFx("vfx/vfx_molten_fist").Execute(choiceContext);
-        if (IsUpgraded && CombatState is { } combat)
+        if (IsMegaUpgraded && CombatState is { } combat)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
                 .TargetingRandomOpponents(combat)
@@ -51,8 +52,16 @@ public class PhosphorStorm : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        // Original: +2 dmg on upgrade, then mega = -1 dmg + 3rd random hit.
-        // Folded: +1 dmg (net of the mega's -1) + the 3rd random-enemy hit.
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 damage (7 → 9). Mega: -1 (9 → 8) but the third, random-enemy hit
+        // is unlocked (see OnPlay; StS1 M_UPGRADE_PLUS_ATTACK_DMG is -1).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(-1m);
+        }
     }
 }

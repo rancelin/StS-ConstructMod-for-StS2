@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class FlakBarrage : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     // Cycle keyword (and thus its hover tip) only applies when upgraded, matching CanonicalKeywords below.
     // We deliberately do NOT chain through base.ExtraHoverTips here, because the base (AbstractCycleCard)
     // unconditionally adds the Cycle tip; we need it gated on IsUpgraded to match the keyword filter.
@@ -70,5 +71,12 @@ public class FlakBarrage : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
+        // Regular: no stat change — the original only adds the Cycle line at +1 (handled by
+        // the {IfUpgraded} formatter and CanCycle gating above). Mega: +2 hits (4 → 6;
+        // StS1 M_UPGRADE_PLUS_TIMES).
+        if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Hits"].UpgradeValueBy(2m);
+        }
     }
 }

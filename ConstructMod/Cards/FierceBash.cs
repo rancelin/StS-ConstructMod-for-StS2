@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class FierceBash : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(9m, ValueProp.Move)];
 
@@ -19,7 +20,7 @@ public class FierceBash : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Fierce Bash",
-        "#Deal !Damage! damage.\nHits twice if the enemy doesn't intend to *Attack* or *Defend*.");
+        "{IfMega:mega:Retain.\n|}Deal !Damage! damage.\nHits twice if the enemy doesn't intend to *Attack* or *Defend*.");
 
     private static bool IntendsToAttackOrDefend(MegaCrit.Sts2.Core.Entities.Creatures.Creature target)
     {
@@ -50,6 +51,17 @@ public class FierceBash : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +3 damage (9 → 12). Mega: +1 more (12 → 13) and the card becomes
+        // Retain (StS1 sets retain = true only in the mega tier).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(3m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(1m);
+            AddKeyword(CardKeyword.Retain);
+        }
     }
 }

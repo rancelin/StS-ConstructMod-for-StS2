@@ -13,6 +13,7 @@ namespace ConstructMod.Cards;
 
 public class CriticalHit : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(14m, ValueProp.Move)];
 
@@ -32,6 +33,9 @@ public class CriticalHit : AbstractCycleCard
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Critical Hit",
         "#*Cycle* unless an enemy is *Weak* or *Vulnerable*.\nDeal !Damage! damage.");
+
+    // StS1's mega branch renames the card outright (name = EXTENDED_DESCRIPTION[0] = "Mega-Crit").
+    public override string Title => IsMegaUpgraded ? "Mega-Crit" : base.Title;
 
     public override bool CanCycle()
     {
@@ -54,6 +58,16 @@ public class CriticalHit : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +4 damage (14 → 18). Mega: +7 more (18 → 25; StS1 M_UPGRADE_PLUS_ATTACK_DMG),
+        // plus the "Mega-Crit" rename above.
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(4m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(7m);
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace ConstructMod.Cards;
 
 public class ElectricArmor : AbstractCycleCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
         get
@@ -32,7 +33,7 @@ public class ElectricArmor : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Electric Armor",
-        "#*Cycle* if your *Dexterity* is less than 1.\nThis turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.");
+        "#*Cycle* if your *Dexterity* is less than 1.\nThis{IfMega:mega: or next|} turn, when an enemy attacks you, it takes damage equal to your *Dexterity*.");
 
     public override bool CanCycle()
     {
@@ -51,6 +52,16 @@ public class ElectricArmor : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: cost 1 → 0. Mega: the reflect lasts an extra turn (1 → 2;
+        // StS1 M_UPGRADE_PLUS_TURNS).
+        if (CurrentUpgradeLevel == 1)
+        {
+            EnergyCost.UpgradeBy(-1);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Turns"].UpgradeValueBy(1m);
+        }
     }
 }

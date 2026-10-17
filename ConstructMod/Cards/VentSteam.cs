@@ -14,6 +14,7 @@ namespace ConstructMod.Cards;
 
 public class VentSteam : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
     [
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust),
@@ -32,7 +33,12 @@ public class VentSteam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Vent Steam",
-        "#Exhaust 1 card.\nApply {Weak} *Weak* and {Vuln} *Vulnerable*.");
+        "#Exhaust 1 card.\nApply {Weak} *Weak* and {Vuln} *Vulnerable*{IfMega:mega: to ALL enemies|}.");
+
+    // StS1's mega tier flips the card to ALL_ENEMY.
+    public override TargetType TargetType => IsMegaUpgraded
+        ? MegaCrit.Sts2.Core.Entities.Cards.TargetType.AllEnemies
+        : base.TargetType;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -52,6 +58,8 @@ public class VentSteam : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
+        // Both rungs add +1/+1 (StS1 UPGRADE_PLUS_DEBUFF_AMT and M_UPGRADE_PLUS_DEBUFF_AMT
+        // are both 1); the mega rung also flips the target to ALL enemies (see TargetType).
         DynamicVars["Weak"].UpgradeValueBy(1m);
         DynamicVars["Vuln"].UpgradeValueBy(1m);
     }

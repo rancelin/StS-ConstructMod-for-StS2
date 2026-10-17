@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class SweepLaser : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(4m, ValueProp.Move)];
 
@@ -19,7 +20,7 @@ public class SweepLaser : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Sweep Laser",
-        "#Deal !Damage! damage, then deal !Damage! damage to ALL enemies.");
+        "#Deal !Damage! damage, then deal !Damage! damage to ALL enemies{IfMega:mega: twice|}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -33,10 +34,28 @@ public class SweepLaser : AbstractConstructCard
             .TargetingAllOpponents(CombatState!)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
+        if (IsMegaUpgraded)
+        {
+            // StS1's mega tier repeats the cleave.
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay)
+                .TargetingAllOpponents(CombatState!)
+                .WithHitFx("vfx/vfx_attack_slash")
+                .Execute(choiceContext);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 damage (4 → 6). Mega: -1 (6 → 5) but the cleave hits a second time
+        // (see OnPlay); StS1 shares one number between damage and its mirror.
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars.Damage.UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars.Damage.UpgradeValueBy(-1m);
+        }
     }
 }

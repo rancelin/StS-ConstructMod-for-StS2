@@ -11,6 +11,7 @@ namespace ConstructMod.Cards;
 
 public class HastyRepair : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
         get
@@ -28,13 +29,13 @@ public class HastyRepair : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Hasty Repair",
-        "#Heal {Heal} HP.\nLose 2 Max HP.{IfUpgraded:show:\nPut a copy of this card into your hand.|}");
+        "#Heal {Heal} HP.\nLose 2 Max HP.{IfMega:mega:\nPut a copy of this card into your hand.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.Heal(Owner.Creature, DynamicVars["Heal"].BaseValue);
         await CreatureCmd.LoseMaxHp(choiceContext, Owner.Creature, 2m, isFromCard: true);
-        if (IsUpgraded)
+        if (IsMegaUpgraded)
         {
             // this is a mutable in-combat card; CreateClone preserves its upgrade state.
             var copy = this.CreateClone();
@@ -44,6 +45,11 @@ public class HastyRepair : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Heal"].UpgradeValueBy(4m);
+        // Regular: +4 HP healed (12 → 16). Mega: no stat change — the bonus copy
+        // (see OnPlay) only arrives at the mega tier.
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Heal"].UpgradeValueBy(4m);
+        }
     }
 }
