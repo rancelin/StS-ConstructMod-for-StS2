@@ -12,6 +12,7 @@ namespace ConstructMod.Cards;
 
 public class HardReboot : AbstractConstructCard
 {
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
@@ -49,6 +50,16 @@ public class HardReboot : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["DrawCards"].UpgradeValueBy(2m);
+        // Branch on the level the upgrade just reached (replayed in order on save/load).
+        // Regular: +2 cards (3 → 5). Mega: no stat change — the card stops Exhausting
+        // (StS1 sets exhaust = false in its mega branch; the Exhaust icon disappears).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["DrawCards"].UpgradeValueBy(2m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            RemoveKeyword(CardKeyword.Exhaust);
+        }
     }
 }
