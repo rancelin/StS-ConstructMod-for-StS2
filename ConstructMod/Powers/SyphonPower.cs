@@ -1,4 +1,5 @@
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -28,5 +29,14 @@ public class SyphonPower : CustomPowerModel
         var player = dealer?.Player;
         if (player == null) return;
         await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, player, cardSource!);
+    }
+
+    // StS1: atEndOfRound() reduces the amount by 1 (and removes it at 0) — a turn-based debuff.
+    // Vanilla debuffs (Vulnerable/Weak) tick at the end of the Enemy side turn; mirror that so the
+    // power actually expires instead of lasting the whole combat.
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
+    {
+        if (side == CombatSide.Enemy) await PowerCmd.TickDownDuration(this);
     }
 }

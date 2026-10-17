@@ -15,16 +15,19 @@ namespace ConstructMod.Cards;
 public class Rollout : AbstractConstructCard
 {
     // 2-tier ladder: +1 = +5 overheat, +2 = mega (+1 multiplier, +5 overheat).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     // Damage = CalculationBase (0) + ExtraDamage (Multiplier) * (cycles this turn).
     // Uses the vanilla CalculatedDamageVar pattern (same as PerfectedStrike) so the damage
     // flows through the card's damage pipeline (Strength/Weak/Vulnerable/etc. apply correctly)
     // and the card preview shows the computed value. The previous DamageCmd.Attack(decimal)
     // call bypassed the pipeline and hung when actually dealing damage.
+    // CycleDamageVar additionally forces the displayed value to 0 when nothing has Cycled this
+    // turn, matching OnPlay's early-out (so the tooltip can't show a Strength-only value).
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [
             new CalculationBaseVar(0m),
             new ExtraDamageVar(3m),
-            new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) =>
+            new CycleDamageVar(ValueProp.Move).WithMultiplier((card, _) =>
                 CycleCount.GetCyclesThisTurn(card.Owner)),
             new OverheatVar()
         ];

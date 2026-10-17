@@ -17,6 +17,7 @@ namespace ConstructMod.Cards;
 public class MoltenSmash : AbstractConstructCard
 {
     // 2-tier ladder: +1 = +3/+3, +2 = mega (+4/+4).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     // Neighbors cached by MoltenSmashNeighborPatch (Harmony prefix on CardModel.OnPlayWrapper)
     // while the card is still in the hand pile — by the time OnPlay runs, the card has already
     // moved to the Play pile, so its hand position can no longer be queried.

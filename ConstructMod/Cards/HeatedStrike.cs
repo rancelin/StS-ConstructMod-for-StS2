@@ -13,8 +13,8 @@ namespace ConstructMod.Cards;
 
 public class HeatedStrike : AbstractCycleCard
 {
-    // 2-tier ladder: +1 = +5 overheat, +2 = mega (+10 overheat). No damage delta
-    // at any tier (matches the original — the port's old +3 is dropped).
+    // 2-tier ladder: +1 = +5 overheat, +2 = mega (+10 overheat AND +6 damage).
+    public override int IntrinsicMaxUpgradeLevel => 2;
     protected override System.Collections.Generic.HashSet<CardTag> CanonicalTags => [CardTag.Strike];
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
     {
@@ -54,7 +54,15 @@ public class HeatedStrike : AbstractCycleCard
     protected override void OnUpgrade()
     {
         // Branch on the level the upgrade just reached (replayed in order on save/load).
-        // Regular: +5 overheat. Mega: +10 overheat.
-        UpgradeOverheat(CurrentUpgradeLevel == 1 ? 5 : 10);
+        // Regular: +5 overheat. Mega: +10 overheat and +6 damage (StS1 M_UPGRADE_PLUS_ATTACK_DMG).
+        if (CurrentUpgradeLevel == 1)
+        {
+            UpgradeOverheat(5);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            UpgradeOverheat(10);
+            DynamicVars.Damage.UpgradeValueBy(6m);
+        }
     }
 }

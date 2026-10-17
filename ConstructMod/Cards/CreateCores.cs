@@ -56,8 +56,9 @@ public class CreateCores : AbstractConstructCard
     protected override void OnUpgrade()
     {
         // Branch on the level the upgrade just reached (replayed in order on save/load).
-        // Regular: +5 overheat tolerance. Mega: description-only (upgraded Cores move
-        // here — OnPlay, gated on IsMegaUpgraded).
-        UpgradeOverheat(5);
+        // Regular: +5 overheat tolerance (10 → 15). Mega: description-only (upgraded Cores
+        // move here — OnPlay, gated on IsMegaUpgraded). The overheat must NOT climb again at
+        // mega, or it reaches 20 instead of the original's 15 (10 base + 5).
+        if (CurrentUpgradeLevel == 1) UpgradeOverheat(5);
     }
 }

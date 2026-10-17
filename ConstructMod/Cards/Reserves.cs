@@ -25,10 +25,13 @@ public class Reserves : AbstractCycleCard
     [
         new EnergyVar(3),
         new CardsVar(3),
-        new DynamicVar("HpThreshold", 10m)
+        new DynamicVar("HpThreshold", 20m)
     ];
 
-    public Reserves() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    // 2-tier ladder: +1 = +10 threshold, +2 = mega (+20 threshold).
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
+    public Reserves() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -50,6 +53,8 @@ public class Reserves : AbstractCycleCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["HpThreshold"].UpgradeValueBy(5m);
+        // Regular: +10 threshold (20 → 30). Mega: +20 threshold (30 → 50).
+        if (CurrentUpgradeLevel == 1) DynamicVars["HpThreshold"].UpgradeValueBy(10m);
+        else if (CurrentUpgradeLevel == 2) DynamicVars["HpThreshold"].UpgradeValueBy(20m);
     }
 }

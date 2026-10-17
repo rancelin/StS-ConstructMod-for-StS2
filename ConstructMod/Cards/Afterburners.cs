@@ -23,7 +23,7 @@ public class Afterburners : AbstractConstructCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DynamicVar("Plays", 1m),
+        new DynamicVar("Plays", 3m),
         new DynamicVar("Burns", 3m)
     ];
 
@@ -31,8 +31,10 @@ public class Afterburners : AbstractConstructCard
     {
     }
 
+    public override int IntrinsicMaxUpgradeLevel => 2;
+
     public override List<(string, string)>? Localization => new CardLoc("Afterburners",
-        "#This turn, your next non-*Rare* card is played {Plays} additional time(s).\nShuffle {Burns} *Burn* into your draw pile.");
+        "#Shuffle {Burns} *Burn* into your draw pile.\nThis turn, your next non-*Rare* card is played {Plays} times.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -50,6 +52,14 @@ public class Afterburners : AbstractConstructCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Burns"].UpgradeValueBy(-1m);
+        // Regular: Burns 3 → 2 (Plays stays 3). Mega: Plays 3 → 4 (Burns stays 2).
+        if (CurrentUpgradeLevel == 1)
+        {
+            DynamicVars["Burns"].UpgradeValueBy(-1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            DynamicVars["Plays"].UpgradeValueBy(1m);
+        }
     }
 }
