@@ -13,8 +13,7 @@ namespace ConstructMod.Cards;
 
 public class PowerUp : AbstractConstructCard
 {
-    // 2-tier ladder: +1 = +1 Boost and drop Exhaust, +2 = mega (description-only; the
-    // original's mega also just clears exhaust, which the regular rung already did).
+    // 2-tier ladder: +1 = +1 Boost (Exhaust stays), +2 = mega (drops Exhaust).
     public override int IntrinsicMaxUpgradeLevel => 2;
 
     protected override System.Collections.Generic.IEnumerable<DynamicVar> CanonicalVars =>
@@ -28,7 +27,9 @@ public class PowerUp : AbstractConstructCard
         get
         {
             foreach (var k in base.CanonicalKeywords) yield return k;
-            if (!IsUpgraded) yield return CardKeyword.Exhaust;
+            // StS1 sets exhaust = true in the constructor; only the MEGA rung clears it.
+            // (Mirrors Backup, whose mega likewise drops Exhaust.)
+            if (!IsMegaUpgraded) yield return CardKeyword.Exhaust;
         }
     }
 
@@ -73,13 +74,17 @@ public class PowerUp : AbstractConstructCard
     protected override void OnUpgrade()
     {
         // Branch on the level the upgrade just reached (replayed in order on save/load).
-        // Regular: drop Exhaust and +1 Boost (2 → 3; StS1 UPGRADE_PLUS_POWER_PLUS). Mega:
-        // the original only clears exhaust (already cleared) and re-renders the same text —
-        // no stat change, so the mega rung is description/eligibility only.
+        // StS1 PowerUp.upgrade(): the regular rung only adds +1 Boost (2 → 3) and KEEPS
+        // Exhaust (the original does not re-render its description either, so +0 and +1
+        // read the same); the MEGA rung is the one that sets exhaust = false, swapping in
+        // the "for this combat." text — i.e. the +2 is what actually removes Exhaust.
         if (CurrentUpgradeLevel == 1)
         {
-            RemoveKeyword(CardKeyword.Exhaust);
             DynamicVars["Boost"].UpgradeValueBy(1m);
+        }
+        else if (CurrentUpgradeLevel == 2)
+        {
+            RemoveKeyword(CardKeyword.Exhaust);
         }
     }
 }
