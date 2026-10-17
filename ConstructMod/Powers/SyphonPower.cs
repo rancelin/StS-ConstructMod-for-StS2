@@ -17,8 +17,8 @@ public class SyphonPower : CustomPowerModel
 
     public override List<(string, string)>? Localization => new PowerLoc(
         Title: "Syphon",
-        Description: "#Whenever {Owner} takes attack damage, its attacker draws 1 card.",
-        SmartDescription: "#Whenever {Owner} takes attack damage, its attacker draws 1 card.");
+        Description: "#Whenever this enemy takes attack damage, its attacker draws 1 card.",
+        SmartDescription: "#Whenever {OwnerName} takes attack damage, its attacker draws 1 card.");
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
