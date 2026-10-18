@@ -24,7 +24,7 @@ public class Failsafe : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Failsafe",
-        "#The first !FailsafePower! *Status* cards you draw each turn *Cycle*.");
+        "#The first !FailsafePower! Status cards you draw each turn *Cycle*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Factories;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Commands;
 using BaseLib.Abstracts;
@@ -28,8 +29,13 @@ public class MemoryTap : AbstractConstructCard
     {
     }
 
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
+
     public override List<(string, string)>? Localization => new CardLoc("Memory Tap",
-        "#Add a random card from 3 different classes to your hand{IfMega:mega: twice|}. They cost 0 this turn.{IfPlusOne:plusone: Upgrade them.|}");
+        // "1 / 1 / 2 cards from EACH of 3 different classes" is the whole point: the mega tier adds
+        // two cards per class (6 total), not two cards overall. The count is a DynamicVar so the
+        // +1→+2 preview greens it (the var is only upgraded at level 2).
+        "#Add !Cards! random {IfPlusOne:plusone:upgraded |}{Cards:plural:card|cards} from each of 3 different classes to your hand. They cost 0 this turn.");
 
     private async Task AddOneClassCard(PlayerChoiceContext choiceContext, CardPoolModel pool)
     {
@@ -75,11 +81,12 @@ public class MemoryTap : AbstractConstructCard
     protected override void OnUpgrade()
     {
         // Branch on the level the upgrade just reached (replayed in order on save/load).
-        // Regular: no stat change (cards arrive Upgraded — text only). Mega: cost 2 → 3;
-        // the doubled set moves here (OnPlay, gated on IsMegaUpgraded).
+        // Regular: no stat change (cards arrive Upgraded — text only). Mega: cost 2 → 3 and the
+        // doubled set (2 cards per class instead of 1; OnPlay is gated on IsMegaUpgraded).
         if (CurrentUpgradeLevel == 2)
         {
             EnergyCost.UpgradeBy(1);
+            DynamicVars["Cards"].UpgradeValueBy(1m);
         }
     }
 }

@@ -23,7 +23,9 @@ public class Enhance : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
+            // The card only mentions Mega-upgrading in its mega text line, so the tip appears
+            // exactly when that line does (mega tier, or the +1→+2 preview).
+            if (IsMegaUpgraded) yield return HoverTipFactory.FromKeyword(ConstructKeywords.MegaUpgrade);
         }
     }
 

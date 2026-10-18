@@ -37,7 +37,9 @@ public class OmegaCannon : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Omega Cannon",
-        "#Deal !Damage! damage.\nCosts 1 less energy for each *Strength* you have.{IfMega:mega: Negative *Strength* also counts.|}");
+        // Vanilla wording for a cost reduction (Banshee's Cry / Mad Science): the pip icon stands
+        // for "energy" instead of the literal word.
+        "#Deal !Damage! damage.\nCosts {energyPrefix:energyIcons(1)} less for each *Strength* you have.{IfMega:mega: Negative *Strength* also counts.|}");
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {

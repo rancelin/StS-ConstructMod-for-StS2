@@ -31,15 +31,19 @@ public class SunScreen : AbstractConstructCard
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
             // Matches vanilla Feel No Pain (the canonical 'exhaust a Status' card): Exhaust
-            // keyword tip + Block tip. Vanilla has no Status hover-tip (StaticHoverTip has no
-            // Status member), so the gold-highlighted word stays un-tippped for consistency.
+            // keyword tip + Block tip. Vanilla has no Status (or Curse) hover tip — StaticHoverTip
+            // has no such member — so the two words stay plain rather than gold-highlighted.
             yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
             yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Sun Screen",
-        "#At the end of your turn, *Exhaust* a random *Status* card in your hand to gain !Block! *Block*.{IfMega:mega:\nAlso *Exhaust* a random *Curse* card in your hand to gain !Block! *Block*.|}");
+        // \"Status\" is deliberately NOT gold-highlighted: gold implies a hover tip, and vanilla has
+        // no Status tip (StaticHoverTip has no Status member) and never highlights Status in card
+        // text (it does highlight card *rarities* like Rare/Common and the words Attack/Defend).
+        // Matches vanilla Feel No Pain, the canonical 'exhaust a Status' card.
+        "#At the end of your turn, *Exhaust* a random Status card in your hand to gain !Block! *Block*.{IfMega:mega:\nAlso *Exhaust* a random Curse card in your hand to gain !Block! *Block*.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -26,7 +26,7 @@ public class NuclearCore : AbstractCoreCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc(CoreName,
-        $"#*Cycle*. When cycled: {CoreCycleText}\n*Overheat*: {{Overheat}}.\n{{IfPlusOne:plusone:Put a {CoreName} into your discard pile.|}}");
+        $"#*Cycle*. When cycled: {CoreCycleText}\n*Overheat*: {{Overheat}}.\n{{IfPlusOne:plusone:Put a {CoreName}{{IfMega:mega:+|}} into your discard pile.|}}");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {

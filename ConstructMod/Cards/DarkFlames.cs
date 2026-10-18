@@ -25,7 +25,10 @@ public class DarkFlames : AbstractConstructCard
 
     protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips =>
     [
-        EnergyHoverTip
+        EnergyHoverTip,
+        // Shows the Burn card itself, like the vanilla Overclock/Oil Spill (FromCard<Burn>) —
+        // the text counts *Burns* in the exhaust pile at every tier.
+        HoverTipFactory.FromCard<Burn>()
     ];
 
     public DarkFlames() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)

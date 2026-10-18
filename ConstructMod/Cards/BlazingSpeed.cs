@@ -27,7 +27,9 @@ public class BlazingSpeed : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            // This card does not Cycle and its text never mentions Cycle, so it gets no Cycle tip
+            // (unlike Autoturret/Point Defense/... whose text says "Whenever a card *Cycles*").
+            // The *Overheat* line is the only mechanic its text names.
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }

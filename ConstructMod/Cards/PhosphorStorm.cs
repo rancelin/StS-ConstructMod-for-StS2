@@ -27,7 +27,8 @@ public class PhosphorStorm : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            // No Cycle tip: this card neither Cycles nor mentions Cycle in its text (only
+            // *Overheat*, whose own tip already explains the Cycle interaction).
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
         }
     }

@@ -13,8 +13,16 @@ namespace ConstructMod.Cards;
 public class Synchronize : AbstractConstructCard
 {
     public override int IntrinsicMaxUpgradeLevel => 2;
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(CardKeyword.Innate)];
+    // Innate is granted by the +1 rung (and kept at +2), so the tip belongs only on an upgraded
+    // card — including the +1→+2 preview, whose clone already carries the keyword.
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            if (IsUpgraded) yield return HoverTipFactory.FromKeyword(CardKeyword.Innate);
+        }
+    }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

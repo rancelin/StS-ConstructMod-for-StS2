@@ -22,7 +22,7 @@ public class Supernova : AbstractConstructCard
     // Display name matches StS1 cardStrings.NAME ("Sunburst"); the card key/id stays
     // construct:Supernova (the original's own id/name mismatch).
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Sunburst",
-        "#Exhaust ALL *Status* cards and replace them with random{IfMega:mega: *upgraded*|} cards.\nThose cards cost 0 this combat.");
+        "#Exhaust ALL Status cards and replace them with random{IfMega:mega: *upgraded*|} cards.\nThose cards cost 0 this combat.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {

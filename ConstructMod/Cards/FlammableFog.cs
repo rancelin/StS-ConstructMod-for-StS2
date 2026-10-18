@@ -31,7 +31,8 @@ public class FlammableFog : AbstractConstructCard
         get
         {
             foreach (var t in base.ExtraHoverTips) yield return t;
-            yield return HoverTipFactory.FromKeyword(ConstructKeywords.Cycle);
+            // No Cycle tip: the card neither Cycles nor mentions Cycle in its text (only
+            // *Overheat*, whose own tip already explains the Cycle interaction).
             yield return HoverTipFactory.FromKeyword(ConstructKeywords.Overheat);
             yield return HoverTipFactory.Static(StaticHoverTip.Block);
         }

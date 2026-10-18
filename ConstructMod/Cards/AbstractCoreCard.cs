@@ -32,21 +32,13 @@ public abstract class AbstractCoreCard : AbstractCycleCard
 
     public override List<(string, string)>? Localization =>
         new CardLoc(CoreName,
-            $"#*Cycle*. When cycled: {CoreCycleText}\n{{IfPlusOne:plusone:Put a {CoreName}{{CorePlus}} into your discard pile.|}}");
+            // The clone is a base copy at +1 and an UPGRADED copy at +2 (StS1's CloneCore), hence
+            // the "+" — injected as a nested {IfMega} so the preview greens it at +1→+2 (vanilla
+            // renders marker text green through [green], the same markup ShowIfMegaFormatter writes).
+            $"#*Cycle*. When cycled: {CoreCycleText}\n{{IfPlusOne:plusone:Put a {CoreName}{{IfMega:mega:+|}} into your discard pile.|}}");
 
     protected abstract string CoreName { get; }
     protected abstract string CoreCycleText { get; }
-
-    /// <summary>
-    /// "{CorePlus}" resolves to "+" while mega-upgraded (StS1's mega clone line reads
-    /// "Put a X Core+ into your discard pile"), otherwise "". Injected as a plain string arg
-    /// rather than nesting an {IfMega:...} formatter inside the tier branch.
-    /// </summary>
-    protected override void AddExtraArgsToDescription(LocString description)
-    {
-        base.AddExtraArgsToDescription(description);
-        description.Add("CorePlus", IsMegaUpgraded ? "+" : "");
-    }
 
     /// <summary>
     /// The on-cycle effect. Runs before the replacement draw.

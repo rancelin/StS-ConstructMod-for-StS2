@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -30,6 +31,16 @@ public class Reserves : AbstractCycleCard
 
     // 2-tier ladder: +1 = +10 threshold, +2 = mega (+20 threshold).
     public override int IntrinsicMaxUpgradeLevel => 2;
+
+    // The text shows energy pips, so it gets the energy tip (vanilla Fuel/Compact do the same).
+    protected override System.Collections.Generic.IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var t in base.ExtraHoverTips) yield return t;
+            yield return EnergyHoverTip;
+        }
+    }
 
     public Reserves() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {

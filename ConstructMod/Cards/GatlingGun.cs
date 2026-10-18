@@ -34,7 +34,8 @@ public class GatlingGun : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Gatling Gun",
-        "#Deal !Damage! damage to a random enemy !Shots! times for each energy spent.");
+        // Vanilla phrasing for an X-cost card (Helix Drill): "for each {E} spent".
+        "#Deal !Damage! damage to a random enemy !Shots! times for each {energyPrefix:energyIcons(1)} spent.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
