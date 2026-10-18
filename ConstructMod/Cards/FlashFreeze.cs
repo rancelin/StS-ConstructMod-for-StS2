@@ -43,7 +43,7 @@ public class FlashFreeze : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flash Freeze",
-        "#Gain !Block! *Block*. Your cards cannot *Overheat* for {FreezeTurns} turn(s).");
+        "#Gain !Block! *Block*. Your cards cannot *Overheat* for !FreezeTurns! turn(s).");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

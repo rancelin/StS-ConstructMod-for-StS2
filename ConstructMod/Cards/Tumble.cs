@@ -32,7 +32,7 @@ public class Tumble : AbstractConstructCard, IAfterCardCycled
         [HoverTipFactory.FromKeyword(ConstructKeywords.Cycle)];
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Tumble",
-        "#Draw {Cards} cards.\nDeal !Damage! damage to a random enemy for each card drawn that *Cycled*.");
+        "#Draw !Cards! cards.\nDeal !Damage! damage to a random enemy for each card drawn that *Cycled*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

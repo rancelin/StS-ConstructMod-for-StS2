@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -28,7 +29,7 @@ public class PanicFire : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Panic Fire",
-        "#Whenever a non-Upgraded card *Cycles*, *Exhaust* it and deal {PanicFirePower} damage to a random enemy.{IfMega:mega:\nShuffle 3 random Cores into your draw pile.|}");
+        "#Whenever a non-Upgraded card *Cycles*, *Exhaust* it and deal !PanicFirePower! damage to a random enemy.{IfMega:mega:\nShuffle 3 random Cores into your draw pile.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -36,12 +37,14 @@ public class PanicFire : AbstractConstructCard
             DynamicVars["PanicFirePower"].BaseValue, Owner.Creature, this);
         if (!IsMegaUpgraded) return;
         if (CombatState is not { } combat) return;
+        var added = new List<CardPileAddResult>();
         for (int i = 0; i < 3; i++)
         {
             CardModel canonical = ConstructCores.RandomCore(Owner);
             CardModel core = combat.CreateCard(canonical, Owner);
-            await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
+            added.Add(await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random));
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
     }
 
     protected override void OnUpgrade()

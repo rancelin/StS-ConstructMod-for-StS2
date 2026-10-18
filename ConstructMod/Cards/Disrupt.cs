@@ -29,7 +29,10 @@ public class Disrupt : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Disrupt",
-        "{IfMega:mega:Retain.\n|}Gain !Block! *Block*.\nEnemy loses {StrLoss} *Strength* for the rest of this turn.");
+        // NOTE: no "{IfMega:mega:Retain.}" here — the mega tier grants the Retain KEYWORD, and StS2
+        // renders keyword badges itself, so spelling it out would show Retain twice. The leading '#'
+        // opts into SimpleLoc markup (!Block!/!StrLoss!/*Block*); without it they print literally.
+        "#Gain !Block! *Block*.\nEnemy loses !StrLoss! *Strength* for the rest of this turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

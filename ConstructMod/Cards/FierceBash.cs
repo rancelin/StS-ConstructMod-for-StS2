@@ -20,7 +20,10 @@ public class FierceBash : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Fierce Bash",
-        "{IfMega:mega:Retain.\n|}Deal !Damage! damage.\nHits twice if the enemy doesn't intend to *Attack* or *Defend*.");
+        // NOTE: no "{IfMega:mega:Retain.}" here — the mega tier grants the Retain KEYWORD, and StS2
+        // renders keyword badges itself, so spelling it out would show Retain twice. The leading '#'
+        // opts into SimpleLoc markup (!Damage!/*Attack*); without it they print literally.
+        "#Deal !Damage! damage.\nHits twice if the enemy doesn't intend to *Attack* or *Defend*.");
 
     private static bool IntendsToAttackOrDefend(MegaCrit.Sts2.Core.Entities.Creatures.Creature target)
     {

@@ -45,7 +45,7 @@ public class AttackMode : AbstractConstructCard
     };
 
     public override List<(string, string)>? Localization => new CardLoc("Attack Mode",
-        "#Gain {Strength} *Strength*. Lose {Dexterity} *Dexterity*.");
+        "#Gain !Strength! *Strength*. Lose !Dexterity! *Dexterity*.");
 
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

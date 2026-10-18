@@ -33,7 +33,7 @@ public class VentSteam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Vent Steam",
-        "#Exhaust 1 card.\nApply {Weak} *Weak* and {Vuln} *Vulnerable*{IfMega:mega: to ALL enemies|}.");
+        "#Exhaust 1 card.\nApply !Weak! *Weak* and !Vuln! *Vulnerable*{IfMega:mega: to ALL enemies|}.");
 
     // StS1's mega tier flips the card to ALL_ENEMY.
     public override TargetType TargetType => IsMegaUpgraded

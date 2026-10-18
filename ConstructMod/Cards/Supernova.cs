@@ -64,7 +64,10 @@ public class Supernova : AbstractConstructCard
                 var replacement = combat.CreateCard(canonical, Owner);
                 if (IsMegaUpgraded && replacement.IsUpgradable) CardCmd.Upgrade(replacement);
                 replacement.EnergyCost.AddThisCombat(-9, reduceOnly: true);
-                await CardPileCmd.AddGeneratedCardToCombat(replacement, pileType, Owner, CardPilePosition.Top);
+                var added = await CardPileCmd.AddGeneratedCardToCombat(replacement, pileType, Owner, CardPilePosition.Top);
+                // Hidden piles need the vanilla fly-to-pile preview, otherwise their count badge
+                // never learns about the new card (hand adds just appear, as in vanilla).
+                if (pileType != PileType.Hand) CardCmd.PreviewCardPileAdd(added);
             }
         }
     }

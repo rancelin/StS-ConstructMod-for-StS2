@@ -42,7 +42,7 @@ public class MetalShell : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Metal Shell",
-        "#Gain !Block! *Block*.\n{IfMega:mega:Gain {Metal} *Metallicize*.|Gain {Plates} *Plated Armor*.}");
+        "#Gain !Block! *Block*.\n{IfMega:mega:Gain !Metal! *Metallicize*.|Gain !Plates! *Plated Armor*.}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

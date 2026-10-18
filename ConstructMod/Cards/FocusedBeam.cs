@@ -20,7 +20,7 @@ public class FocusedBeam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Focused Beam",
-        "#Deal !Damage! damage.{IfMega:mega:\nDraw a card, then put this on top of your draw pile.|Put this on top of your draw pile.}");
+        "#Deal !Damage! damage.{IfMega:mega:\nDraw a card, then put this on top of your draw pile.|\nPut this on top of your draw pile.}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

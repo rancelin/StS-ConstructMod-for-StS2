@@ -27,7 +27,7 @@ public class SiegeForm : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Siege Form",
-        "#After you play a card, gain {SiegeFormPower} *Strength* until the end of your turn.");
+        "#After you play a card, gain !SiegeFormPower! *Strength* until the end of your turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

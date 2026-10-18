@@ -29,7 +29,7 @@ public class OneWayMirror : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("One-Way Mirror",
-        "#Gain !Block! *Block*. Apply {Vuln} *Vulnerable* to ALL enemies.");
+        "#Gain !Block! *Block*. Apply !Vuln! *Vulnerable* to ALL enemies.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

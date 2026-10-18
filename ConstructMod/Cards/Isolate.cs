@@ -20,7 +20,7 @@ public class Isolate : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Isolate",
-        "#*Cycle* if there is more than one enemy.\n{IfUpgraded:show:Your attacks deal double damage this turn.|Your next attack deals double damage this turn.}{IfMega:mega:\nYour attacks also deal double damage next turn.|}");
+        "#*Cycle* if there is more than one enemy.\n{IfPlusOne:plusone:Your attacks deal double damage this turn.|Your next attack deals double damage this turn.}{IfMega:mega:\nYour attacks also deal double damage next turn.|}");
 
     public override bool CanCycle()
     {

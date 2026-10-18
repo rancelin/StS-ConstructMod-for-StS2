@@ -39,6 +39,7 @@ public class CreateCores : AbstractConstructCard
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         int count = (int)DynamicVars["Cores"].BaseValue;
+        var added = new List<CardPileAddResult>();
         for (int i = 0; i < count; i++)
         {
             CardModel canonical = ConstructCores.RandomCore(Owner);
@@ -48,8 +49,9 @@ public class CreateCores : AbstractConstructCard
             }
             CardModel core = combat.CreateCard(canonical, Owner);
             if (IsMegaUpgraded) CardCmd.Upgrade(core);
-            await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random);
+            added.Add(await CardPileCmd.AddGeneratedCardToCombat(core, PileType.Draw, Owner, CardPilePosition.Random));
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
         await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, Owner, this);
     }
 

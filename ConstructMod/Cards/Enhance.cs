@@ -32,7 +32,7 @@ public class Enhance : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Enhance",
-        "#At the end of your turn, Upgrade {Enhance} random card(s) in your discard pile for the rest of this combat.{IfMega:mega:\nCan *Mega-upgrade* cards.|}");
+        "#At the end of your turn, Upgrade !Enhance! random card(s) in your discard pile for the rest of this combat.{IfMega:mega:\nCan *Mega-upgrade* cards.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

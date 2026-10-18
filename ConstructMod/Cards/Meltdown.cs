@@ -25,7 +25,7 @@ public class Meltdown : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Meltdown",
-        "#At the start of your turn, deal {MeltdownPower} damage to ALL enemies and add a *Burn* to your hand.");
+        "#At the start of your turn, deal !MeltdownPower! damage to ALL enemies and add a *Burn* to your hand.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

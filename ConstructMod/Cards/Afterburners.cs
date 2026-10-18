@@ -34,18 +34,20 @@ public class Afterburners : AbstractConstructCard
     public override int IntrinsicMaxUpgradeLevel => 2;
 
     public override List<(string, string)>? Localization => new CardLoc("Afterburners",
-        "#Shuffle {Burns} *Burn* into your draw pile.\nThis turn, your next non-*Rare* card is played {Plays} times.");
+        "#Shuffle !Burns! *Burn* into your draw pile.\nThis turn, your next non-*Rare* card is played !Plays! times.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (CombatState is not { } combat) return;
         // OnUpgrade already decrements the Burns var by 1, so just read the resolved value here.
         var burns = DynamicVars["Burns"].IntValue;
+        var added = new List<CardPileAddResult>();
         for (var i = 0; i < burns; i++)
         {
             var burn = combat.CreateCard(ModelDb.Card<Burn>(), Owner);
-            await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Draw, Owner, CardPilePosition.Random);
+            added.Add(await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Draw, Owner, CardPilePosition.Random));
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
         await PowerCmd.Apply<Powers.AfterburnersPower>(choiceContext, Owner.Creature,
             DynamicVars["Plays"].BaseValue, Owner.Creature, this);
     }

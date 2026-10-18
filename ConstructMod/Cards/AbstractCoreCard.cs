@@ -32,7 +32,7 @@ public abstract class AbstractCoreCard : AbstractCycleCard
 
     public override List<(string, string)>? Localization =>
         new CardLoc(CoreName,
-            $"#*Cycle*. When cycled: {CoreCycleText}\n{{IfUpgraded:show:Put a {CoreName}{{CorePlus}} into your discard pile.|}}");
+            $"#*Cycle*. When cycled: {CoreCycleText}\n{{IfPlusOne:plusone:Put a {CoreName}{{CorePlus}} into your discard pile.|}}");
 
     protected abstract string CoreName { get; }
     protected abstract string CoreCycleText { get; }
@@ -40,7 +40,7 @@ public abstract class AbstractCoreCard : AbstractCycleCard
     /// <summary>
     /// "{CorePlus}" resolves to "+" while mega-upgraded (StS1's mega clone line reads
     /// "Put a X Core+ into your discard pile"), otherwise "". Injected as a plain string arg
-    /// rather than nesting an {IfMega:...} formatter inside the {IfUpgraded:...} branch.
+    /// rather than nesting an {IfMega:...} formatter inside the tier branch.
     /// </summary>
     protected override void AddExtraArgsToDescription(LocString description)
     {
@@ -74,6 +74,9 @@ public abstract class AbstractCoreCard : AbstractCycleCard
         // a merely-upgraded Core clones a base copy. (QuantumEgg's forced upgrade
         // has no port equivalent — the relic was not carried over.)
         if (IsMegaUpgraded && copy.IsUpgradable) CardCmd.Upgrade(copy);
-        await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, Owner, CardPilePosition.Top);
+        var added = await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, Owner, CardPilePosition.Top);
+        // Vanilla pattern for generating into a hidden pile (Turbo, Metamorphosis, ...): the discard
+        // button's count badge is advanced by the fly-to-pile animation, not by the pile contents.
+        CardCmd.PreviewCardPileAdd(added);
     }
 }

@@ -25,7 +25,7 @@ public class Accumulate : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Accumulate",
-        "#Deal !Damage! damage.\nMake {IfMega:mega:{Copies} copies|a copy} of a non-*Rare* card in your draw pile.");
+        "#Deal !Damage! damage.\nMake {IfMega:mega:!Copies! copies|a copy} of a non-*Rare* card in your draw pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -45,6 +45,7 @@ public class Accumulate : AbstractConstructCard
                 c => c.Rarity != CardRarity.Rare)).ToList();
         // Mega copies the chosen card several times (StS1's M_UPGRADE_PLUS_COPIES).
         var copies = (int)DynamicVars["Copies"].BaseValue;
+        var added = new List<CardPileAddResult>();
         foreach (var card in selection)
         {
             if (card == null) continue;
@@ -52,9 +53,10 @@ public class Accumulate : AbstractConstructCard
             {
                 var clone = card.CreateClone();
                 Relics.WeddingRing.MarkGeneratedCopy(clone);
-                await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Draw, Owner, CardPilePosition.Random);
+                added.Add(await CardPileCmd.AddGeneratedCardToCombat(clone, PileType.Draw, Owner, CardPilePosition.Random));
             }
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
     }
 
     protected override void OnUpgrade()

@@ -30,7 +30,9 @@ public class ShieldGenerator : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Shield Generator",
-        "#Gain {Blur} *Blur*.\nGain {Vulnerable} *Vulnerable*.{IfUpgraded:show:|}");
+        // StS1's base/upgrade descriptions differ only in the Vulnerable number it puts on YOU
+        // (2 → 1), which the DynamicVar already renders per level — so no per-tier text is needed.
+        "#Gain !Blur! *Blur*.\nGain !Vulnerable! *Vulnerable*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

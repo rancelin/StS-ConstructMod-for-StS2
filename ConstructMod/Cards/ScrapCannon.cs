@@ -29,7 +29,7 @@ public class ScrapCannon : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Scrap Cannon",
-        "#Deal !Damage! damage.\n{IfMega:mega:Exhaust up to {Exhaust} cards|Exhaust {Exhaust} card}.");
+        "#Deal !Damage! damage.\n{IfMega:mega:Exhaust up to !Exhaust! cards|Exhaust !Exhaust! card}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -40,7 +40,11 @@ public class ScrapCannon : AbstractConstructCard
                 .Execute(choiceContext);
         }
         int count = DynamicVars["Exhaust"].IntValue;
-        var cards = (await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, count),
+        // StS1: the base tier forces you to exhaust exactly 1 card (ExhaustAction's default
+        // anyNumber/canPickZero are both false), while the mega tier's "Exhaust up to 2 cards"
+        // passes canPickZero — so the player may confirm with fewer, including none.
+        int min = IsMegaUpgraded ? 0 : count;
+        var cards = (await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, min, count),
             context: choiceContext, player: Owner, filter: null, source: this)).ToList();
         foreach (var card in cards)
         {

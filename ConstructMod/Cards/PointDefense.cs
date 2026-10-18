@@ -32,7 +32,7 @@ public class PointDefense : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Point Defense",
-        "#Whenever a card *Cycles*, gain 1 *Block*. Works {Limit} times per turn.");
+        "#Whenever a card *Cycles*, gain 1 *Block*. Works !Limit! times per turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

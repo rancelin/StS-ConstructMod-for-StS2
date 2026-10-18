@@ -29,7 +29,7 @@ public class MemoryTap : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Memory Tap",
-        "#Add a random card from 3 different classes to your hand{IfMega:mega: twice|}. They cost 0 this turn.{IfUpgraded:show: Upgrade them.|}");
+        "#Add a random card from 3 different classes to your hand{IfMega:mega: twice|}. They cost 0 this turn.{IfPlusOne:plusone: Upgrade them.|}");
 
     private async Task AddOneClassCard(PlayerChoiceContext choiceContext, CardPoolModel pool)
     {

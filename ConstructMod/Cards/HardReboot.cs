@@ -26,7 +26,7 @@ public class HardReboot : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Hard Reboot",
-        "#Exhaust your hand. Draw {DrawCards} cards.");
+        "#Exhaust your hand. Draw !DrawCards! cards.");
 
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {

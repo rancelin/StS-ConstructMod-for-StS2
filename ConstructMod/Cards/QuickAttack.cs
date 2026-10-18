@@ -30,7 +30,7 @@ public class QuickAttack : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Quick Attack",
-        "#Deal !Damage! damage.\nGain {Dex} *Dexterity*.\nAt the end of your turn, lose {DexLoss} *Dexterity*.");
+        "#Deal !Damage! damage.\nGain !Dex! *Dexterity*.\nAt the end of your turn, lose {DexLoss} *Dexterity*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

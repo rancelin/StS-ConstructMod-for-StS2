@@ -32,7 +32,7 @@ public class HyperBeam : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Hyper Beam",
-        "#Deal !Damage! damage.\nPut {Dazed} *Dazed* on top of your draw pile.");
+        "#Deal !Damage! damage.\nPut !Dazed! *Dazed* on top of your draw pile.");
 
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -49,11 +49,13 @@ public class HyperBeam : AbstractConstructCard
         if (CombatState is not { } combat) return;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_giant_horizontal_slash").Execute(choiceContext);
+        var added = new List<CardPileAddResult>();
         for (var i = 0; i < (int)DynamicVars["Dazed"].BaseValue; i++)
         {
             var dazed = combat.CreateCard(ModelDb.Card<Dazed>(), Owner);
-            await CardPileCmd.AddGeneratedCardToCombat(dazed, PileType.Draw, Owner, CardPilePosition.Top);
+            added.Add(await CardPileCmd.AddGeneratedCardToCombat(dazed, PileType.Draw, Owner, CardPilePosition.Top));
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
     }
 
     protected override void OnUpgrade()

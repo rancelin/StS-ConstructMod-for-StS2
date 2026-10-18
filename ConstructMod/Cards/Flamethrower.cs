@@ -35,7 +35,7 @@ public class Flamethrower : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flamethrower",
-        "#Deal !Damage! damage to a random enemy for each {IfMega:mega:*Burn* or *Status* card|*Burn*} in your piles.{IfUpgraded:show:\n*Cycle* if there are fewer than 2 *Burn*s.|}");
+        "#Deal !Damage! damage to a random enemy for each {IfMega:mega:*Burn* or *Status* card|*Burn*} in your piles.{IfPlusOne:plusone:\n*Cycle* if there are fewer than 2 *Burn*s.|}");
 
     public override bool CanCycle()
     {

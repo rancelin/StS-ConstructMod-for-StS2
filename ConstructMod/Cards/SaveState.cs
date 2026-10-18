@@ -24,7 +24,7 @@ public class SaveState : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Save State",
-        "#*Retain* your hand this{IfMega:mega: and next|} turn.{IfUpgraded:show:\nDraw 1 card.|}");
+        "#*Retain* your hand this{IfMega:mega: and next|} turn.{IfPlusOne:plusone:\nDraw 1 card.|}");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {

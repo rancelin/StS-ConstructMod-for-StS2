@@ -31,23 +31,32 @@ public class Agitation : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Agitation",
-        "#Whenever a card *Overheats*, gain {AgitationPower} *Strength* and {AgitationPower} *Dexterity*.");
+        // Mega tier draws 1 so playing it doesn't cost you a hand slot: StS1's startInPlay removed
+        // the card from the deck and applied the power for free, which Innate + 0-cost alone can't
+        // reproduce (see OnUpgrade). The line leads the text, as StS1's EXTENDED_DESCRIPTION does.
+        "#{IfMega:mega:Draw 1 card.\n|}Whenever a card *Overheats*, gain {AgitationPower} *Strength* and {AgitationPower} *Dexterity*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await PowerCmd.Apply<AgitationPower>(choiceContext, Owner.Creature,
             DynamicVars["AgitationPower"].IntValue, Owner.Creature, this);
+        if (IsMegaUpgraded)
+        {
+            await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(choiceContext, 1, Owner, this);
+        }
     }
 
     protected override void OnUpgrade()
     {
         // Branch on the level the upgrade just reached (replayed in order on save/load).
-        // Regular: Innate. Mega: cost 1 → 0.
+        // Regular: Innate. Mega: cost 1 → 0 plus "Draw 1 card" (compensating for StS1's
+        // startInPlay, which cost the player no hand slot).
         //
         // StS1's mega tier also sets startInPlay = true ("start combat with this card in play").
         // StS2 has no card-level equivalent: a BeforeCombatStart hook fires on the *deck* card
         // while the combat still holds a separate clone in the draw pile, so auto-applying there
-        // would hand out the power twice. Innate + 0-cost is the closest safe approximation.
+        // would hand out the power twice. Innate + 0-cost + self-replacing draw is the closest
+        // safe approximation.
         if (CurrentUpgradeLevel == 1)
         {
             AddKeyword(CardKeyword.Innate);

@@ -31,7 +31,7 @@ public class Hazardproof : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Hazardproof",
-        "#Gain !Block! *Block*.\nGain {Artifact} *Artifact*.");
+        "#Gain !Block! *Block*.\nGain !Artifact! *Artifact*.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

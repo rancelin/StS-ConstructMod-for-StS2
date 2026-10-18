@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -32,7 +33,7 @@ public class DarkFlames : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Dark Flames",
-        "#{IfMega:mega:Add {Burns} *Burns* to your exhaust pile.\n|}Deal !Damage! damage and gain {Energy:energyIcons()} for each *Burn* in your exhaust pile.");
+        "#{IfMega:mega:Add !Burns! *Burns* to your exhaust pile.\n|}Deal !Damage! damage and gain {Energy:energyIcons()} for each *Burn* in your exhaust pile.");
 
     public override System.Collections.Generic.IEnumerable<CardKeyword> CanonicalKeywords
     {
@@ -56,11 +57,18 @@ public class DarkFlames : AbstractConstructCard
         // each hit also gains 1 energy, so we can't collapse into a single WithHitCount call.)
         if (CombatState is { } c && DynamicVars["Burns"].BaseValue > 0)
         {
+            var added = new List<CardPileAddResult>();
             for (var i = 0; i < (int)DynamicVars["Burns"].BaseValue; i++)
             {
                 var burn = c.CreateCard(ModelDb.Card<Burn>(), Owner);
-                await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Exhaust, Owner, CardPilePosition.Bottom);
+                added.Add(await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Exhaust, Owner, CardPilePosition.Bottom));
             }
+            // Vanilla's pattern whenever a card is generated into a hidden pile (see Turbo,
+            // Metamorphosis, GraveWarden...). Without it the exhaust-pile button never hears about
+            // the new cards: its badge is advanced by the fly-to-pile animation, and the button
+            // even stays hidden when the pile was empty. Both are user-visible here because
+            // Dark Flames is the only effect that seeds the exhaust pile out of nothing.
+            CardCmd.PreviewCardPileAdd(added);
         }
         var burns = BurnCount();
         for (var i = 0; i < burns; i++)

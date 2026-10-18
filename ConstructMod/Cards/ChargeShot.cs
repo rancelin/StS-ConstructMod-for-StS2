@@ -36,7 +36,7 @@ public class ChargeShot : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Charge Shot",
-        "#Deal !Damage! damage, plus {Charge} for each turn this was Retained.");
+        "#Deal !Damage! damage, plus !Charge! for each turn this was Retained.");
 
     private decimal TrueBaseDamage()
     {

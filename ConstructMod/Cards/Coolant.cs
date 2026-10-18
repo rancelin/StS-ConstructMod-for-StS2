@@ -34,13 +34,13 @@ public class Coolant : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Coolant",
-        "#Gain !Block! *Block*. Increase the *Overheat* threshold of all cards with *Overheat* by {Cooling}.");
+        "#Gain !Block! *Block*. Increase the *Overheat* threshold of all cards with *Overheat* by !Cooling!.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
         // Increase the Overheat field of every AbstractConstructCard with overheat > 0
-        // across draw, hand, and discard by {Cooling}. (Per-combat modification; the field
+        // across draw, hand, and discard by !Cooling!. (Per-combat modification; the field
         // is per-card-instance and combat resets rebuild from canonical copies.)
         var cooling = DynamicVars["Cooling"].IntValue;
         foreach (var pileType in new[] { PileType.Draw, PileType.Hand, PileType.Discard })

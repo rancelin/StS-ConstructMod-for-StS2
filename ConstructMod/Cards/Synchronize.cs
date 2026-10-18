@@ -26,7 +26,7 @@ public class Synchronize : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Synchronize",
-        "#When you draw 2 of the same card in a row, deal {SynchronizePower} damage to ALL enemies.");
+        "#When you draw 2 of the same card in a row, deal !SynchronizePower! damage to ALL enemies.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

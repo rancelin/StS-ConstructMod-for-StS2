@@ -46,7 +46,7 @@ public class ModeShift : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Mode Shift",
-        "#Swap your *Strength* and *Dexterity*. Draw {Cards} card(s).");
+        "#Swap your *Strength* and *Dexterity*. Draw !Cards! card(s).");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

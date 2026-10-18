@@ -50,7 +50,7 @@ public class FlakBarrage : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Flak Barrage",
-        "#Deal !Damage! damage to a random enemy {Hits} times.{IfUpgraded:show:\n*Cycle* if your *Strength* is 0 or less.|}");
+        "#Deal !Damage! damage to a random enemy !Hits! times.{IfPlusOne:plusone:\n*Cycle* if your *Strength* is 0 or less.|}");
 
     public override bool CanCycle()
     {

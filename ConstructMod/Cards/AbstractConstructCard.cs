@@ -161,6 +161,19 @@ public abstract class AbstractConstructCard : CustomCardModel
             display = MegaDisplay.MegaPreview;
         }
         description.Add(new IfMegaVar(display));
+        // Injects {IfPlusOne:plusone:...} — the multi-level-aware replacement for vanilla's
+        // {IfUpgraded:show:...} (see IfPlusOneVar). The +1 text is hidden until the card is
+        // upgraded, and is only highlighted while the +1 upgrade is the one being previewed:
+        //   level 0            -> hidden
+        //   level 1 or 2       -> shown, no highlight (it is already printed on the card)
+        //   preview from 0     -> shown green (clone is level 1)
+        //   preview from 1     -> shown, no highlight (clone is level 2)
+        var plusOne = CurrentUpgradeLevel < 1
+            ? PlusOneDisplay.Hidden
+            : (UpgradePreviewType.IsPreview() && CurrentUpgradeLevel == 1
+                ? PlusOneDisplay.ShownGreen
+                : PlusOneDisplay.Shown);
+        description.Add(new IfPlusOneVar(plusOne));
     }
 
     /// <summary>The per-card overheat threshold. -1 = no overheat.</summary>

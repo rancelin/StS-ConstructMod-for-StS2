@@ -22,7 +22,7 @@ public class SpinDrive : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Spin Drive",
-        "#Whenever you play a card, draw a card.\nWorks {Draws} times per turn.");
+        "#Whenever you play a card, draw a card.\nWorks !Draws! times per turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

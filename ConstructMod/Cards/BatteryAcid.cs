@@ -28,7 +28,7 @@ public class BatteryAcid : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Battery Acid",
-        "#Gain {Energy:energyIcons()} energy.{IfMega:mega:\nNext turn, gain {NextTurn:energyIcons()}.|}\nShuffle 1 *Slimed* into your draw pile.");
+        "#Gain {Energy:energyIcons()}.{IfMega:mega:\nNext turn, gain {NextTurn:energyIcons()}.|}\nShuffle 1 *Slimed* into your draw pile.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -40,7 +40,8 @@ public class BatteryAcid : AbstractConstructCard
         }
         if (CombatState is not { } combat) return;
         var slimed = combat.CreateCard(ModelDb.Card<Slimed>(), Owner);
-        await CardPileCmd.AddGeneratedCardToCombat(slimed, PileType.Draw, Owner, CardPilePosition.Random);
+        var added = await CardPileCmd.AddGeneratedCardToCombat(slimed, PileType.Draw, Owner, CardPilePosition.Random);
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
     }
 
     protected override void OnUpgrade()

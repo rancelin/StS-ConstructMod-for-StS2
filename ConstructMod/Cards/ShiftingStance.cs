@@ -31,7 +31,7 @@ public class ShiftingStance : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Shifting Stance",
-        "#Every time you play {ShiftingStancePower} cards, swap your *Strength* and *Dexterity*.{IfMega:mega:\nThen increase the highest and decrease the lowest by 1.|}");
+        "#Every time you play !ShiftingStancePower! cards, swap your *Strength* and *Dexterity*.{IfMega:mega:\nThen increase the highest and decrease the lowest by 1.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

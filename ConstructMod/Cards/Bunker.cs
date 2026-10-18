@@ -32,7 +32,7 @@ public class Bunker : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Bunker",
-        "#Whenever a card is *Retained*, gain {BunkerPower} *Block*.{IfMega:mega:\nAt the end of your turn, *Retain* a random card.|}");
+        "#Whenever a card is *Retained*, gain !BunkerPower! *Block*.{IfMega:mega:\nAt the end of your turn, *Retain* a random card.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

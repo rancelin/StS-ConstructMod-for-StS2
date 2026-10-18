@@ -35,7 +35,7 @@ public class ShiftGuard : AbstractCycleCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Shift Guard",
-        "#*Cycle* if your *Strength* is negative.\nGain !Block! *Block*. Gain {Shift} *Dexterity*. Lose {Shift} *Strength*.");
+        "#*Cycle* if your *Strength* is negative.\nGain !Block! *Block*. Gain !Shift! *Dexterity*. Lose !Shift! *Strength*.");
 
     public override bool CanCycle()
     {

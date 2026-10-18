@@ -65,12 +65,14 @@ public class Backup : AbstractConstructCard
         // chosen is a mutable in-hand card; CreateClone preserves its upgrade state and produces a
         // proper in-combat copy. (combat.CreateCard requires a canonical model and would throw
         // MutableModelException.)
+        var added = new List<CardPileAddResult>();
         for (var i = 0; i < DynamicVars["Copies"].IntValue; i++)
         {
             var copy = chosen.CreateClone();
             Relics.WeddingRing.MarkGeneratedCopy(copy);
-            await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Draw, Owner, CardPilePosition.Top);
+            added.Add(await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Draw, Owner, CardPilePosition.Top));
         }
+        CardCmd.PreviewCardPileAdd(added); // keep the draw-pile badge in sync (vanilla pattern)
     }
 
     protected override void OnUpgrade()

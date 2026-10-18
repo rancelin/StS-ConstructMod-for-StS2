@@ -29,7 +29,7 @@ public class HastyRepair : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Hasty Repair",
-        "#Heal {Heal} HP.\nLose 2 Max HP.{IfMega:mega:\nPut a copy of this card into your hand.|}");
+        "#Heal !Heal! HP.\nLose 2 Max HP.{IfMega:mega:\nPut a copy of this card into your hand.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -23,7 +23,7 @@ public class GoldenBullet : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Golden Bullet",
-        "#Lose {Gold} gold.\nDeal !Damage! damage.");
+        "#Lose !Gold! gold.\nDeal !Damage! damage.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

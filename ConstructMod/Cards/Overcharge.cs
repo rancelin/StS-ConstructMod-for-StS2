@@ -28,7 +28,9 @@ public class Overcharge : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Overcharge",
-        "#At the start of your turn, gain {Energy:energyIcons()} and add a *Burn* to your hand.{IfMega:mega:\nGain {OnPlay:energyIcons()} energy now.|}");
+        // StS1's upgraded description leads with the immediate gain, then the per-turn line; the
+        // word "energy" is omitted because the pips already read as energy (vanilla convention).
+        "#{IfMega:mega:Gain {OnPlay:energyIcons()}.\n|}At the start of your turn, gain {Energy:energyIcons()} and add a *Burn* to your hand.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

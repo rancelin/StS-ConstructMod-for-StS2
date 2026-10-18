@@ -23,7 +23,7 @@ public class LongRangeLance : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Long-Range Lance",
-        "#At the start of your next combat, deal {Damage} damage to a random enemy.{IfMega:mega:\nAt the start of the combat after, deal {Damage} damage to a random enemy.|}");
+        "#At the start of your next combat, deal !Damage! damage to a random enemy.{IfMega:mega:\nAt the start of the combat after, deal !Damage! damage to a random enemy.|}");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

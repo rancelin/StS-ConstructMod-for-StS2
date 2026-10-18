@@ -38,7 +38,7 @@ public class PowerUp : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Power Up",
-        "#Deal !Damage! damage.\nALL of your *Strike* and *Defend* cards gain {Boost} power for this combat.");
+        "#Deal !Damage! damage.\nALL of your *Strike* and *Defend* cards gain !Boost! power for this combat.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -31,7 +31,7 @@ public class Electrocute : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Electrocute",
-        "#Deal !Damage! damage. Target loses {StrLoss} *Strength* for the rest of this turn.");
+        "#Deal !Damage! damage. Target loses !StrLoss! *Strength* for the rest of this turn.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

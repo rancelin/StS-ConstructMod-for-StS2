@@ -36,7 +36,7 @@ public class Reserves : AbstractCycleCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Reserves",
-        "#*Cycle* if your HP is above {HpThreshold}.\nGain {Energy:energyIcons()}. Draw {Cards} cards.");
+        "#*Cycle* if your HP is above !HpThreshold!.\nGain {Energy:energyIcons()}. Draw {Cards} cards.");
 
     public override bool CanCycle()
     {

@@ -20,7 +20,7 @@ public class Antimatter : AbstractConstructCard
     }
 
     public override System.Collections.Generic.List<(string, string)>? Localization => new CardLoc("Antimatter",
-        "#Reduce your energy to 0{IfMega:mega:, and regain it next turn|}.\nDeal damage equal to {Mult} times the number of other cards in your hand.");
+        "#Reduce your energy to 0{IfMega:mega:, and regain it next turn|}.\nDeal damage equal to !Mult! times the number of other cards in your hand.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

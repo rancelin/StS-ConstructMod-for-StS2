@@ -33,7 +33,7 @@ public class BlazingSpeed : AbstractConstructCard
     }
 
     public override List<(string, string)>? Localization => new CardLoc("Blazing Speed",
-        "#Deal !Damage! damage.\nDraw {Cards} cards.\n*Overheat*: {Overheat}.");
+        "#Deal !Damage! damage.\nDraw !Cards! cards.\n*Overheat*: {Overheat}.");
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
