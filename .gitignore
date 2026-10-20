@@ -1,0 +1,6 @@
+# Local, untracked testing aids (not part of the public repo)
+/TESTING.md
+/TESTING.html
+/TESTING.helper.py
+/TESTING.results.json
+/TESTING.results.batch*.json

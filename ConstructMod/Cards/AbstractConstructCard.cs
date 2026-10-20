@@ -1,0 +1,199 @@
+using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Models;
+using BaseLib.Abstracts;
+using BaseLib.Utils;
+using ConstructMod.Pools;
+
+namespace ConstructMod.Cards;
+
+/// <summary>
+/// Base class for all Construct cards. Uses in-code localization via BaseLib's CardLoc.
+///
+/// Mega-upgrade support (the original mod's second upgrade tier) is built on StS2's native
+/// multi-level upgrade system: <see cref="CardModel.MaxUpgradeLevel"/> (default 1) with
+/// <see cref="CardModel.CurrentUpgradeLevel"/>. A card opts into the mega tier by overriding
+/// <see cref="IntrinsicMaxUpgradeLevel"/> to 2 and branching its OnUpgrade on
+/// <see cref="CardModel.CurrentUpgradeLevel"/> (1 = regular delta, 2 = mega delta). The vanilla
+/// engine then handles eligibility (<c>IsUpgradable</c>), the "Name+1"/"Name+2" title rendering,
+/// the save/load per-level replay, and the upgrade flows with zero patches — the same foundation
+/// Downfall (RefractedBeam) and TheTailor (99999-level cards) build on.
+///
+/// Gating (matching the original's ClockworkPhoenix rules): the player may only CHOOSE a mega
+/// upgrade at the smith while owning <see cref="Relics.ClockworkPhoenix"/> (and never in combat);
+/// forced mega sources (MegaBattery, MegaPotion, ...) bypass the gate via
+/// <see cref="ForceUpgradeToMax"/>, the StS2 equivalent of the original's forcedUpgrade flag.
+/// </summary>
+[Pool(typeof(ConstructCardPool))]
+public abstract class AbstractConstructCard : CustomCardModel
+{
+    // Per-card overheat threshold. -1 (default) = card does not participate in the Heat system.
+    // A positive value N means the card turns into a Burn when CycleCount reaches N in a single turn.
+    // Modified by UpgradeOverheat() and Coolant. Preserved on CreateClone() via CopyOnClone.
+    private static readonly SpireField<CardModel, int> OverheatField =
+        new SpireField<CardModel, int>(_ => -1).CopyOnClone();
+
+    // Display flag: true when overheat was changed by an upgrade (so the !O! value renders green).
+    private static readonly SpireField<CardModel, bool> UpgradedOverheatField =
+        new SpireField<CardModel, bool>(_ => false).CopyOnClone();
+
+    // Transient "forced upgrade in progress" flag (the original's forcedUpgrade). While set,
+    // MaxUpgradeLevel allows one more level regardless of the Phoenix gate, so programmatic
+    // mega sources can saturate the card. Never persisted.
+    private static readonly ConditionalWeakTable<CardModel, StrongBox<bool>> ForcingUpgrades = new();
+
+    protected AbstractConstructCard(int baseCost, CardType type, CardRarity rarity, TargetType target,
+        bool showInCardLibrary = true, bool autoAdd = true)
+        : base(baseCost, type, rarity, target, showInCardLibrary, autoAdd)
+    {
+    }
+
+    /// <summary>
+    /// The card's true upgrade ceiling: 1 = single-tier (no mega), 2 = regular + mega tier.
+    /// Override to 2 when the card's OnUpgrade implements its per-level mega ladder
+    /// (branching on <see cref="CardModel.CurrentUpgradeLevel"/>).
+    /// </summary>
+    public virtual int IntrinsicMaxUpgradeLevel => 1;
+
+    /// <summary>
+    /// The engine-facing upgrade cap. Applies the mega gating on top of
+    /// <see cref="IntrinsicMaxUpgradeLevel"/>:
+    /// <list type="bullet">
+    /// <item>Canonical / unowned instances (compendium grid, save/load replay) → intrinsic, so
+    /// saved mega cards always reconstruct and canonical cards never trip the Owner-assert.
+    /// NOTE: CardModel.get_Owner() asserts mutable — this getter MUST check IsMutable before
+    /// reading Owner (the compendium grid calls IsUpgradable on canonical models).</item>
+    /// <item>Forced upgrade in progress → one more level than current (bounded by intrinsic).</item>
+    /// <item>In combat → regular tier only (the original never allowed player-chosen mega
+    /// mid-combat, even with Phoenix).</item>
+    /// <item>Out of combat with <see cref="Relics.ClockworkPhoenix"/> → intrinsic.</item>
+    /// <item>Otherwise → regular tier only.</item>
+    /// </list>
+    /// The result is floored at <see cref="CardModel.CurrentUpgradeLevel"/> so the vanilla
+    /// multi-level title branch ("Name+2") still triggers for already-mega'd cards even when the
+    /// gate reports a cap of 1 — the floor never re-enables upgrading (level &lt; max).
+    /// </summary>
+    public override int MaxUpgradeLevel
+    {
+        get
+        {
+            if (ForcingUpgrades.TryGetValue(this, out var box) && box.Value)
+            {
+                return Math.Min(IntrinsicMaxUpgradeLevel, CurrentUpgradeLevel + 1);
+            }
+            if (!IsMutable || Owner == null)
+            {
+                return IntrinsicMaxUpgradeLevel;
+            }
+            // StS1 gate (AbstractConstructCard.canUpgrade): the regular ladder
+            // (super.canUpgrade() / timesUpgraded<N) climbs FREELY — only the mega rung
+            // needs Phoenix-out-of-combat or forcing. So the no-Phoenix cap is every rung
+            // below mega: max(1, intrinsic-1) keeps single/2-tier behavior identical
+            // (cap 1) while letting the Egg reach +3 to earn its Phoenix. (An earlier
+            // version capped everything at 1 — a deadlock: Phoenix needs +3, +3 needed
+            // Phoenix.) The combat branch stays Mega-locked even with Phoenix (StS1's
+            // phase check; protects the Apotheosis design).
+            var regularCap = Math.Max(1, IntrinsicMaxUpgradeLevel - 1);
+            var gated = Owner.Creature.CombatState != null
+                ? regularCap
+                : HasClockworkPhoenix() ? IntrinsicMaxUpgradeLevel : regularCap;
+            return Math.Max(gated, CurrentUpgradeLevel);
+        }
+    }
+
+    private bool HasClockworkPhoenix() => Owner.Relics?.OfType<Relics.ClockworkPhoenix>().Any() == true;
+
+    /// <summary>True once the card has reached its mega tier.</summary>
+    public bool IsMegaUpgraded => CurrentUpgradeLevel >= IntrinsicMaxUpgradeLevel
+        && IntrinsicMaxUpgradeLevel > 1;
+
+    /// <summary>
+    /// Saturate the card's upgrade ladder (the original's "upgrade(true) x5" idiom): force-upgrade
+    /// until the card reaches <see cref="IntrinsicMaxUpgradeLevel"/>. Uses CardCmd.Upgrade so each
+    /// level gets the vanilla history/VFX treatment. Safe on already-maxed cards (no-op).
+    /// Non-Construct cards get a SINGLE regular upgrade (StS1 gives outsiders c.upgrade()
+    /// once, never the mega path) — so foreign multi-tier cards (Refracted Beam, Premium)
+    /// climb one rung instead of saturating.
+    /// </summary>
+    public static void ForceUpgradeToMax(CardModel card)
+    {
+        if (card is not AbstractConstructCard)
+        {
+            if (card.IsUpgradable) CardCmd.Upgrade(card);
+            return;
+        }
+        var box = ForcingUpgrades.GetOrCreateValue(card);
+        var previous = box.Value;
+        box.Value = true;
+        try
+        {
+            while (card.IsUpgradable)
+            {
+                CardCmd.Upgrade(card);
+            }
+        }
+        finally
+        {
+            box.Value = previous;
+        }
+    }
+
+    /// <summary>
+    /// Injects the {IfMega:...} description variable so loc text can branch per tier:
+    /// {IfMega:mega:mega-only sentence.|} — handled by ShowIfMegaFormatter (registered via
+    /// BaseLib's IAutoRegisterFormatSpecifier; named "mega" since SmartFormat forbids
+    /// duplicate formatter names and vanilla already owns "show").
+    /// </summary>
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        // Upgrade-preview clones carry the POST-upgrade level already, so IsMegaUpgraded on the
+        // clone is the correct check for both the +1 preview (level 1, not mega → normal branch)
+        // and the +2 preview (level 2 → mega branch). The IsPreview() check only adds the green
+        // wrap, mirroring the vanilla IfUpgraded UpgradePreview handling.
+        var display = IsMegaUpgraded ? MegaDisplay.Mega : MegaDisplay.Normal;
+        if (UpgradePreviewType.IsPreview() && IsMegaUpgraded)
+        {
+            display = MegaDisplay.MegaPreview;
+        }
+        description.Add(new IfMegaVar(display));
+        // Injects {IfPlusOne:plusone:...} — the multi-level-aware replacement for vanilla's
+        // {IfUpgraded:show:...} (see IfPlusOneVar). The +1 text is hidden until the card is
+        // upgraded, and is only highlighted while the +1 upgrade is the one being previewed:
+        //   level 0            -> hidden
+        //   level 1 or 2       -> shown, no highlight (it is already printed on the card)
+        //   preview from 0     -> shown green (clone is level 1)
+        //   preview from 1     -> shown, no highlight (clone is level 2)
+        var plusOne = CurrentUpgradeLevel < 1
+            ? PlusOneDisplay.Hidden
+            : (UpgradePreviewType.IsPreview() && CurrentUpgradeLevel == 1
+                ? PlusOneDisplay.ShownGreen
+                : PlusOneDisplay.Shown);
+        description.Add(new IfPlusOneVar(plusOne));
+    }
+
+    /// <summary>The per-card overheat threshold. -1 = no overheat.</summary>
+    public int Overheat
+    {
+        get => OverheatField.Get(this);
+        set => OverheatField.Set(this, value);
+    }
+
+    /// <summary>Whether the overheat value was changed by an upgrade (for green-number display).</summary>
+    public bool UpgradedOverheat
+    {
+        get => UpgradedOverheatField.Get(this);
+        set => UpgradedOverheatField.Set(this, value);
+    }
+
+    /// <summary>Raise the overheat threshold by <paramref name="amount"/> (e.g. +5 from Coolant).</summary>
+    public void UpgradeOverheat(int amount)
+    {
+        Overheat += amount;
+        UpgradedOverheat = true;
+    }
+}
